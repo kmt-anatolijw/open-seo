@@ -1,0 +1,121 @@
+name: Sync upstream
+
+# This fork tracks every-app/open-seo but is expected to carry changes of its own,
+# so upstream never lands on main unreviewed. Each run rebuilds the sync/upstream
+# branch from main, merges upstream into it, and opens (or updates) a pull request.
+#
+# Set a SYNC_PAT repository secret (fine-grained, contents:write + pull-requests:write)
+# if CI should run on the sync PRs — pull requests opened with the default
+# GITHUB_TOKEN do not trigger pull_request workflows. Without it the sync still
+# works, the PR just arrives with no checks.
+
+on:
+  schedule:
+    - cron: "23 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: sync-upstream
+  cancel-in-progress: false
+
+env:
+  UPSTREAM_URL: https://github.com/every-app/open-seo.git
+  UPSTREAM_BRANCH: main
+  SYNC_BRANCH: sync/upstream
+
+jobs:
+  sync:
+    name: Open upstream sync PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.SYNC_PAT || secrets.GITHUB_TOKEN }}
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Fetch upstream
+        run: |
+          git remote add upstream "$UPSTREAM_URL"
+          git fetch --no-tags upstream "$UPSTREAM_BRANCH"
+
+      - name: Merge upstream onto sync branch
+        id: merge
+        run: |
+          set -euo pipefail
+
+          if git merge-base --is-ancestor FETCH_HEAD HEAD; then
+            echo "main already contains upstream/$UPSTREAM_BRANCH — nothing to do."
+            exit 0
+          fi
+
+          BEHIND=$(git rev-list --count HEAD..FETCH_HEAD)
+          echo "behind=$BEHIND" >> "$GITHUB_OUTPUT"
+
+          # The sync branch is bot-owned and rebuilt from main on every run, so a
+          # forced update is expected. Resolve conflicts on a branch of your own.
+          git checkout -B "$SYNC_BRANCH"
+
+          if ! git merge --no-edit FETCH_HEAD; then
+            git diff --name-only --diff-filter=U > conflicts.txt
+            git merge --abort || true
+            echo "conflict=true" >> "$GITHUB_OUTPUT"
+            echo "Merge conflict — see conflicts.txt" >&2
+            exit 1
+          fi
+
+          git push --force origin "HEAD:refs/heads/$SYNC_BRANCH"
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Open or update pull request
+        if: steps.merge.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.SYNC_PAT || secrets.GITHUB_TOKEN }}
+          BEHIND: ${{ steps.merge.outputs.behind }}
+        run: |
+          set -euo pipefail
+
+          EXISTING=$(gh pr list --head "$SYNC_BRANCH" --base main --state open --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTING" ]; then
+            echo "PR #$EXISTING already open — the branch push updated it."
+            exit 0
+          fi
+
+          BODY=$(printf 'Automated merge of `%s` (`%s`) into `main`: %s new upstream commit(s).\n\nReview the diff for anything that clashes with changes this fork carries of its own, then merge.\n' \
+            "$UPSTREAM_URL" "$UPSTREAM_BRANCH" "$BEHIND")
+
+          gh pr create \
+            --base main \
+            --head "$SYNC_BRANCH" \
+            --title "sync: merge $BEHIND commit(s) from upstream" \
+            --body "$BODY"
+
+      - name: Report conflict
+        if: failure() && steps.merge.outputs.conflict == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.SYNC_PAT || secrets.GITHUB_TOKEN }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+
+          TITLE="Upstream sync needs manual resolution"
+          BODY=$(printf 'The scheduled sync from `%s` hit a merge conflict, so no pull request was opened.\n\nConflicting paths:\n\n```\n%s\n```\n\nResolve locally:\n\n```bash\ngit remote add upstream %s\ngit fetch upstream %s\ngit checkout -b sync/upstream-manual origin/main\ngit merge upstream/%s   # resolve, commit, push, open a PR\n```\n\nRun: %s\n' \
+            "$UPSTREAM_URL" "$(cat conflicts.txt)" "$UPSTREAM_URL" "$UPSTREAM_BRANCH" "$UPSTREAM_BRANCH" "$RUN_URL")
+
+          EXISTING=$(gh issue list --state open --search "$TITLE in:title" --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --body "$BODY"
+          else
+            gh issue create --title "$TITLE" --body "$BODY"
+          fi
