@@ -39,23 +39,31 @@ und Migrationstooling sind dokumentiert. Wir müssen den Adapter nicht bauen.
 ## 2. Die vier Schichten
 
 ```
-OpenClaw          Zustellung: Alerts, Wochenreport, Rückfragen vom Handy
+OpenClaw                  Zustellung: Alerts, Reports, Rückfragen vom Handy
     ▲
-Hermes            Ausführung: Orchestrator + parallele Subagents
+    ├── Hermes            Analyse-Runtime: Orchestrator + parallele Subagents
+    │      ├─ ECC         Betriebssystem: Arbeitszyklus, Memory Vault,
+    │      │              Hooks, Cron, Marketing- und Content-Skills
+    │      ├─ claude-seo   Fachabteilung: 25 SEO-Skills + 18 Subagents
+    │      └─ open-seo     Marktdaten und Persistenz: MCP, self-hosted
     │
-    ├─ ECC        Betriebssystem: Arbeitszyklus, Memory Vault, Hooks, Cron,
-    │             Marketing- und Content-Skills
-    ├─ claude-seo Fachabteilung: 25 SEO-Skills + 18 Subagents als SKILL.md
-    └─ open-seo   Marktdaten und Persistenz: MCP-Server, self-hosted
+    └── Claude Code       Reporting-Runtime: Bestandsskills, unverändert
+           └─ weekly-seo-report, searchfit-seo, brightdata-plugin
 ```
 
-**Hermes** ist die einzige Ausführungsebene. Sein Orchestrator-Worker-Modell mit isolierten,
+**Zwei Runtimes, bewusst.** Hermes ist die Analyse-Ebene, Claude Code bleibt die
+Reporting-Ebene. Die Bestandsskills wandern nicht mit — `weekly-seo-report` mit seiner
+ahrefs-, Sistrix-, ClickUp- und Notion-Anbindung läuft, und ein Umzug würde funktionierende
+Integrationen gegen einen experimentellen Adapter tauschen.
+
+**Hermes** trägt die neue Fachlichkeit. Sein Orchestrator-Worker-Modell mit isolierten,
 parallel laufenden Subagents passt genau auf `claude-seo`s `/seo audit`, das bis zu 15
 Subagents gleichzeitig startet. Das ist kein Zufallstreffer, sondern der Grund, warum die
 Kombination trägt.
 
-**OpenClaw** bekommt kein Skill-Set. Es stellt zu, mehr nicht. Wer beides mit Skills
-bestückt, hat zwei Wahrheiten darüber, wie ein Audit läuft.
+**OpenClaw** bekommt kein Skill-Set. Es stellt zu, mehr nicht — und ist damit zugleich die
+einzige Stelle, an der beide Runtimes zusammenlaufen. Wer OpenClaw mit Skills bestückt, hat
+eine dritte Wahrheit darüber, wie ein Audit läuft.
 
 ### Rollen im Team
 
@@ -67,7 +75,8 @@ bestückt, hat zwei Wahrheiten darüber, wie ein Audit läuft.
 | Gedächtnis (quantitativ) | open-seo | Keywords, Rankings, Audit-Läufe |
 | SEO-Fachlichkeit | claude-seo | 18 Spezialisten von technisch bis GEO |
 | Text und Marke | ECC-Marketing-Skills | Artikel, Brand Voice, Repurposing |
-| Meldewesen | OpenClaw | Alerts und Reports zustellen |
+| Reporting | Claude Code (Bestand) | Wochenbericht, ClickUp, Notion — bleibt wo es ist |
+| Meldewesen | OpenClaw | Alerts und Reports zustellen, Klammer über beide Runtimes |
 
 ---
 
@@ -96,12 +105,18 @@ fremde Domain braucht — nicht als Standardeinstieg.
 
 ### Namenskollisionen
 
-Nach der Integration existieren vier Skills, deren Beschreibung auf „SEO-Audit" triggert:
+Es existieren vier Skills, deren Beschreibung auf „SEO-Audit" triggert:
 `searchfit-seo:seo-audit`, `brightdata-plugin:seo-audit`, claude-seos `/seo audit` und
 open-seos `seo-audit`. Ein Agent, der frei wählen darf, wählt hier zufällig.
 
-Deshalb ein Router-Skill `kosmonaut-seo` als einziger Einstiegspunkt, der die Tabelle oben
-als Entscheidungslogik trägt. Alles andere ruft er auf.
+Die Runtime-Trennung entschärft das zur Hälfte: die beiden Bestandsskills leben in Claude
+Code, die beiden neuen in Hermes. Innerhalb von Hermes bleibt die Wahl zwischen claude-seo
+und open-seo — dafür der Router-Skill `kosmonaut-seo` als einziger Einstiegspunkt, der die
+Tabelle oben als Entscheidungslogik trägt.
+
+Was der Router **nicht** kann: über die Runtime-Grenze rufen. Ein Auftrag, der Analyse und
+Wochenbericht verbindet, braucht zwei Aufrufe in zwei Runtimes. Die Klammer ist OpenClaw
+oder ihr selbst — nicht der Router.
 
 ---
 
@@ -210,12 +225,12 @@ Nutzerweiter Memory-Zugriff erfordert zusätzlich `ECC_MEMORY_ALLOW_USER_SCOPE=1
 
 ## 5. Betrieb
 
-| Wann | Was | Wer führt aus | Wer bekommt es |
-|---|---|---|---|
-| täglich | `/seo drift compare` je Kundendomain | Hermes-Cron | OpenClaw, nur bei Abweichung |
-| wöchentlich | bestehender SEO-Wochenbericht | `weekly-seo-report` | OpenClaw + Notion + ClickUp |
-| monatlich | `/seo audit` je Mandat | Hermes, parallel | PDF via `google_report.py` |
-| anlassbezogen | Cluster, Content-Brief, Competitor | Hermes über Router | direkt im Chat |
+| Wann | Was | Runtime | Wer führt aus | Wer bekommt es |
+|---|---|---|---|---|
+| täglich | `/seo drift compare` je Kundendomain | Hermes | Cron | OpenClaw, nur bei Abweichung |
+| wöchentlich | bestehender SEO-Wochenbericht | **Claude Code** | `weekly-seo-report` | OpenClaw + Notion + ClickUp |
+| monatlich | `/seo audit` je Mandat | Hermes | Orchestrator, parallel | PDF via `google_report.py` |
+| anlassbezogen | Cluster, Content-Brief, Competitor | Hermes | Router | direkt im Chat |
 
 Rank-Tracker laufen unabhängig davon in open-seo weiter — das ist der Teil, den kein
 Agent-Lauf ersetzen kann, weil er kontinuierliche Messung braucht.
@@ -240,11 +255,11 @@ Agent-Lauf ersetzen kann, weil er kontinuierliche Messung braucht.
 5. **Docker-Self-Hosting hat keine Auth.** Siehe Schritt 4. Vor dem ersten Kundenmandat
    entscheiden.
 
-6. **Offen: die Runtime-Grenze.** Die Bestandsskills (`weekly-seo-report`, ClickUp- und
-   Notion-Anbindung) leben in Claude Code, das neue Team in Hermes. Ein Router kann nicht
-   über Runtime-Grenzen hinweg aufrufen. Entweder wandert das Reporting mit nach Hermes,
-   oder Claude Code bleibt bewusst die Reporting-Runtime und OpenClaw verbindet beide. Diese
-   Entscheidung steht noch aus.
+6. **Kein gemeinsamer Einstiegspunkt über beide Runtimes.** Folge der Entscheidung, die
+   Bestandsskills in Claude Code zu belassen. Wer beides in einem Auftrag braucht, ruft
+   zweimal. Der Preis ist bewusst gezahlt: funktionierende ahrefs-, Sistrix-, ClickUp- und
+   Notion-Integrationen gegen einen experimentellen Hermes-Adapter zu tauschen wäre teurer.
+   Prüfpunkt: falls Hermes' Adapter stabil wird, den Umzug neu bewerten.
 
 ---
 
