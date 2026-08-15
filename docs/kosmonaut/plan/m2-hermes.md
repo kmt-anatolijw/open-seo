@@ -85,7 +85,15 @@ Die Arbeitspakete oben gelten nur noch mit diesen Korrekturen.
    Runtime-Gates wiederholen (Persistenzbeweis). Router-Routen nach open-seo müssen
    bis M3 sauber fail-closed enden.
 7. **Skill-Manifest festlegen:** Plan sagt 25 Skills, portability_check zählt
-   33 SKILL.md (Extension-Mirrors). Vor der Abnahme das Soll-Manifest fixieren.
+   33 SKILL.md (Extension-Mirrors). Vor der Abnahme das Soll-Manifest fixieren —
+   erledigt: [m2-manifest.md](./m2-manifest.md) (26 Skills, 18 Agents, gepinnte
+   Quellen, Ausschlüsse).
+8. **Host-Footprint minimieren:** Deploys laufen ausschließlich über GitHub Actions
+   mit geschlossener Datei-Allowlist; neue Host-Artefakte müssen dort eingetragen
+   werden, und zwei der drei betroffenen Dateien liegen bewusst außerhalb des
+   CI-Pfads — jede Erweiterung kostet ein manuelles Operator-Fenster. Deshalb:
+   alles ins abgeleitete Image plus das eine Volume; keine zusätzlichen
+   Host-Dateien, wenn irgend vermeidbar.
 
 **Prozess:** M2 wird von der Hermes-Config-Session über deren GSD-Flow ausgeführt
 (eigene Phase, Plan-Gate mit Cross-AI-Review, Build-Gate mit hermes-security) —
