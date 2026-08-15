@@ -63,9 +63,11 @@ Die Arbeitspakete oben gelten nur noch mit diesen Korrekturen.
 
 1. **Build-Zeit statt Laufzeit:** ECC-CLI (fixe Version) und claude-seo-Venv/Chromium
    gehören in ein vom gepinnten Image abgeleitetes Image; nur Config, Skills und
-   Memory in persistente Volumes. Achtung: abgeleitetes Image = Fork eines fremden
-   gepinnten Images mit eigenem Build-/Update-Pfad — Architekturentscheidung, vor
-   Start klären.
+   Memory in persistente Volumes. Abgeleitetes Image = Fork eines fremden gepinnten
+   Images mit eigenem Build-/Update-Pfad (bei Upstream-Releases: Digest aktualisieren,
+   Image neu bauen). **Entschieden 15.08.2026 (User): abgeleitetes Image — genehmigt.**
+   Build auf einer Maschine mit freiem Internet (lokal/CI); die Egress-Allowlist im
+   Betrieb wird dafür nicht aufgeweicht.
 2. **ECC-Checkout ist Voraussetzung:** `./install.sh` und `node tests/run-all.js`
    brauchen ein gepinntes ECC-Repo (`affaan-m/ECC`, Commit/Tag festlegen).
    „Setzt voraus: nichts" stimmt nicht; `npm install -g ecc-universal` liefert den
