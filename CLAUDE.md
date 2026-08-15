@@ -49,5 +49,6 @@ Changes to `.greptile/**`, `AGENTS.md`, `CLAUDE.md`, `.agents/skills/**`, and `.
 - pnpm is pinned via `packageManager` (10.30.1); sharp's install script is
   deliberately ignored in `pnpm-workspace.yaml` (transitive miniflare/wrangler
   dep only — pnpm 11 errors without an explicit decision).
-- Milestone masterplan: `docs/kosmonaut/plan/README.md`. Live worker:
-  `open-seo-selfhost.kosmonaut-account.workers.dev`.
+- Milestone masterplan: `docs/kosmonaut/plan/README.md`. Live app:
+  `https://openseo.kosmonaut.io` (custom domain via `SELFHOST_DOMAIN` in
+  `.env.selfhost`; workers.dev subdomain disabled by the deploy).

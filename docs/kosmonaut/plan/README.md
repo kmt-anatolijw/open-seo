@@ -46,9 +46,16 @@ das Ganze ab.
 Den Status pflegt der Orchestrator in dieser Tabelle: offen → läuft → fertig, mit Datum.
 Übergabewerte — etwa den Worker-Hostname aus M1 — hält er beim Abhaken ebenfalls hier fest.
 
-Übergabewerte aus M1: Worker-Hostname `open-seo-selfhost.kosmonaut-account.workers.dev`,
-Zero-Trust-Team `kmt-base.cloudflareaccess.com`, Access-App `open-seo-selfhost.kosmonaut-account.workers.dev`
-(Policy `SelfHostAllow`, handverwaltet — E-Mail-Allowlist lebt in dieser Policy, nicht in `ACCESS_ALLOWED_EMAILS`).
+Übergabewerte aus M1 (aktualisiert 16.08.2026 nach Domain-Umzug): App-URL
+`https://openseo.kosmonaut.io` (Custom Domain via `SELFHOST_DOMAIN` in `.env.selfhost`;
+die frühere workers.dev-URL ist deaktiviert), Zero-Trust-Team `kmt-base.cloudflareaccess.com`,
+Access-App deckt beide Hostnames (Policy `SelfHostAllow`, handverwaltet — E-Mail-Allowlist
+lebt in dieser Policy, nicht in `ACCESS_ALLOWED_EMAILS`).
+
+> **Offener Punkt für M3:** Super Bot Fight Mode der Zone `kosmonaut.io`
+> („Definitely automated: Managed Challenge") challengt headless Clients auf der
+> Custom Domain — betrifft potenziell den MCP-Zugriff auf `/mcp`. Entscheidung
+> (workers.dev nur für MCP reaktivieren vs. SBFM lockern) fällt beim M3-Setup.
 
 ## Eure Schritte auf einen Blick
 

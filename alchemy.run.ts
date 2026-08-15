@@ -351,10 +351,20 @@ export default Alchemy.Stack(
       workersSubdomain,
     );
 
+    // Self-host may serve a custom domain instead of workers.dev (the zone
+    // must live in the same account). When set, the workers.dev subdomain is
+    // disabled so the Access application hostname list stays the only entry.
+    const selfhostDomain = yield* optionalVar("SELFHOST_DOMAIN");
+
     const app = yield* Cloudflare.Worker("open-seo", {
       name: workerName(stage),
       // Prod serves the real domains; the zone is inferred from the hostname.
-      domain: prod ? ["app.openseo.so", "www.app.openseo.so"] : undefined,
+      domain: prod
+        ? ["app.openseo.so", "www.app.openseo.so"]
+        : selfhostDomain
+          ? [selfhostDomain]
+          : undefined,
+      ...(!prod && selfhostDomain ? { url: false } : {}),
       // Prebuilt worker from `vite build` (@cloudflare/vite-plugin). The entry
       // exports the DO + WorkflowEntrypoint classes (re-exported by
       // src/server.ts), which `bundle: false` requires. Sibling chunks under

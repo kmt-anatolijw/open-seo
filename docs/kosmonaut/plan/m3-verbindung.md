@@ -18,9 +18,15 @@
 
 ## Arbeitspakete
 
-1. `https://<worker-hostname>/mcp` in `~/.hermes/config.yaml` eintragen. Das exakte
+1. `https://openseo.kosmonaut.io/mcp` in `~/.hermes/config.yaml` eintragen. Das exakte
    Format des Eintrags aus ECCs `HERMES-SETUP.md` oder einer bestehenden `config.yaml`
    ablesen — nicht raten.
+   **Vorab klären (Entscheidung vom 16.08.2026 vertagt):** Super Bot Fight Mode der
+   Zone `kosmonaut.io` („Definitely automated: Managed Challenge") challengt headless
+   Clients auf der Custom Domain. Falls der MCP-Handshake daran scheitert: entweder
+   die workers.dev-Subdomain nur für den MCP-Endpoint reaktivieren (`url: true`,
+   bleibt Access-geschützt, umgeht die Zone-WAF) oder SBFM zonenweit lockern —
+   Trade-off betrifft die Firmen-Website, Entscheidung beim User.
 2. Die beiden [DU]-Schritte anfordern und begleiten.
 3. `whoami` über den MCP aus Hermes heraus ausführen; Ergebnis an den Orchestrator.
 
