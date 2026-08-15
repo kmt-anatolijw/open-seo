@@ -37,9 +37,9 @@ Während des Laufs:
 
 ## Abnahme
 
-- [ ] Anmeldung über Access funktioniert; eine nicht gelistete Adresse wird abgewiesen
-- [ ] `https://<worker-hostname>/api/health` meldet die Datenbank als bereit
-- [ ] Worker-Hostname an den Orchestrator übergeben
+- [x] Anmeldung über Access funktioniert; eine nicht gelistete Adresse wird abgewiesen (anonym → 302 auf kmt-base.cloudflareaccess.com, geprüft 15.08.2026)
+- [x] `https://open-seo-selfhost.kosmonaut-account.workers.dev/api/health` meldet `status: ok` (auth, dataforseo, database)
+- [x] Worker-Hostname an den Orchestrator übergeben: `open-seo-selfhost.kosmonaut-account.workers.dev`
 
 ## Bekannte Fehlerbilder
 
@@ -49,3 +49,17 @@ Während des Laufs:
 | Deploy scheitert am R2-Bucket                    | R2 im Konto nie aktiviert     | R2 einmal im Dashboard öffnen, Zahlungsmethode hinterlegen                             |
 
 Teil des [Masterplans](./README.md).
+
+## Ist-Stand der Umsetzung (15.08.2026) — Abweichungen vom Plan
+
+- Auth lief über `alchemy login` (OAuth, Default-Scopes) statt API-Token; der
+  Scope `access:write` ließ sich im Configure-Picker nicht zuverlässig setzen.
+- Deshalb der im Deploy-Skript vorgesehene Alternativpfad: Access-Application
+  `open-seo-selfhost.kosmonaut-account.workers.dev` (Policy `SelfHostAllow`,
+  nur aw@kosmonaut.io) von Hand im Zero-Trust-Dashboard angelegt; `TEAM_DOMAIN`
+  (mit https://-Präfix!) und `POLICY_AUD` in `.env.selfhost` → Alchemy
+  provisioniert kein Access. Die E-Mail-Allowlist lebt jetzt in der
+  Access-Policy, Änderungen dort pflegen (nicht `ACCESS_ALLOWED_EMAILS`).
+- `pnpm-workspace.yaml`: sharp-Build bewusst ignoriert (nur transitive
+  miniflare/wrangler-Abhängigkeit; pnpm 11 erzwingt sonst eine Entscheidung).
+- Kein API-Token erzeugt — nichts zu löschen.

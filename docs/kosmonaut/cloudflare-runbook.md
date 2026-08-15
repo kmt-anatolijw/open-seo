@@ -75,6 +75,22 @@ Optional, für den Agenturbetrieb erwägenswert: `OPENSEO_TELEMETRY_DISABLED=1`.
 Telemetrie sendet laut Doku keine URLs, Keywords oder E-Mails, aber Zählwerte an eine
 Install-ID.
 
+**Bewährter Alternativpfad (so lief M1):** Fehlt dem OAuth-Login der Scope
+`access:write` (der Configure-Picker setzt ihn leicht daneben), Access-Application
+von Hand im Zero-Trust-Dashboard anlegen — Self-hosted-App auf
+`open-seo-<stage>.<subdomain>.workers.dev`, Allow-Policy mit den erlaubten
+E-Mails — und zwei weitere Variablen setzen:
+
+| Variable      | Zweck                                                                                      |
+| ------------- | ------------------------------------------------------------------------------------------ |
+| `TEAM_DOMAIN` | Zero-Trust-Team, **volle URL mit https://**, z. B. `https://kmt-base.cloudflareaccess.com` |
+| `POLICY_AUD`  | AUD-Tag der App (Zero Trust → Applications → App → Additional settings)                    |
+
+Sind beide gesetzt, provisioniert der Deploy kein Access — die E-Mail-Allowlist
+lebt dann in der Access-Policy im Dashboard, `ACCESS_ALLOWED_EMAILS` ist wirkungslos.
+Häufigster Fehler: `TEAM_DOMAIN` ohne `https://` → `/api/health` meldet einen
+Auth-Konfigurationsfehler statt `ok`.
+
 ## Schritt 4 — Deployen
 
 ```bash
