@@ -52,10 +52,10 @@ die frühere workers.dev-URL ist deaktiviert), Zero-Trust-Team `kmt-base.cloudfl
 Access-App deckt beide Hostnames (Policy `SelfHostAllow`, handverwaltet — E-Mail-Allowlist
 lebt in dieser Policy, nicht in `ACCESS_ALLOWED_EMAILS`).
 
-> **Offener Punkt für M3:** Super Bot Fight Mode der Zone `kosmonaut.io`
-> („Definitely automated: Managed Challenge") challengt headless Clients auf der
-> Custom Domain — betrifft potenziell den MCP-Zugriff auf `/mcp`. Entscheidung
-> (workers.dev nur für MCP reaktivieren vs. SBFM lockern) fällt beim M3-Setup.
+> **Gelöst (16.08.2026):** SBFM auf `kosmonaut.io` blockt headless Clients —
+> deshalb zweiter Worker-Hostname `openseo.tiaex.ai` (Zone ohne SBFM) für
+> MCP/headless. Managed OAuth ist aktiviert; `/mcp` liefert dort den korrekten
+> Bearer/Discovery-Handshake. **MCP-Endpoint für M3: `https://openseo.tiaex.ai/mcp`.**
 
 ## Eure Schritte auf einen Blick
 

@@ -351,20 +351,25 @@ export default Alchemy.Stack(
       workersSubdomain,
     );
 
-    // Self-host may serve a custom domain instead of workers.dev (the zone
-    // must live in the same account). When set, the workers.dev subdomain is
-    // disabled so the Access application hostname list stays the only entry.
+    // Self-host may serve custom domains instead of workers.dev (comma-
+    // separated; every zone must live in the same account). When set, the
+    // workers.dev subdomain is disabled so the Access application hostname
+    // list stays the only entry. Second hostname exists for headless/MCP
+    // clients on a zone without Super Bot Fight Mode.
     const selfhostDomain = yield* optionalVar("SELFHOST_DOMAIN");
+    const selfhostDomains = selfhostDomain
+      ? selfhostDomain.split(",").map((d) => d.trim()).filter(Boolean)
+      : [];
 
     const app = yield* Cloudflare.Worker("open-seo", {
       name: workerName(stage),
       // Prod serves the real domains; the zone is inferred from the hostname.
       domain: prod
         ? ["app.openseo.so", "www.app.openseo.so"]
-        : selfhostDomain
-          ? [selfhostDomain]
+        : selfhostDomains.length
+          ? selfhostDomains
           : undefined,
-      ...(!prod && selfhostDomain ? { url: false } : {}),
+      ...(!prod && selfhostDomains.length ? { url: false } : {}),
       // Prebuilt worker from `vite build` (@cloudflare/vite-plugin). The entry
       // exports the DO + WorkflowEntrypoint classes (re-exported by
       // src/server.ts), which `bundle: false` requires. Sibling chunks under

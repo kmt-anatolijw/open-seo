@@ -18,20 +18,17 @@
 
 ## Arbeitspakete
 
-1. `https://openseo.kosmonaut.io/mcp` in `~/.hermes/config.yaml` eintragen. Das exakte
+1. `https://openseo.tiaex.ai/mcp` in `~/.hermes/config.yaml` eintragen. Das exakte
    Format des Eintrags aus ECCs `HERMES-SETUP.md` oder einer bestehenden `config.yaml`
    ablesen — nicht raten.
-   **Vorab klären (Entscheidung vom 16.08.2026 vertagt):** Super Bot Fight Mode der
-   Zone `kosmonaut.io` („Definitely automated: Managed Challenge") challengt headless
-   Clients auf der Custom Domain. Falls der MCP-Handshake daran scheitert,
-   bevorzugter Fallback (User-Vorgabe 16.08.2026): **`openseo.tiaex.ai`** als
-   zweiten Worker-Hostname anbinden — die Zone `tiaex.ai` liegt im selben Account,
-   ist Free-Plan **ohne** Super Bot Fight Mode (verifiziert 16.08.2026: nur Managed
-   Ruleset aktiv) und challengt headless Clients nicht. Umsetzung: Hostname in
-   `alchemy.run.ts` als zweite Domain ergänzen + in der Access-App als weiteren
-   Public hostname eintragen; Access-Schutz bleibt voll erhalten.
-   Nachrangige Alternativen: workers.dev-Subdomain nur für MCP reaktivieren, oder
-   SBFM auf kosmonaut.io zonenweit lockern (Trade-off Firmen-Website).
+   **Gelöst (16.08.2026):** Super Bot Fight Mode auf `kosmonaut.io` blockiert
+   headless Clients (empirisch: `/mcp`-POST → 403 `cf-mitigated: challenge`).
+   Deshalb ist `openseo.tiaex.ai` als zweiter Worker-Hostname angebunden
+   (`SELFHOST_DOMAIN` kommasepariert; Access-App deckt beide Hostnames) —
+   Zone ohne SBFM, verifiziert: `/mcp`-POST liefert dort 401 mit
+   `WWW-Authenticate: Bearer` + `resource_metadata` (Managed-OAuth-Discovery,
+   aktiviert 16.08.2026). UI läuft auf `openseo.kosmonaut.io`, MCP auf
+   `openseo.tiaex.ai` — Bot-Schutz der Firmen-Website unangetastet.
 2. Die beiden [DU]-Schritte anfordern und begleiten.
 3. `whoami` über den MCP aus Hermes heraus ausführen; Ergebnis an den Orchestrator.
 

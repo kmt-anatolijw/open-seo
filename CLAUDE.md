@@ -50,5 +50,7 @@ Changes to `.greptile/**`, `AGENTS.md`, `CLAUDE.md`, `.agents/skills/**`, and `.
   deliberately ignored in `pnpm-workspace.yaml` (transitive miniflare/wrangler
   dep only — pnpm 11 errors without an explicit decision).
 - Milestone masterplan: `docs/kosmonaut/plan/README.md`. Live app:
-  `https://openseo.kosmonaut.io` (custom domain via `SELFHOST_DOMAIN` in
-  `.env.selfhost`; workers.dev subdomain disabled by the deploy).
+  `https://openseo.kosmonaut.io` (UI) + `https://openseo.tiaex.ai` (headless/MCP;
+  kosmonaut.io's Super Bot Fight Mode challenges non-browser clients). Custom
+  domains via comma-separated `SELFHOST_DOMAIN` in `.env.selfhost`; workers.dev
+  subdomain disabled by the deploy. Access Managed OAuth is enabled.
