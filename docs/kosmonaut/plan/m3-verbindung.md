@@ -23,10 +23,15 @@
    ablesen — nicht raten.
    **Vorab klären (Entscheidung vom 16.08.2026 vertagt):** Super Bot Fight Mode der
    Zone `kosmonaut.io` („Definitely automated: Managed Challenge") challengt headless
-   Clients auf der Custom Domain. Falls der MCP-Handshake daran scheitert: entweder
-   die workers.dev-Subdomain nur für den MCP-Endpoint reaktivieren (`url: true`,
-   bleibt Access-geschützt, umgeht die Zone-WAF) oder SBFM zonenweit lockern —
-   Trade-off betrifft die Firmen-Website, Entscheidung beim User.
+   Clients auf der Custom Domain. Falls der MCP-Handshake daran scheitert,
+   bevorzugter Fallback (User-Vorgabe 16.08.2026): **`openseo.tiaex.ai`** als
+   zweiten Worker-Hostname anbinden — die Zone `tiaex.ai` liegt im selben Account,
+   ist Free-Plan **ohne** Super Bot Fight Mode (verifiziert 16.08.2026: nur Managed
+   Ruleset aktiv) und challengt headless Clients nicht. Umsetzung: Hostname in
+   `alchemy.run.ts` als zweite Domain ergänzen + in der Access-App als weiteren
+   Public hostname eintragen; Access-Schutz bleibt voll erhalten.
+   Nachrangige Alternativen: workers.dev-Subdomain nur für MCP reaktivieren, oder
+   SBFM auf kosmonaut.io zonenweit lockern (Trade-off Firmen-Website).
 2. Die beiden [DU]-Schritte anfordern und begleiten.
 3. `whoami` über den MCP aus Hermes heraus ausführen; Ergebnis an den Orchestrator.
 
