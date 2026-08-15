@@ -1,153 +1,129 @@
 ---
 name: kosmonaut-devops
-description: "Infrastruktur für den Kosmonaut SEO-Stack: Hetzner-Server bereitstellen und härten, open-seo als Docker-Container deployen und aktualisieren, Reverse Proxy mit TLS und Zugangsschutz einrichten, Backups des Datenvolumes samt Wiederherstellungstest, Überwachung und Security-Review vor jeder Freigabe nach außen. Triggert auf: Server, Hetzner, Deployment, Docker, Compose, Reverse Proxy, Caddy, TLS, Firewall, Backup, Restore, Monitoring, Update, Härtung, Absicherung, Infrastruktur, DevOps."
+description: "Betrieb der open-seo-Instanz auf Cloudflare für den Kosmonaut SEO-Stack: deployen und aktualisieren über Alchemy, Cloudflare Access und Managed OAuth konfigurieren, MCP-Anbindung an Hermes, Secrets- und Zugriffsverwaltung, Fehlersuche über Worker-Logs, Abnahme vor dem ersten Kundenmandat. Triggert auf: Deployment, deployen, Cloudflare, Worker, Alchemy, Access, Zero Trust, MCP-Anbindung, Update, Rollout, Infrastruktur, DevOps, Zugriff, Secrets, Logs."
 user-invocable: true
 argument-hint: "[aufgabe]"
 license: MIT
 metadata:
   author: Kosmonaut
-  version: "1.0.0"
+  version: "2.0.0"
   category: infrastructure
 ---
 
 # Kosmonaut DevOps
 
-Verantwortet die Infrastruktur hinter dem SEO-Team: den Hetzner-Server, auf dem open-seo
-läuft, und alles, was ihn sicher und verfügbar hält.
+Verantwortet die open-seo-Instanz, an der das SEO-Team hängt: Deployment auf Cloudflare,
+Zugriff, Aktualisierung, Fehlersuche.
+
+Vollständige Schrittfolge im [Cloudflare-Runbook](../../cloudflare-runbook.md).
 
 ## Feste Regeln
 
-Diese gelten ohne Ausnahme. Sie sind kein Stilfrage, sondern verhindern Datenverlust und
-offene Türen.
+1. **Keine Secrets anfassen.** Schreibe `.env.selfhost` als Vorlage mit Platzhaltern und
+   sage, welcher Wert wohin gehört. Trage nie einen echten Schlüssel ein, gib keinen in
+   einer Antwort wieder, und lies keine `.env` aus, um ihren Inhalt zu zitieren.
+2. **`alchemy destroy` nur nach ausdrücklicher Aufforderung.** Der Befehl löscht die
+   stage-suffigierten D1-, KV- und R2-Ressourcen samt aller Daten.
+3. **Zugriff wird in `.env.selfhost` gepflegt, nicht im Dashboard.** Änderungen an der
+   Access-Policy im UI werden beim nächsten Deploy überschrieben.
+4. **Die IDs in `wrangler.jsonc` bleiben unverändert.** Sie gelten für lokale Entwicklung
+   und Docker; miniflare leitet daraus per HMAC seine Dateinamen ab. Cloudflare-Deployments
+   laufen ohnehin über `alchemy.run.ts` und lesen sie nicht.
+5. **Vor jedem Deploy ansagen, was er bewirkt.** Nenne den Befehl und was passiert, wenn er
+   fehlschlägt.
 
-1. **Keine Secrets anfassen.** Schreibe `.env`-Vorlagen mit Platzhaltern und sage, welcher
-   Wert wohin gehört. Trage nie einen echten Schlüssel ein, gib keinen in einer Antwort
-   wieder, und lies keine `.env` aus, um ihren Inhalt zu zitieren.
-2. **Nie `docker compose down -v`.** Das `-v` löscht das Volume `open_seo_data` und damit die
-   gesamte Datenbank. Zum Stoppen `docker compose down`, zum Neustart `up -d`.
-3. **Die IDs in `wrangler.jsonc` bleiben unverändert.** miniflare leitet seine Dateinamen per
-   HMAC aus `id` und `database_id` ab. Ändert sie jemand, sind alle bestehenden Daten
-   verwaist — ohne Fehlermeldung, die Anwendung startet einfach leer.
-4. **Nichts nach außen öffnen, solange keine Authentifizierung davor steht.** Die Anwendung
-   läuft mit `AUTH_MODE=local_noauth` und hat keinerlei eigenen Zugangsschutz.
-5. **Vor jeder destruktiven Aktion ein Backup nachweisen.** Nicht behaupten — den Pfad und
-   den Zeitstempel des Backups nennen, dann handeln.
-6. **Änderungen am Server ansagen, bevor sie laufen.** Nenne den Befehl, was er bewirkt und
-   was passiert, wenn er fehlschlägt.
+## Was hier läuft
 
-## Was auf diesem Server läuft
+open-seo als Cloudflare Worker, provisioniert über Alchemy. Ein `pnpm deploy:selfhost --yes`
+legt D1, KV, R2, den Worker **und** die Cloudflare-Access-Application an, die genau die
+Adressen aus `ACCESS_ALLOWED_EMAILS` durchlässt.
 
-open-seo im Docker-Container. Die Eigenheiten sind aus `Dockerfile.selfhost`,
-`compose.yaml` und `docker-entrypoint.sh` belegt und bestimmen fast jede Entscheidung:
+Die Anwendung bindet Workflows (`SiteAuditWorkflow`, `RankCheckWorkflow`), drei Durable
+Objects, D1, zwei KV-Namespaces und R2 und importiert quer durch die Services aus
+`cloudflare:workers`. Deshalb ist Cloudflare kein Hosting-Geschmack, sondern die Laufzeit,
+für die die Anwendung geschrieben ist. **Vercel scheidet aus** — für Durable Objects und
+Workflows gibt es dort kein Gegenstück.
 
-| Eigenschaft                                 | Konsequenz für den Betrieb                                |
-| ------------------------------------------- | --------------------------------------------------------- |
-| Startet `vite preview` über miniflare       | Cloudflares Laufzeit auf eigener Hardware, nicht die Edge |
-| Volume `open_seo_data:/app/.wrangler`       | **Die komplette Datenbank.** Einziges Backup-Ziel         |
-| Port-Binding `127.0.0.1:${PORT}`            | Nur Loopback — Zugriff ausschließlich über den Proxy      |
-| `AUTH_MODE=local_noauth`                    | Kein Zugangsschutz in der Anwendung                       |
-| SSR-Build beim Containerstart, ~7400 Module | Minutenlanger Erststart, RAM-hungrig                      |
-| Healthcheck mit 300 s `start-period`        | Ein „unhealthy" in den ersten fünf Minuten ist normal     |
-| `image:` zeigt per Default auf Upstream     | Für den Fork `OPEN_SEO_IMAGE` setzen                      |
+### Warum nicht selbst hosten
 
-### Die Cron-Trigger feuern nicht — das ist bekannt und beabsichtigt umgangen
+Der Docker-Pfad ist technisch möglich (`Dockerfile.selfhost` fährt workerd im Container),
+kostet aber zwei Plattformfunktionen:
 
-`wrangler.jsonc` deklariert `"crons": ["*/5 * * * *", "17 3 * * *"]`, aber der
-Vite-Cloudflare-Plugin validiert das Feld nur und setzt keine Scheduled-Events ab. Der
-`scheduled`-Handler in `src/server.ts` wird im Container also **nie** aufgerufen.
+- `AUTH_MODE=local_noauth` — kein Zugangsschutz, alles muss davor gebaut werden
+- Die Cron-Trigger feuern nicht. Der Container serviert über `vite preview`, und der
+  Vite-Cloudflare-Plugin validiert `triggers.crons` nur, ohne Scheduled-Events abzusetzen.
+  `runScheduledRankChecks` und `reconcileStaleAudits` haben genau einen Aufrufer, den
+  `scheduled`-Handler — Rank-Tracking liefe still ins Leere.
 
-Betroffen sind `runScheduledRankChecks` und `reconcileStaleAudits`. Die Rank-Checks werden
-stattdessen von **Hermes-Cron über das MCP-Tool `run_rank_tracker`** ausgelöst — siehe
-`../cron-jobs.md`. Das Aufräumen hängengebliebener Audits hat kein Gegenstück und bleibt
-manuell.
-
-Wer hier „das läuft doch per Cron" annimmt, baut ein Rank-Tracking, das nie misst. Nicht
-reparieren wollen, indem der Container auf `wrangler dev` umgestellt wird — das ist ein
-Entwicklungsserver und gehört nicht in den Produktivbetrieb.
+Beides fällt auf Cloudflare weg. Wer das Thema wieder aufmacht, sollte diese zwei Punkte
+kennen, bevor er einen Server bestellt.
 
 ## Aufgabenbereiche
 
-### Server bereitstellen
-
-Hetzner Cloud, Standort Falkenstein oder Nürnberg — EU-Residenz ist der Grund, warum diese
-Instanz nicht bei Cloudflare läuft. **CPX31** (4 vCPU, 8 GB, 160 GB) als Untergrenze: der
-Boot-Build braucht den Speicher, die `.npmrc` hebt eigens Nodes Heap-Limit an, weil er sonst
-abstürzt. Ubuntu 24.04 LTS.
-
-### Härten
-
-SSH nur mit Schlüssel, Root-Login und Passwort-Authentifizierung aus, unprivilegierter
-Deploy-Benutzer mit Docker-Gruppe, Firewall mit ausschließlich 22, 80 und 443, `fail2ban`,
-unattended-upgrades. Prüfen, ob die Hetzner-Cloud-Firewall im Panel schon filtert — dann
-nicht zusätzlich `ufw` aufsetzen, sonst sucht man Fehler an zwei Stellen.
-
 ### Deployen und aktualisieren
 
-Der Fork veröffentlicht kein eigenes Image, weil `docker-image.yml` auf das Upstream-Repo
-gegated ist. Entweder auf dem Server bauen oder ein eigener Workflow nach GHCR. Bevorzugt
-GHCR, dann ist ein Update `docker compose pull && docker compose up -d` statt eines Builds,
-der im Produktivbetrieb den Speicher sprengen kann.
+`pnpm deploy:selfhost --yes` nach jedem Fork-Merge. Voraussetzung ist eine Anmeldung mit
+`access:write`-Scope — ohne die kann der Deploy die Access-Application nicht anlegen, und
+ein bloßes `pnpm alchemy login` fragt die Scopes nicht erneut ab. Dafür
+`pnpm alchemy login --configure`.
 
-Vor jedem Update: Backup. Nach jedem Update: Healthcheck und ein Aufruf gegen
-`/api/health`, der die Datenbank als bereit meldet.
+Nach dem Deploy: Worker-URL öffnen, über Access anmelden, `/api/health` prüfen.
 
-### Zugang absichern
+### Zugriff verwalten
 
-Caddy als Reverse Proxy — automatisches Let's-Encrypt-TLS, deutlich weniger Konfiguration
-als nginx mit certbot. Davor eine Authentifizierung, weil die Anwendung keine hat.
+Teammitglied aufnehmen oder entfernen heißt: `ACCESS_ALLOWED_EMAILS` in `.env.selfhost`
+ändern und neu deployen. Nicht im Zero-Trust-Dashboard editieren — das hält bis zum
+nächsten Deploy.
 
-Zwei Wege, beim Aufsetzen gegeneinanderstellen und die Wahl begründen: **Cloudflare Tunnel
-mit Access** — kein offener Port, E-Mail-Allowlist, die Daten bleiben trotzdem auf dem
-Server, nur der Zugriffsweg läuft über Cloudflare. Oder **Authentifizierung direkt in
-Caddy**, vollständig in eigener Hand, mehr Handarbeit.
+Alle Zugelassenen teilen sich **einen** Workspace und sehen dieselben Projekte. Es gibt
+keine Mandantentrennung innerhalb einer Instanz. Kommt die Anforderung auf, Kundendaten zu
+trennen: mehrere Deployments, nicht Rollen innerhalb einer Instanz.
 
-### Sichern
+### MCP an Hermes anbinden
 
-Ziel ist das Volume `open_seo_data`. Darin liegen Projekte, Keywords, Rank-Historie, Audits
-und die Google-OAuth-Tokens der Kunden.
+Managed OAuth ist für MCP-Clients erforderlich und standardmäßig aus. Fehlt es, meldet sich
+der Client an und zeigt trotzdem **keine Tools** — das sieht nach einem defekten Server aus,
+ist aber der Schalter in Zero Trust unter `Access controls` → Application →
+`Additional settings` → `OAuth`. Dazu die Loopback-Redirect-URIs freigeben, weil CLI-Agents
+`http://localhost:PORT/callback` registrieren.
 
-Täglich, bei pausiertem Container, verschlüsselt, auf eine Hetzner Storage Box oder einen
-S3-kompatiblen Bucket, mit Aufbewahrungsfenster. **Ein Backup ohne bestandenen
-Wiederherstellungstest ist kein Backup** — den Test einmal wirklich durchführen und das
-Ergebnis festhalten.
+Endpunkt ist `https://<worker-hostname>/mcp`. Die `oseo_`-API-Keys greifen hier nicht; sie
+gelten nur für die gehostete Variante. Für die geplanten Läufe braucht es eine einmalige
+interaktive Anmeldung, danach erneuert der Client über das Refresh-Token.
 
-### Überwachen
+Läuft die Access-Sitzung ab, verlieren die Cron-Jobs **still** den Zugriff. Das ist der
+Grund, warum der Credit-Wächter in `../../cron-jobs.md` einen Auth-Fehler ausdrücklich anders
+meldet als einen niedrigen Guthabenstand.
 
-Healthcheck-Status, freier Plattenplatz (das Volume wächst mit der Rank-Historie),
-Logrotation, Erreichbarkeit von außen, Gültigkeit des Zertifikats.
+### Fehler suchen
 
-### Security-Review vor jeder Freigabe
+Worker-`Logs` im Dashboard oder `pnpm exec wrangler tail`. `/api/health` meldet
+Laufzeitkonfiguration und Datenbankstatus und ist der erste Griff bei „die App tut nicht".
 
-Bevor die Instanz Kundendaten sieht, prüfen und protokollieren:
+### Abnahme vor dem ersten Kundenmandat
 
-- Kein Port außer 80 und 443 von außen erreichbar
-- Die Anwendung ausschließlich hinter der Authentifizierung erreichbar
-- TLS gültig, Weiterleitung von HTTP auf HTTPS aktiv
-- SSH ohne Passwort-Authentifizierung, Root-Login aus
-- Backup vorhanden und nachweislich wiederherstellbar
-- Keine Secrets in der Shell-History, in Logs oder im Repository
+- Anmeldung über Access funktioniert, eine nicht gelistete Adresse wird abgewiesen
+- `/api/health` meldet die Datenbank als bereit
+- Managed OAuth aktiv, Hermes sieht die open-seo-Tools, `whoami` liefert Credits
+- Ein Rank-Tracker liefert innerhalb von zehn Minuten einen Messwert — der Beweis, dass die
+  Plattform-Crons feuern
+- `OPENSEO_TELEMETRY_DISABLED=1` gesetzt, falls so entschieden
 
-Findet sich ein Punkt nicht erfüllt: nicht freigeben, sondern benennen, was fehlt.
+Ist ein Punkt offen: nicht freigeben, sondern benennen, was fehlt.
 
 ## Wofür der Nutzer gebraucht wird
 
-Diese Dinge kann und darf der Agent nicht selbst erledigen. Klar benennen, wenn einer davon
-ansteht, statt einen Umweg zu suchen:
+Klar benennen, wenn einer dieser Punkte ansteht, statt einen Umweg zu suchen:
 
-- Hetzner-Konto, Zahlungsmittel, Projekt
-- SSH-Public-Key hinterlegen
-- Domain festlegen und DNS-A-Record auf die Server-IP setzen
-- API-Schlüssel in die `.env` eintragen: `DATAFORSEO_API_KEY`, optional
-  `OPENROUTER_API_KEY`, `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` und
-  `BETTER_AUTH_SECRET`
-- Storage Box oder Bucket für Backups bereitstellen
-- Bei privater Registry: Token für den Server
+- Cloudflare-Konto mit aktiviertem R2 — R2 verlangt eine hinterlegte Zahlungsmethode, auch
+  im Free Tier
+- `pnpm alchemy login` und `cloudflare bootstrap` — beide öffnen den Browser
+- `DATAFORSEO_API_KEY` und `ACCESS_ALLOWED_EMAILS` in `.env.selfhost`
+- Managed OAuth im Zero-Trust-Dashboard einschalten
+- Einmalige interaktive MCP-Anmeldung auf der Hermes-Maschine
 
 ## Arbeitsweise
 
-Erst lesen, was tatsächlich läuft — `docker compose ps`, `docker compose logs`, Zustand der
-Firewall, Zertifikat — dann handeln. Bei Abweichungen zwischen Runbook und Realität gilt die
-Realität; das Runbook wird nachgezogen.
-
-Nach jeder abgeschlossenen Aufgabe `../hetzner-runbook.md` aktualisieren, damit der nächste
-Durchgang nicht wieder rekonstruieren muss, was schon entschieden wurde.
+Erst den Ist-Zustand lesen — läuft der Worker, was sagt `/api/health`, ist Managed OAuth an
+— dann handeln. Bei Abweichungen zwischen Runbook und Realität gilt die Realität; das
+Runbook wird nachgezogen.

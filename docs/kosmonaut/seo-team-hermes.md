@@ -204,35 +204,39 @@ cp -r agents/* ~/.hermes/agents/             # 18 Subagents, Pfad an Hermes anpa
 Die Python-Scripts laufen **immer** über `claude-seo run <script>`, nie über einen nackten
 Interpreter. Der Launcher hält das Venv isoliert; ein `pip install` daneben bricht das.
 
-### Schritt 4 — open-seo auf Hetzner und als MCP eintragen
+### Schritt 4 — open-seo auf Cloudflare und als MCP eintragen
 
-**Entschieden: Hetzner, self-hosted, EU-Residenz.** Vollständige Schrittfolge im
-[Hetzner-Runbook](./hetzner-runbook.md), ausgeführt vom
-[`kosmonaut-devops`](./skills/kosmonaut-devops/SKILL.md)-Agenten.
+Vollständige Schrittfolge im [Cloudflare-Runbook](./cloudflare-runbook.md), ausgeführt vom
+[`kosmonaut-devops`](./skills/kosmonaut-devops/SKILL.md)-Agenten. Kurzfassung:
 
-Möglich ist das, weil `Dockerfile.selfhost` **workerd** im Container fährt — dieselbe
-Cloudflare-Laufzeit, nur auf eigener Hardware. Vercel schied aus: die Anwendung bindet
-Workflows, Durable Objects und importiert quer durch die Services aus `cloudflare:workers`.
+```bash
+pnpm alchemy login --configure    # access:write aktivieren
+pnpm alchemy cloudflare bootstrap
+cp .env.selfhost.example .env.selfhost   # DATAFORSEO_API_KEY + ACCESS_ALLOWED_EMAILS
+pnpm deploy:selfhost --yes
+```
 
-Zwei Eigenheiten, die den Betrieb prägen:
+Der letzte Befehl provisioniert D1, KV und R2, spielt die Migrationen ein, deployt den
+Worker **und legt die Cloudflare-Access-Application an**, die genau
+`ACCESS_ALLOWED_EMAILS` durchlässt. Läuft auf dem Free Plan.
 
-**Keine eigene Authentifizierung.** Der Docker-Pfad läuft mit `AUTH_MODE=local_noauth`, der
-Nutzer ist immer `admin@localhost`. Der Zugangsschutz muss vollständig davor — Caddy mit
-TLS, dahinter Cloudflare Access über einen Tunnel oder Auth direkt im Proxy. Das
-Port-Binding steht bereits auf `127.0.0.1`.
+Cloudflare ist hier keine Geschmacksfrage: die Anwendung bindet Workflows, drei Durable
+Objects und importiert quer durch die Services aus `cloudflare:workers`. **Vercel scheidet
+damit aus** — für Durable Objects und Workflows gibt es dort kein Gegenstück.
 
-**Keine funktionierenden Cron-Trigger.** Der Container fährt `vite preview` über miniflare;
-der Vite-Cloudflare-Plugin validiert `triggers.crons` nur und setzt keine Scheduled-Events
-ab. `runScheduledRankChecks` und `reconcileStaleAudits` werden also nie automatisch
-aufgerufen. Die Rank-Checks übernimmt **Hermes-Cron über das MCP-Tool `run_rank_tracker`**,
-das intern dieselbe `RankTrackingService.triggerCheck()` aufruft — siehe
-[`cron-jobs.md`](./cron-jobs.md). Belege in Schritt 0 des Runbooks.
+Gegen Self-Hosting sprechen zwei Plattformfunktionen, die dabei wegfallen: der Docker-Pfad
+läuft mit `AUTH_MODE=local_noauth` ohne jeden Zugangsschutz, und die Cron-Trigger feuern
+dort nicht — der Container serviert über `vite preview`, und der Vite-Cloudflare-Plugin
+validiert `triggers.crons` lediglich. Rank-Tracking liefe still ins Leere.
 
-Die `oseo_`-API-Keys helfen hier nicht: sie hängen an `oauth-provider.ts` mit
-`getHostedBaseUrl()` und gelten nur im Hosted-Modus.
+**Der Schritt, den man übersieht:** Managed OAuth ist für MCP-Clients erforderlich und
+standardmäßig aus. Ohne ihn meldet sich Hermes an und sieht trotzdem **keine Tools**. Der
+Schalter sitzt in Zero Trust unter `Access controls` → Application →
+`Additional settings` → `OAuth`; dazu die Loopback-Redirect-URIs freigeben.
 
-Danach den MCP-Endpoint der eigenen Instanz (Pfad `/mcp`) in `~/.hermes/config.yaml` bzw.
-`mcp-configs/mcp-servers.json` eintragen — erreichbar über die Domain, nicht über den Port.
+Endpunkt für `~/.hermes/config.yaml`: `https://<worker-hostname>/mcp`. Einmalig interaktiv
+anmelden, danach erneuert der Client über das Refresh-Token — das trägt die geplanten Läufe
+headless. Die `oseo_`-API-Keys greifen nicht; sie gelten nur für die gehostete Variante.
 
 ### Schritt 5 — Router-Skill
 

@@ -16,7 +16,6 @@ Gehört zu [`seo-team-hermes.md`](./seo-team-hermes.md).
 
 | Job            | Rhythmus             | Runtime | Meldung                 |
 | -------------- | -------------------- | ------- | ----------------------- |
-| Rank-Checks    | alle 30 Minuten      | Hermes  | nie, außer bei Fehler   |
 | Drift-Wache    | täglich, 06:15       | Hermes  | nur bei Abweichung      |
 | Monatsaudit    | 1. des Monats, 04:00 | Hermes  | immer, als PDF          |
 | Credit-Wächter | montags, 08:00       | Hermes  | nur bei Unterschreitung |
@@ -24,44 +23,16 @@ Gehört zu [`seo-team-hermes.md`](./seo-team-hermes.md).
 Zeiten bewusst vor Arbeitsbeginn und versetzt, damit sich parallele Läufe nicht um
 Chromium-Instanzen und API-Kontingente streiten.
 
-> **Job 0 ist kein Komfort, sondern Ersatz für eine kaputte Plattformfunktion.** Auf der
-> self-hosted Hetzner-Instanz feuern die in `wrangler.jsonc` deklarierten Cron-Trigger
-> nicht: der Container fährt `vite preview` über miniflare, und der Vite-Cloudflare-Plugin
-> validiert `triggers.crons` nur, statt Scheduled-Events abzusetzen. Ohne Job 0 misst das
-> Rank-Tracking nie. Belege in [`hetzner-runbook.md`](./hetzner-runbook.md), Schritt 0.
-
----
-
-## Job 0 — Rank-Checks
-
-**Zweck:** Ersetzt den `*/5 * * * *`-Cron, der im Container nicht feuert. Das MCP-Tool
-`run_rank_tracker` ruft intern dieselbe `RankTrackingService.triggerCheck()` auf wie der
-Scheduled-Handler.
-
-**Rhythmus:** alle 30 Minuten
-**Runtime:** Hermes
-**Voraussetzung:** je Kunde ein Rank-Tracker in open-seo angelegt
-
-**Prompt:**
-
-> Rufe für jedes Projekt in open-seo `run_rank_tracker` auf. Melde nichts, wenn alle Läufe
-> angenommen wurden — antworte dann mit genau `RANKS OK`. Scheitert ein Aufruf, nenne
-> Projekt und Fehlermeldung.
-
-**Empfänger:** OpenClaw, nur wenn die Antwort nicht `RANKS OK` ist.
-
-**Abbruchbedingung:** Antwortet der MCP-Endpunkt gar nicht, als Infrastrukturproblem melden
-und die restlichen Projekte nicht durchprobieren — bei einer nicht erreichbaren Instanz
-scheitern sie ohnehin alle.
-
-**Warum 30 Minuten statt 5.** Der Originaltakt war auf Cloudflares Edge-Cron ausgelegt, wo
-ein Tick fast nichts kostet. Über Hermes ist jeder Tick ein Agent-Lauf. SERP-Positionen
-ändern sich nicht im Fünfminutentakt; 30 Minuten liefern dieselbe Aussage bei einem Bruchteil
-der Läufe. Bei Bedarf enger stellen.
-
-> **Nicht abgedeckt:** `reconcileStaleAudits`, der zweite Teil desselben Crons, hat kein
-> MCP-Gegenstück. Audits, deren Workflow stirbt, bleiben auf „running" stehen und müssen
-> gelegentlich von Hand aufgeräumt werden.
+> **Rank-Checks stehen bewusst nicht in dieser Liste.** open-seo erledigt sie selbst: die
+> Cron-Trigger aus `wrangler.jsonc` — alle fünf Minuten Rank-Checks und
+> Stale-Audit-Reconcile — feuern auf Cloudflare als Plattformfunktion. Sie hier
+> nachzubauen würde die Arbeit verdoppeln und Credits verbrennen.
+>
+> Das gilt **nur** für das Cloudflare-Deployment. Wer die Instanz je selbst hostet, verliert
+> diese Trigger: der Docker-Container serviert über `vite preview`, und der
+> Vite-Cloudflare-Plugin validiert `triggers.crons` lediglich, ohne Scheduled-Events
+> abzusetzen. Dann braucht es hier einen zusätzlichen Job, der je Projekt
+> `run_rank_tracker` über MCP aufruft.
 
 ---
 
