@@ -25,30 +25,30 @@ oder Daten über eine fremde Domain braucht, nie als Standardeinstieg.
 
 ## Routing
 
-| Anfrage dreht sich um | Nimm | Konkret |
-|---|---|---|
-| On-Page, Technik, Crawlability, Indexierung | claude-seo | `/seo technical`, `/seo page` |
-| Schema, strukturierte Daten | claude-seo | `/seo schema` |
-| Core Web Vitals, Ladezeit | claude-seo | `/seo google`, `/seo technical` |
-| Bilder | claude-seo | `/seo images` |
-| Sitemap, hreflang, Internationalisierung | claude-seo | `/seo sitemap`, `/seo hreflang` |
-| GSC-, GA4-, CrUX-Daten **eigener** Properties | claude-seo | `/seo google` |
-| Vollständiges Site-Audit | claude-seo | `/seo audit` — delegiert selbst parallel |
-| Content-Qualität, E-E-A-T | claude-seo | `/seo content` |
-| Content-Brief | claude-seo | `/seo content-brief` |
-| Themencluster aus einem Seed | claude-seo | `/seo cluster` |
-| AI-Suche, AI Overviews, GEO | claude-seo | `/seo geo` |
-| Search Experience, Seitentypen, Personas | claude-seo | `/seo sxo` |
-| Lokales SEO, GBP, Map Pack | claude-seo | `/seo local`, `/seo maps` |
-| Veränderung gegenüber letztem Stand | claude-seo | `/seo drift compare` |
-| Backlinks, **erste Einschätzung** | claude-seo | `/seo backlinks` — Moz, Bing, Common Crawl |
-| Keyword-Volumen, Difficulty, SERP-Zeilen | open-seo | `research_keywords`, `get_keyword_metrics` |
-| Rankings **über Zeit** | open-seo | Rank-Tracker |
-| Fremde Domain, Wettbewerber-Footprint | open-seo | `get_domain_overview`, `get_ranked_keywords` |
-| Backlinks, **belastbar für eine Entscheidung** | open-seo | `get_backlinks_profile` |
-| Text schreiben, Markenstimme, Repurposing | ECC | `article-writing`, `brand-voice`, `content-engine` |
-| Marktrecherche, Wettbewerbsbericht | ECC | `market-research`, `competitive-report-structure` |
-| Kundenkontext, frühere Entscheidungen | ECC | Memory Vault, `.ecc/memory/` |
+| Anfrage dreht sich um                          | Nimm       | Konkret                                            |
+| ---------------------------------------------- | ---------- | -------------------------------------------------- |
+| On-Page, Technik, Crawlability, Indexierung    | claude-seo | `/seo technical`, `/seo page`                      |
+| Schema, strukturierte Daten                    | claude-seo | `/seo schema`                                      |
+| Core Web Vitals, Ladezeit                      | claude-seo | `/seo google`, `/seo technical`                    |
+| Bilder                                         | claude-seo | `/seo images`                                      |
+| Sitemap, hreflang, Internationalisierung       | claude-seo | `/seo sitemap`, `/seo hreflang`                    |
+| GSC-, GA4-, CrUX-Daten **eigener** Properties  | claude-seo | `/seo google`                                      |
+| Vollständiges Site-Audit                       | claude-seo | `/seo audit` — delegiert selbst parallel           |
+| Content-Qualität, E-E-A-T                      | claude-seo | `/seo content`                                     |
+| Content-Brief                                  | claude-seo | `/seo content-brief`                               |
+| Themencluster aus einem Seed                   | claude-seo | `/seo cluster`                                     |
+| AI-Suche, AI Overviews, GEO                    | claude-seo | `/seo geo`                                         |
+| Search Experience, Seitentypen, Personas       | claude-seo | `/seo sxo`                                         |
+| Lokales SEO, GBP, Map Pack                     | claude-seo | `/seo local`, `/seo maps`                          |
+| Veränderung gegenüber letztem Stand            | claude-seo | `/seo drift compare`                               |
+| Backlinks, **erste Einschätzung**              | claude-seo | `/seo backlinks` — Moz, Bing, Common Crawl         |
+| Keyword-Volumen, Difficulty, SERP-Zeilen       | open-seo   | `research_keywords`, `get_keyword_metrics`         |
+| Rankings **über Zeit**                         | open-seo   | Rank-Tracker                                       |
+| Fremde Domain, Wettbewerber-Footprint          | open-seo   | `get_domain_overview`, `get_ranked_keywords`       |
+| Backlinks, **belastbar für eine Entscheidung** | open-seo   | `get_backlinks_profile`                            |
+| Text schreiben, Markenstimme, Repurposing      | ECC        | `article-writing`, `brand-voice`, `content-engine` |
+| Marktrecherche, Wettbewerbsbericht             | ECC        | `market-research`, `competitive-report-structure`  |
+| Kundenkontext, frühere Entscheidungen          | ECC        | Memory Vault, `.ecc/memory/`                       |
 
 ### Grenzfälle
 
@@ -79,13 +79,13 @@ unbeantwortet bleibt.
 Fünf Skills triggern auf „SEO". Der Router ist der einzige Einstieg; die anderen werden von
 ihm gerufen oder liegen in einer anderen Runtime.
 
-| Skill | Runtime | Regel |
-|---|---|---|
-| `claude-seo` (`/seo …`) | Hermes | vom Router gerufen |
-| `open-seo` (`seo-audit`) | Hermes | vom Router gerufen, nur nach Kostenprüfung |
-| `ECC` (`seo` aus `business-content`) | Hermes | **nicht verwenden** — Beifang des Marketing-Moduls, fachlich von claude-seo abgedeckt |
-| `searchfit-seo:seo-audit` | Claude Code | Bestand, andere Runtime |
-| `brightdata-plugin:seo-audit` | Claude Code | Bestand, andere Runtime |
+| Skill                                | Runtime     | Regel                                                                                 |
+| ------------------------------------ | ----------- | ------------------------------------------------------------------------------------- |
+| `claude-seo` (`/seo …`)              | Hermes      | vom Router gerufen                                                                    |
+| `open-seo` (`seo-audit`)             | Hermes      | vom Router gerufen, nur nach Kostenprüfung                                            |
+| `ECC` (`seo` aus `business-content`) | Hermes      | **nicht verwenden** — Beifang des Marketing-Moduls, fachlich von claude-seo abgedeckt |
+| `searchfit-seo:seo-audit`            | Claude Code | Bestand, andere Runtime                                                               |
+| `brightdata-plugin:seo-audit`        | Claude Code | Bestand, andere Runtime                                                               |
 
 ## Was dieser Router nicht kann
 

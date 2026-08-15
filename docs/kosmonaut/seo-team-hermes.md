@@ -12,14 +12,14 @@ und über OpenClaw meldet.
 Der naheliegende Fehler wäre, `claude-seo` und `open-seo` als Alternativen zu behandeln und
 sich für eine zu entscheiden. Sie lösen verschiedene Probleme.
 
-| | claude-seo v2.2.4 | open-seo |
-|---|---|---|
-| Was es ist | Methodik- und Analyse-Engine | Datenplattform mit Gedächtnis |
-| Umfang | 25 Skills, 18 Subagents, 53 Python-Scripts | Web-App + MCP-Server mit ~21 Tools |
-| Datenquellen | Live-Site (Fetch, Headless-Render, Screenshots), Google APIs (GSC, PSI, CrUX, GA4, Indexing), Moz / Bing / Common Crawl | DataForSEO, GSC, GA4 — persistiert in Projekten |
-| State | keiner, jeder Lauf flüchtig | Projekte, gespeicherte Keywords, Rank-Tracker, Audit-Historie |
-| Kosten pro Lauf | nahe null | DataForSEO-Credits |
-| Mensch kann nachsehen | nur im Agent-Output | ja, eigene UI |
+|                       | claude-seo v2.2.4                                                                                                       | open-seo                                                      |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| Was es ist            | Methodik- und Analyse-Engine                                                                                            | Datenplattform mit Gedächtnis                                 |
+| Umfang                | 25 Skills, 18 Subagents, 53 Python-Scripts                                                                              | Web-App + MCP-Server mit ~21 Tools                            |
+| Datenquellen          | Live-Site (Fetch, Headless-Render, Screenshots), Google APIs (GSC, PSI, CrUX, GA4, Indexing), Moz / Bing / Common Crawl | DataForSEO, GSC, GA4 — persistiert in Projekten               |
+| State                 | keiner, jeder Lauf flüchtig                                                                                             | Projekte, gespeicherte Keywords, Rank-Tracker, Audit-Historie |
+| Kosten pro Lauf       | nahe null                                                                                                               | DataForSEO-Credits                                            |
+| Mensch kann nachsehen | nur im Agent-Output                                                                                                     | ja, eigene UI                                                 |
 
 **claude-seo ist das Handwerk, open-seo das Gedächtnis und die Marktdaten.**
 
@@ -67,16 +67,16 @@ eine dritte Wahrheit darüber, wie ein Audit läuft.
 
 ### Rollen im Team
 
-| Rolle | Wer | Aufgabe |
-|---|---|---|
-| Teamleitung | Hermes-Orchestrator | zerlegt Aufträge, verteilt, führt zusammen |
-| Arbeitsweise | ECC | erzwingt Plan vor Bau und Review aus frischem Kontext |
-| Gedächtnis (qualitativ) | ECC Memory Vault | Kundenkontext, Präferenzen, Historie |
-| Gedächtnis (quantitativ) | open-seo | Keywords, Rankings, Audit-Läufe |
-| SEO-Fachlichkeit | claude-seo | 18 Spezialisten von technisch bis GEO |
-| Text und Marke | ECC-Marketing-Skills | Artikel, Brand Voice, Repurposing |
-| Reporting | Claude Code (Bestand) | Wochenbericht, ClickUp, Notion — bleibt wo es ist |
-| Meldewesen | OpenClaw | Alerts und Reports zustellen, Klammer über beide Runtimes |
+| Rolle                    | Wer                   | Aufgabe                                                   |
+| ------------------------ | --------------------- | --------------------------------------------------------- |
+| Teamleitung              | Hermes-Orchestrator   | zerlegt Aufträge, verteilt, führt zusammen                |
+| Arbeitsweise             | ECC                   | erzwingt Plan vor Bau und Review aus frischem Kontext     |
+| Gedächtnis (qualitativ)  | ECC Memory Vault      | Kundenkontext, Präferenzen, Historie                      |
+| Gedächtnis (quantitativ) | open-seo              | Keywords, Rankings, Audit-Läufe                           |
+| SEO-Fachlichkeit         | claude-seo            | 18 Spezialisten von technisch bis GEO                     |
+| Text und Marke           | ECC-Marketing-Skills  | Artikel, Brand Voice, Repurposing                         |
+| Reporting                | Claude Code (Bestand) | Wochenbericht, ClickUp, Notion — bleibt wo es ist         |
+| Meldewesen               | OpenClaw              | Alerts und Reports zustellen, Klammer über beide Runtimes |
 
 ---
 
@@ -89,31 +89,31 @@ Dinge, die claude-seo kostenlos kann.
 persistent.** open-seo wird gerufen, wenn eine Entscheidung Historie oder Daten über eine
 fremde Domain braucht — nicht als Standardeinstieg.
 
-| Aufgabe | Zuständig | Warum |
-|---|---|---|
-| On-Page, technisch, Schema, Core Web Vitals, Bilder, hreflang | claude-seo | arbeitet am Live-Objekt, kostenlos |
-| GSC / GA4 / CrUX für eigene Properties | claude-seo (`/seo google`) | direkter API-Zugriff, keine Credits |
-| Keyword-Universum, Volumen, KD, SERP-Rows | open-seo | DataForSEO, wird persistiert |
-| Rankings über Zeit | open-seo | einzige Schicht mit Historie |
-| Competitor-Footprint (fremde Domain) | open-seo | fremde GSC ist für uns unsichtbar |
-| Backlinks, erste Näherung | claude-seo (Moz / Bing / Common Crawl) | kostenlos, reicht zur Triage |
-| Backlinks, belastbar | open-seo | wenn die Näherung eine Entscheidung tragen soll |
-| Content-Brief, Cluster, GEO, SXO | claude-seo | Methodik, kein Datenkauf |
-| Texte, Brand Voice, Repurposing | ECC (`article-writing`, `brand-voice`, `content-engine`) | dafür gebaut |
-| Kundenkontext und Präferenzen | ECC Memory Vault | `.ecc/memory/` |
-| Wochenreport, ClickUp, Notion | Bestand (`weekly-seo-report`) | läuft, nicht anfassen |
+| Aufgabe                                                       | Zuständig                                                | Warum                                           |
+| ------------------------------------------------------------- | -------------------------------------------------------- | ----------------------------------------------- |
+| On-Page, technisch, Schema, Core Web Vitals, Bilder, hreflang | claude-seo                                               | arbeitet am Live-Objekt, kostenlos              |
+| GSC / GA4 / CrUX für eigene Properties                        | claude-seo (`/seo google`)                               | direkter API-Zugriff, keine Credits             |
+| Keyword-Universum, Volumen, KD, SERP-Rows                     | open-seo                                                 | DataForSEO, wird persistiert                    |
+| Rankings über Zeit                                            | open-seo                                                 | einzige Schicht mit Historie                    |
+| Competitor-Footprint (fremde Domain)                          | open-seo                                                 | fremde GSC ist für uns unsichtbar               |
+| Backlinks, erste Näherung                                     | claude-seo (Moz / Bing / Common Crawl)                   | kostenlos, reicht zur Triage                    |
+| Backlinks, belastbar                                          | open-seo                                                 | wenn die Näherung eine Entscheidung tragen soll |
+| Content-Brief, Cluster, GEO, SXO                              | claude-seo                                               | Methodik, kein Datenkauf                        |
+| Texte, Brand Voice, Repurposing                               | ECC (`article-writing`, `brand-voice`, `content-engine`) | dafür gebaut                                    |
+| Kundenkontext und Präferenzen                                 | ECC Memory Vault                                         | `.ecc/memory/`                                  |
+| Wochenreport, ClickUp, Notion                                 | Bestand (`weekly-seo-report`)                            | läuft, nicht anfassen                           |
 
 ### Namenskollisionen
 
 Fünf Skills triggern auf „SEO":
 
-| Skill | Runtime | Umgang |
-|---|---|---|
-| `searchfit-seo:seo-audit` | Claude Code | Bestand, bleibt |
-| `brightdata-plugin:seo-audit` | Claude Code | Bestand, bleibt |
-| `claude-seo` → `/seo audit` | Hermes | Standard für On-Page und Technik |
-| `open-seo` → `seo-audit` | Hermes | nur bei Bedarf an Historie oder Fremddaten |
-| `ECC` → `seo` (aus `business-content`) | Hermes | **abschalten oder umbenennen** |
+| Skill                                  | Runtime     | Umgang                                     |
+| -------------------------------------- | ----------- | ------------------------------------------ |
+| `searchfit-seo:seo-audit`              | Claude Code | Bestand, bleibt                            |
+| `brightdata-plugin:seo-audit`          | Claude Code | Bestand, bleibt                            |
+| `claude-seo` → `/seo audit`            | Hermes      | Standard für On-Page und Technik           |
+| `open-seo` → `seo-audit`               | Hermes      | nur bei Bedarf an Historie oder Fremddaten |
+| `ECC` → `seo` (aus `business-content`) | Hermes      | **abschalten oder umbenennen**             |
 
 Ein Agent, der frei wählen darf, wählt hier zufällig. ECCs `seo` ist der unangenehmste Fall:
 er kommt als Beifang mit dem Marketing-Modul und deckt fachlich nichts ab, was claude-seo
@@ -143,14 +143,14 @@ command -v ecc-memory-mcp     # muss einen Pfad liefern
 
 Verzeichnislayout danach:
 
-| Pfad | Inhalt |
-|---|---|
-| `~/.hermes/config.yaml` | Model-Routing, MCP-Registrierung, Plugins |
-| `~/.hermes/skills/ecc-imports/` | ECC-Skills für Hermes |
-| `~/.hermes/plugins/` | Hook-Bridges |
-| `~/.hermes/cron/jobs.json` | geplante Läufe mit explizitem Prompt |
-| `<repo>/.ecc/memory/` | Projekt- und Team-Kontext |
-| `~/.ecc/memory/` | nutzerweiter Kontext über Repos hinweg |
+| Pfad                            | Inhalt                                    |
+| ------------------------------- | ----------------------------------------- |
+| `~/.hermes/config.yaml`         | Model-Routing, MCP-Registrierung, Plugins |
+| `~/.hermes/skills/ecc-imports/` | ECC-Skills für Hermes                     |
+| `~/.hermes/plugins/`            | Hook-Bridges                              |
+| `~/.hermes/cron/jobs.json`      | geplante Läufe mit explizitem Prompt      |
+| `<repo>/.ecc/memory/`           | Projekt- und Team-Kontext                 |
+| `~/.ecc/memory/`                | nutzerweiter Kontext über Repos hinweg    |
 
 Existiert bereits ein `~/.hermes`, vorher den Migrationspfad fahren:
 
@@ -170,11 +170,11 @@ ecc migrate import-memory
 
 Das ist genau „ECC-Kern plus Marketing":
 
-| Teil | Was drinsteckt |
-|---|---|
-| `minimal` | `rules-core`, `agents-core`, `commands-core`, `platform-configs`, `workflow-quality` |
-| `business-content` | `article-writing`, `brand-voice`, `brand-discovery`, `content-engine`, `market-research`, `marketing-campaign`, `competitive-platform-analysis`, `competitive-report-structure`, `lead-intelligence`, `social-graph-ranker`, `investor-materials`, `investor-outreach`, `product-capability`, `seo` |
-| `skill-unified-memory` | Memory Vault — trägt die qualitative Gedächtnisschicht |
+| Teil                   | Was drinsteckt                                                                                                                                                                                                                                                                                      |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `minimal`              | `rules-core`, `agents-core`, `commands-core`, `platform-configs`, `workflow-quality`                                                                                                                                                                                                                |
+| `business-content`     | `article-writing`, `brand-voice`, `brand-discovery`, `content-engine`, `market-research`, `marketing-campaign`, `competitive-platform-analysis`, `competitive-report-structure`, `lead-intelligence`, `social-graph-ranker`, `investor-materials`, `investor-outreach`, `product-capability`, `seo` |
+| `skill-unified-memory` | Memory Vault — trägt die qualitative Gedächtnisschicht                                                                                                                                                                                                                                              |
 
 `skill-unified-memory` ist bewusst dazugenommen: der Memory Vault ist in dieser Architektur
 die Ablage für Kundenkontext, steckt aber **nicht** in `minimal`.
@@ -244,12 +244,12 @@ Nutzerweiter Memory-Zugriff erfordert zusätzlich `ECC_MEMORY_ALLOW_USER_SCOPE=1
 
 ## 5. Betrieb
 
-| Wann | Was | Runtime | Wer führt aus | Wer bekommt es |
-|---|---|---|---|---|
-| täglich | `/seo drift compare` je Kundendomain | Hermes | Cron | OpenClaw, nur bei Abweichung |
-| wöchentlich | bestehender SEO-Wochenbericht | **Claude Code** | `weekly-seo-report` | OpenClaw + Notion + ClickUp |
-| monatlich | `/seo audit` je Mandat | Hermes | Orchestrator, parallel | PDF via `google_report.py` |
-| anlassbezogen | Cluster, Content-Brief, Competitor | Hermes | Router | direkt im Chat |
+| Wann          | Was                                  | Runtime         | Wer führt aus          | Wer bekommt es               |
+| ------------- | ------------------------------------ | --------------- | ---------------------- | ---------------------------- |
+| täglich       | `/seo drift compare` je Kundendomain | Hermes          | Cron                   | OpenClaw, nur bei Abweichung |
+| wöchentlich   | bestehender SEO-Wochenbericht        | **Claude Code** | `weekly-seo-report`    | OpenClaw + Notion + ClickUp  |
+| monatlich     | `/seo audit` je Mandat               | Hermes          | Orchestrator, parallel | PDF via `google_report.py`   |
+| anlassbezogen | Cluster, Content-Brief, Competitor   | Hermes          | Router                 | direkt im Chat               |
 
 Rank-Tracker laufen unabhängig davon in open-seo weiter — das ist der Teil, den kein
 Agent-Lauf ersetzen kann, weil er kontinuierliche Messung braucht.

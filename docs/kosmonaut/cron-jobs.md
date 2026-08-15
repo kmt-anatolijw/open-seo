@@ -14,11 +14,11 @@ Gehört zu [`seo-team-hermes.md`](./seo-team-hermes.md).
 
 ## Übersicht
 
-| Job | Rhythmus | Runtime | Meldung |
-|---|---|---|---|
-| Drift-Wache | täglich, 06:15 | Hermes | nur bei Abweichung |
-| Monatsaudit | 1. des Monats, 04:00 | Hermes | immer, als PDF |
-| Credit-Wächter | montags, 08:00 | Hermes | nur bei Unterschreitung |
+| Job            | Rhythmus             | Runtime | Meldung                 |
+| -------------- | -------------------- | ------- | ----------------------- |
+| Drift-Wache    | täglich, 06:15       | Hermes  | nur bei Abweichung      |
+| Monatsaudit    | 1. des Monats, 04:00 | Hermes  | immer, als PDF          |
+| Credit-Wächter | montags, 08:00       | Hermes  | nur bei Unterschreitung |
 
 Zeiten bewusst vor Arbeitsbeginn und versetzt, damit sich parallele Läufe nicht um
 Chromium-Instanzen und API-Kontingente streiten.
