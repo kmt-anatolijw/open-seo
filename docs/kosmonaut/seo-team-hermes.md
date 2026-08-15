@@ -3,7 +3,7 @@
 Architektur und Umsetzungsanleitung. Intern.
 
 Wie `claude-seo`, `open-seo` und `ECC` zusammen ein SEO-Team ergeben, das in Hermes läuft
-und über OpenClaw meldet.
+und über OpenClaw meldet. Die Umsetzung in Meilensteinen: [Masterplan](./plan/README.md).
 
 ---
 
@@ -17,7 +17,7 @@ sich für eine zu entscheiden. Sie lösen verschiedene Probleme.
 | Was es ist            | Methodik- und Analyse-Engine                                                                                            | Datenplattform mit Gedächtnis                                 |
 | Umfang                | 25 Skills, 18 Subagents, 53 Python-Scripts                                                                              | Web-App + MCP-Server mit ~21 Tools                            |
 | Datenquellen          | Live-Site (Fetch, Headless-Render, Screenshots), Google APIs (GSC, PSI, CrUX, GA4, Indexing), Moz / Bing / Common Crawl | DataForSEO, GSC, GA4 — persistiert in Projekten               |
-| State                 | keiner, jeder Lauf flüchtig                                                                                             | Projekte, gespeicherte Keywords, Rank-Tracker, Audit-Historie |
+| State                 | fast keiner — nur die Drift-Baseline (SQLite) bleibt                                                                    | Projekte, gespeicherte Keywords, Rank-Tracker, Audit-Historie |
 | Kosten pro Lauf       | nahe null                                                                                                               | DataForSEO-Credits                                            |
 | Mensch kann nachsehen | nur im Agent-Output                                                                                                     | ja, eigene UI                                                 |
 
@@ -25,8 +25,9 @@ sich für eine zu entscheiden. Sie lösen verschiedene Probleme.
 
 claude-seo weiß, wie man eine Seite beurteilt, und kommt ohne Account und ohne Datenkauf an
 die Wahrheit über ein Objekt, auf das ihr Zugriff habt. Was ihm strukturell fehlt: Verlauf
-über Zeit, Daten über fremde Domains, und eine Oberfläche, in der ein Mensch nachprüft, was
-der Agent behauptet hat. Genau das liefert open-seo.
+über Zeit jenseits der eigenen Drift-Baseline, Daten über fremde Domains, und eine
+Oberfläche, in der ein Mensch nachprüft, was der Agent behauptet hat. Genau das liefert
+open-seo.
 
 Die dritte Komponente ist **ECC** (`affaan-m/ECC`), das Betriebssystem für Agent-Harnesses.
 Es bringt den Arbeitszyklus mit — plan → test → implement → review → verify → remember →
@@ -107,13 +108,13 @@ fremde Domain braucht — nicht als Standardeinstieg.
 
 Fünf Skills triggern auf „SEO":
 
-| Skill                                  | Runtime     | Umgang                                     |
-| -------------------------------------- | ----------- | ------------------------------------------ |
-| `searchfit-seo:seo-audit`              | Claude Code | Bestand, bleibt                            |
-| `brightdata-plugin:seo-audit`          | Claude Code | Bestand, bleibt                            |
-| `claude-seo` → `/seo audit`            | Hermes      | Standard für On-Page und Technik           |
-| `open-seo` → `seo-audit`               | Hermes      | nur bei Bedarf an Historie oder Fremddaten |
-| `ECC` → `seo` (aus `business-content`) | Hermes      | **abschalten oder umbenennen**             |
+| Skill                                  | Runtime     | Umgang                                       |
+| -------------------------------------- | ----------- | -------------------------------------------- |
+| `searchfit-seo:seo-audit`              | Claude Code | Bestand, bleibt                              |
+| `brightdata-plugin:seo-audit`          | Claude Code | Bestand, bleibt                              |
+| `claude-seo` → `/seo audit`            | Hermes      | Standard für On-Page und Technik             |
+| `open-seo` → `seo-audit`               | Hermes      | nur bei Bedarf an Historie oder Fremddaten   |
+| `ECC` → `seo` (aus `business-content`) | Hermes      | **entfernen oder `description` entschärfen** |
 
 Ein Agent, der frei wählen darf, wählt hier zufällig. ECCs `seo` ist der unangenehmste Fall:
 er kommt als Beifang mit dem Marketing-Modul und deckt fachlich nichts ab, was claude-seo
@@ -195,14 +196,16 @@ Cross-Harness-Portabilität, `portability_check.py` verifiziert sie.
 
 ```bash
 cd claude-seo
-./bin/claude-seo run portability_check.py    # Frontmatter-Kompatibilität prüfen
+python3 scripts/portability_check.py         # Frontmatter-Check, läuft ohne Venv
 cp -r skills/* ~/.hermes/skills/             # 25 Skills
 cp -r agents/* ~/.hermes/agents/             # 18 Subagents, Pfad an Hermes anpassen
 ./bin/claude-seo setup                       # isoliertes Python-Venv + Chromium
 ```
 
-Die Python-Scripts laufen **immer** über `claude-seo run <script>`, nie über einen nackten
-Interpreter. Der Launcher hält das Venv isoliert; ein `pip install` daneben bricht das.
+Die Python-Scripts laufen über `claude-seo run <script>`, nie über einen nackten
+Interpreter — einzige Ausnahme ist `portability_check.py`, das bewusst nur die
+Standardbibliothek nutzt und deshalb schon vor dem Setup läuft. Der Launcher hält das Venv
+isoliert; ein `pip install` daneben bricht das.
 
 ### Schritt 4 — open-seo auf Cloudflare und als MCP eintragen
 
@@ -218,25 +221,16 @@ pnpm deploy:selfhost --yes
 
 Der letzte Befehl provisioniert D1, KV und R2, spielt die Migrationen ein, deployt den
 Worker **und legt die Cloudflare-Access-Application an**, die genau
-`ACCESS_ALLOWED_EMAILS` durchlässt. Läuft auf dem Free Plan.
-
-Cloudflare ist hier keine Geschmacksfrage: die Anwendung bindet Workflows, drei Durable
-Objects und importiert quer durch die Services aus `cloudflare:workers`. **Vercel scheidet
-damit aus** — für Durable Objects und Workflows gibt es dort kein Gegenstück.
-
-Gegen Self-Hosting sprechen zwei Plattformfunktionen, die dabei wegfallen: der Docker-Pfad
-läuft mit `AUTH_MODE=local_noauth` ohne jeden Zugangsschutz, und die Cron-Trigger feuern
-dort nicht — der Container serviert über `vite preview`, und der Vite-Cloudflare-Plugin
-validiert `triggers.crons` lediglich. Rank-Tracking liefe still ins Leere.
+`ACCESS_ALLOWED_EMAILS` durchlässt. Läuft auf dem Free Plan. Warum es Cloudflare sein muss
+— Vercel trägt weder Durable Objects noch Workflows, Self-Hosting kostet Zugangsschutz und
+Cron-Trigger — begründet das Runbook.
 
 **Der Schritt, den man übersieht:** Managed OAuth ist für MCP-Clients erforderlich und
-standardmäßig aus. Ohne ihn meldet sich Hermes an und sieht trotzdem **keine Tools**. Der
-Schalter sitzt in Zero Trust unter `Access controls` → Application →
-`Additional settings` → `OAuth`; dazu die Loopback-Redirect-URIs freigeben.
+standardmäßig aus. Ohne ihn meldet sich Hermes an und sieht trotzdem **keine Tools**.
+Schalter, Redirect-URIs und die einmalige Anmeldung, nach der das Refresh-Token die
+geplanten Läufe headless trägt: Runbook, Schritt 5.
 
-Endpunkt für `~/.hermes/config.yaml`: `https://<worker-hostname>/mcp`. Einmalig interaktiv
-anmelden, danach erneuert der Client über das Refresh-Token — das trägt die geplanten Läufe
-headless. Die `oseo_`-API-Keys greifen nicht; sie gelten nur für die gehostete Variante.
+Endpunkt für `~/.hermes/config.yaml`: `https://<worker-hostname>/mcp`.
 
 ### Schritt 5 — Router-Skill
 
@@ -245,9 +239,9 @@ Abschnitt 3 als Entscheidungslogik, plus explizite Abgrenzung gegen die Bestands
 
 ### Schritt 6 — OpenClaw als Meldekanal
 
-Hermes-Cron (`~/.hermes/cron/jobs.json`) führt aus, OpenClaw stellt zu. Zwei Kandidaten für
-den Start: `/seo drift compare` täglich je Kundendomain, und die Zustellung des bestehenden
-Wochenreports.
+Hermes-Cron (`~/.hermes/cron/jobs.json`) führt aus, OpenClaw stellt zu. Die drei geplanten
+Läufe — Drift-Wache, Monatsaudit, Credit-Wächter — stehen mit vollständigen Prompts und
+Empfängern in [cron-jobs.md](./cron-jobs.md).
 
 > **Zwingend:** Jede Harness braucht ihren eigenen `ecc-memory-mcp`-Prozess mit eigener
 > `ECC_MEMORY_HARNESS`-Identität. Hermes und OpenClaw dürfen sich **nicht** denselben
@@ -259,12 +253,15 @@ Nutzerweiter Memory-Zugriff erfordert zusätzlich `ECC_MEMORY_ALLOW_USER_SCOPE=1
 
 ## 5. Betrieb
 
-| Wann          | Was                                  | Runtime         | Wer führt aus          | Wer bekommt es               |
-| ------------- | ------------------------------------ | --------------- | ---------------------- | ---------------------------- |
-| täglich       | `/seo drift compare` je Kundendomain | Hermes          | Cron                   | OpenClaw, nur bei Abweichung |
-| wöchentlich   | bestehender SEO-Wochenbericht        | **Claude Code** | `weekly-seo-report`    | OpenClaw + Notion + ClickUp  |
-| monatlich     | `/seo audit` je Mandat               | Hermes          | Orchestrator, parallel | PDF via `google_report.py`   |
-| anlassbezogen | Cluster, Content-Brief, Competitor   | Hermes          | Router                 | direkt im Chat               |
+| Wann          | Was                                  | Runtime         | Wer führt aus                      | Wer bekommt es                    |
+| ------------- | ------------------------------------ | --------------- | ---------------------------------- | --------------------------------- |
+| täglich       | `/seo drift compare` je Kundendomain | Hermes          | Cron                               | OpenClaw, nur bei Abweichung      |
+| wöchentlich   | bestehender SEO-Wochenbericht        | **Claude Code** | `weekly-seo-report`                | OpenClaw + Notion + ClickUp       |
+| montags       | Credit-Prüfung (`whoami`)            | Hermes          | Cron                               | OpenClaw, nur bei Unterschreitung |
+| monatlich     | `/seo audit` je Mandat               | Hermes          | Orchestrator, Domains nacheinander | PDF via `google_report.py`        |
+| anlassbezogen | Cluster, Content-Brief, Competitor   | Hermes          | Router                             | direkt im Chat                    |
+
+Vollständige Prompts und Empfänger der geplanten Läufe: [cron-jobs.md](./cron-jobs.md).
 
 Rank-Tracker laufen unabhängig davon in open-seo weiter — das ist der Teil, den kein
 Agent-Lauf ersetzen kann, weil er kontinuierliche Messung braucht.
@@ -294,6 +291,11 @@ Agent-Lauf ersetzen kann, weil er kontinuierliche Messung braucht.
    Notion-Integrationen gegen einen experimentellen Hermes-Adapter zu tauschen wäre teurer.
    Prüfpunkt: falls Hermes' Adapter stabil wird, den Umzug neu bewerten.
 
+6. **Datenresidenz liegt bei Cloudflare.** D1 und R2 landen dort, wo Cloudflare sie
+   platziert; steuern lässt sich das nicht. Akzeptiert, solange kein Kundenvertrag
+   EU-Residenz fordert. Kommt die Forderung, Self-Hosting neu bewerten — zum im Runbook
+   dokumentierten Preis: kein Zugangsschutz, keine Cron-Trigger.
+
 ---
 
 ## 7. Verifikation
@@ -307,12 +309,13 @@ Abzuarbeiten in dieser Reihenfolge; jeder Schritt setzt den vorigen voraus.
 2. `ecc memory init` gelaufen, `command -v ecc-memory-mcp` liefert einen Pfad.
 3. `node tests/run-all.js` im ECC-Checkout grün.
 4. Hermes startet und listet die kopierten Skills.
-5. `whoami` gegen den self-hosted open-seo-MCP liefert Account und Credits. Das ist der
+5. `whoami` gegen die eigene open-seo-Instanz liefert Account und Credits. Das ist der
    Verbindungstest, den open-seos eigene Skills selbst als ersten Schritt vorsehen.
 6. Ende-zu-Ende auf einer echten Kundendomain: `/seo audit`, dann prüfen, ob Hermes
    tatsächlich parallel delegiert hat und ob open-seo nur dort gerufen wurde, wo die
    Routing-Tabelle es vorsieht.
-7. Ein Cron-Lauf mit API-Key-Auth ohne Browser — der Beweis, dass headless trägt.
+7. Ein geplanter Lauf ohne Browser — das Refresh-Token trägt die Anmeldung. Der Beweis,
+   dass headless funktioniert.
 
 ---
 
@@ -320,7 +323,7 @@ Abzuarbeiten in dieser Reihenfolge; jeder Schritt setzt den vorigen voraus.
 
 - `claude-seo/AGENTS.md` — Cross-Harness-Portabilität, Tool-Namens-Mapping
 - `claude-seo/skills/seo/SKILL.md` — Kommandotabelle, Orchestrierungslogik
-- `open-seo/docs/mcp.md` — MCP-Endpoint und Client-Setup
+- `open-seo/docs/SELF_HOSTING_CLOUDFLARE_OPERATIONS.md` — MCP-Endpoint, Managed OAuth
 - `open-seo/docs/SELF_HOSTING_DOCKER.md` — `AUTH_MODE=local_noauth`
 - `open-seo/src/server/mcp/api-key-auth.ts` — `oseo_`-Präfix, Header-Varianten
 - `ECC/docs/HERMES-SETUP.md` — Hermes-Layout, Cron, Memory-Vault-Regeln

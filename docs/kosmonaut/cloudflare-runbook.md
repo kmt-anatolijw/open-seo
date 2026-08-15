@@ -104,11 +104,13 @@ OpenSEO-Application → `Edit` → `Additional settings` → `OAuth` → `Manage
 einschalten. Dann unter `Managed OAuth settings` die Redirect-URIs freigeben:
 
 - `localhost` bzw. Loopback für CLI- und Desktop-Agents — Hermes, Claude Code und Codex CLI
-  registrieren `http://localhost:PORT/callback`
-- HTTPS-Redirect-URIs für Web-Connectors, ein Pfad darf auf `/*` enden
+  registrieren `http://localhost:PORT/callback`; den Port wählt der Client je Sitzung,
+  Loopback deshalb generell freigeben
+- HTTPS-Redirect-URIs nur für Web-Connectors (für reinen CLI-Betrieb reicht Loopback);
+  ein Pfad darf auf `/*` enden
 
-Endpunkt für Hermes, einzutragen in `~/.hermes/config.yaml` bzw.
-`mcp-configs/mcp-servers.json`:
+Endpunkt für Hermes, einzutragen in `~/.hermes/config.yaml` (andere MCP-Clients nutzen
+ihre eigene Registry, etwa `mcp-configs/mcp-servers.json`):
 
 ```text
 https://<worker-hostname>/mcp
@@ -121,7 +123,8 @@ die geplanten Läufe aus [`cron-jobs.md`](./cron-jobs.md) headless funktionieren
 Die `oseo_`-API-Keys helfen hier nicht: sie hängen an `oauth-provider.ts` mit
 `getHostedBaseUrl()` und gelten nur für die gehostete Variante unter `app.openseo.so`.
 
-**Abnahme:** `whoami` über den MCP liefert Konto und verbleibende Credits.
+**Abnahme:** `whoami` über den MCP liefert Konto und verbleibende Credits. Ein zweiter
+Lauf ohne Browser bestätigt, dass das Refresh-Token trägt.
 
 ## Schritt 6 — Betrieb
 
@@ -135,7 +138,10 @@ Die `oseo_`-API-Keys helfen hier nicht: sie hängen an `oauth-provider.ts` mit
 Drei Dinge, die im Agenturbetrieb zählen:
 
 - **Dashboard-Änderungen an der Access-Policy werden beim nächsten Deploy überschrieben.**
-  Zugriff wird in `.env.selfhost` gepflegt, nicht im UI.
+  Zugriff wird in `.env.selfhost` gepflegt, nicht im UI. Ausnahme ist der
+  Managed-OAuth-Schalter aus Schritt 5: er lebt im Dashboard — nach jedem Deploy prüfen,
+  ob er noch aktiv ist; ob er ein Redeploy übersteht, ist unverifiziert (Fehlerbild:
+  angemeldet, aber keine Tools).
 - **Alle Zugelassenen arbeiten in einem gemeinsamen Workspace** und sehen dieselben
   Projekte. Innerhalb einer Instanz gibt es keine Mandantentrennung; wer Kundendaten
   trennen muss, deployt mehrfach.

@@ -25,7 +25,8 @@ Vollständige Schrittfolge im [Cloudflare-Runbook](../../cloudflare-runbook.md).
 2. **`alchemy destroy` nur nach ausdrücklicher Aufforderung.** Der Befehl löscht die
    stage-suffigierten D1-, KV- und R2-Ressourcen samt aller Daten.
 3. **Zugriff wird in `.env.selfhost` gepflegt, nicht im Dashboard.** Änderungen an der
-   Access-Policy im UI werden beim nächsten Deploy überschrieben.
+   Access-Policy (Allowlist) im UI werden beim nächsten Deploy überschrieben. Einzige
+   gewollte Dashboard-Einstellung ist der Managed-OAuth-Schalter.
 4. **Die IDs in `wrangler.jsonc` bleiben unverändert.** Sie gelten für lokale Entwicklung
    und Docker; miniflare leitet daraus per HMAC seine Dateinamen ab. Cloudflare-Deployments
    laufen ohnehin über `alchemy.run.ts` und lesen sie nicht.
@@ -67,7 +68,9 @@ kennen, bevor er einen Server bestellt.
 ein bloßes `pnpm alchemy login` fragt die Scopes nicht erneut ab. Dafür
 `pnpm alchemy login --configure`.
 
-Nach dem Deploy: Worker-URL öffnen, über Access anmelden, `/api/health` prüfen.
+Nach dem Deploy: Worker-URL öffnen, über Access anmelden, `/api/health` prüfen. Zusätzlich
+prüfen, ob Managed OAuth noch aktiv ist — ob der Schalter ein Redeploy übersteht, ist
+unverifiziert; das Fehlerbild wäre wieder „angemeldet, aber keine Tools".
 
 ### Zugriff verwalten
 

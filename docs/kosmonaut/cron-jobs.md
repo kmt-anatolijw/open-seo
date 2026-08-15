@@ -21,7 +21,12 @@ Gehört zu [`seo-team-hermes.md`](./seo-team-hermes.md).
 | Credit-Wächter | montags, 08:00       | Hermes  | nur bei Unterschreitung |
 
 Zeiten bewusst vor Arbeitsbeginn und versetzt, damit sich parallele Läufe nicht um
-Chromium-Instanzen und API-Kontingente streiten.
+Chromium-Instanzen und API-Kontingente streiten. Alle Zeitangaben in lokaler Zeit der
+Hermes-Maschine (Europe/Berlin).
+
+**Die Prompts sind vollständig.** Auch Abbruch- und Sonderregeln stehen im Prompt selbst —
+nur der Prompt erreicht den ausführenden Agenten. Was unter „Warum" steht, ist Begründung
+für euch, keine Anweisung an den Job.
 
 > **Rank-Checks stehen bewusst nicht in dieser Liste.** open-seo erledigt sie selbst: die
 > Cron-Trigger aus `wrangler.jsonc` — alle fünf Minuten Rank-Checks und
@@ -51,14 +56,14 @@ gespeicherter Baseline und kostet keine DataForSEO-Credits.
 > Führe `/seo drift compare` für jede Domain in der Kundenliste aus. Melde ausschließlich
 > Domains mit Abweichungen der Schwere hoch oder mittel. Fasse je betroffener Domain in
 > höchstens drei Sätzen zusammen: was sich geändert hat, seit wann, und ob es Handlung
-> erfordert. Gibt es nirgends eine Abweichung dieser Schwere, antworte mit genau
-> `KEINE ABWEICHUNG` und sonst nichts.
+> erfordert. Sind mehr als die Hälfte der Domains nicht erreichbar, brich den Lauf ab und
+> melde ein Infrastrukturproblem statt SEO-Drift. Gibt es nirgends eine Abweichung dieser
+> Schwere, antworte mit genau `KEINE ABWEICHUNG` und sonst nichts.
 
 **Empfänger:** OpenClaw, aber nur wenn die Antwort **nicht** `KEINE ABWEICHUNG` ist.
 
-**Abbruchbedingung:** Sind mehr als die Hälfte der Domains nicht erreichbar, den Lauf
-abbrechen und das als Infrastrukturproblem melden statt als SEO-Drift — sonst erzeugt ein
-Netzwerkausfall einen Fehlalarm über alle Mandate hinweg.
+**Warum die Abbruchregel im Prompt steht:** Sonst erzeugt ein Netzwerkausfall einen
+Fehlalarm über alle Mandate hinweg.
 
 **Stille ist Absicht.** Ein täglicher Job, der jeden Tag meldet, wird nach zwei Wochen
 ignoriert. Er meldet sich nur, wenn etwas ist.
@@ -76,7 +81,9 @@ ignoriert. Er meldet sich nur, wenn etwas ist.
 
 > Führe `/seo audit` für jede Domain in der Kundenliste aus, eine Domain nach der anderen.
 > Erzeuge je Domain einen PDF-Bericht über `/seo google report` und prüfe vor der Ablage,
-> dass die eingebaute Review `"status": "PASS"` meldet. Rufe open-seo nur, wenn das Audit
+> dass die eingebaute Review `"status": "PASS"` meldet. Schlägt die Review fehl, lege das
+> PDF nicht ab und kennzeichne die Domain in der Sammelmeldung als offen. Rufe open-seo
+> nur, wenn das Audit
 > eine Frage aufwirft, die Marktdaten oder Historie braucht — nenne in dem Fall vorher die
 > zu erwartenden Credits. Lege die Berichte unter `~/.hermes/workspace/seo/<domain>/<jahr-monat>/`
 > ab und schreibe je Domain drei Sätze in den Memory Vault: Gesamtbild, größte Veränderung
@@ -84,9 +91,7 @@ ignoriert. Er meldet sich nur, wenn etwas ist.
 
 **Empfänger:** OpenClaw mit Sammelmeldung und Ablagepfad, Details im PDF.
 
-**Abbruchbedingung:** Schlägt die PDF-Review fehl, das PDF **nicht** ablegen und die Domain
-in der Sammelmeldung als offen kennzeichnen. Ein Bericht mit leeren Diagrammen ist schlimmer
-als kein Bericht.
+**Warum:** Ein Bericht mit leeren Diagrammen ist schlimmer als kein Bericht.
 
 **Reihenfolge, nicht parallel.** Jedes `/seo audit` startet bereits bis zu 15 Subagents.
 Mehrere Domains gleichzeitig würden Hermes' Concurrency-Grenze sprengen und die Läufe
@@ -104,15 +109,17 @@ erschöpften DataForSEO-Credits scheitert.
 
 **Prompt:**
 
-> Rufe `whoami` gegen den open-seo-MCP auf. Liegt das verbleibende Guthaben unter der
-> Schwelle für einen vollständigen Monatslauf, melde den Stand und die Reichweite in Tagen.
-> Liegt es darüber, antworte mit genau `CREDITS OK` und sonst nichts.
+> Rufe `whoami` gegen den open-seo-MCP auf. Antwortet der MCP nicht oder scheitert die
+> Authentifizierung, melde ein Verbindungs- bzw. Auth-Problem — nicht einen Guthabenstand.
+> Liegt das verbleibende Guthaben unter der Schwelle für einen vollständigen Monatslauf,
+> melde den Stand und die Reichweite in Tagen. Liegt es darüber, antworte mit genau
+> `CREDITS OK` und sonst nichts.
 
 **Empfänger:** OpenClaw, nur wenn die Antwort nicht `CREDITS OK` ist.
 
-**Abbruchbedingung:** Antwortet der MCP nicht oder scheitert die Authentifizierung, als
-**Verbindungs- bzw. Auth-Problem** melden — nicht als Guthabenproblem. Ein abgelaufener
-Access-Zugang sieht sonst aus wie ein voller Credit-Stand und legt unbemerkt auch Job 0 lahm.
+**Warum die Auth-Unterscheidung im Prompt steht:** Ein abgelaufener Access-Zugang sieht
+sonst aus wie ein voller Credit-Stand und kappt unbemerkt auch die open-seo-Aufrufe des
+Monatsaudits.
 
 ---
 
@@ -120,13 +127,13 @@ Access-Zugang sieht sonst aus wie ein voller Credit-Stand und legt unbemerkt auc
 
 1. Je Kundendomain einmalig `/seo drift baseline <domain>` — ohne Baseline hat Job 1 nichts
    zu vergleichen und meldet jeden Tag einen Fehler.
-2. Die Kundenliste an einer Stelle pflegen, auf die alle drei Prompts verweisen, statt
-   Domains in drei Jobs zu duplizieren.
+2. Die Kundenliste an einer Stelle pflegen — `~/.hermes/workspace/seo/kundenliste.md` —
+   auf die alle drei Prompts verweisen, statt Domains in drei Jobs zu duplizieren.
 3. Zugang zum open-seo-MCP von der Hermes-Maschine aus prüfen. Die `oseo_`-API-Keys greifen
-   hier **nicht** — sie hängen am Hosted-Modus. Auf der self-hosted Instanz führt der Weg
-   über den Reverse Proxy und dessen Authentifizierung; bei Cloudflare Access ist das eine
-   einmalige interaktive Anmeldung, danach erneuert der Client über das Refresh-Token.
-   Läuft die Access-Sitzung ab, verlieren **alle** Jobs still den Zugriff — deshalb meldet
-   Job 3 einen Auth-Fehler ausdrücklich anders als einen niedrigen Guthabenstand.
+   hier **nicht** — sie hängen am Hosted-Modus. Der Weg ist die einmalige interaktive
+   Anmeldung über Cloudflare Access ([Runbook, Schritt 5](./cloudflare-runbook.md)); danach
+   erneuert der Client über das Refresh-Token. Läuft die Access-Sitzung ab, verlieren alle
+   open-seo-Aufrufe still den Zugriff — deshalb meldet Job 3 einen Auth-Fehler ausdrücklich
+   anders als einen niedrigen Guthabenstand.
 4. Jeden Job einmal von Hand auslösen, bevor der Zeitplan greift. Ein Cronjob, der zum
    ersten Mal um 04:00 fehlschlägt, wird erst am nächsten Werktag bemerkt.
