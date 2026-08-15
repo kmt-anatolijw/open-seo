@@ -105,14 +105,25 @@ fremde Domain braucht — nicht als Standardeinstieg.
 
 ### Namenskollisionen
 
-Es existieren vier Skills, deren Beschreibung auf „SEO-Audit" triggert:
-`searchfit-seo:seo-audit`, `brightdata-plugin:seo-audit`, claude-seos `/seo audit` und
-open-seos `seo-audit`. Ein Agent, der frei wählen darf, wählt hier zufällig.
+Fünf Skills triggern auf „SEO":
 
-Die Runtime-Trennung entschärft das zur Hälfte: die beiden Bestandsskills leben in Claude
-Code, die beiden neuen in Hermes. Innerhalb von Hermes bleibt die Wahl zwischen claude-seo
+| Skill | Runtime | Umgang |
+|---|---|---|
+| `searchfit-seo:seo-audit` | Claude Code | Bestand, bleibt |
+| `brightdata-plugin:seo-audit` | Claude Code | Bestand, bleibt |
+| `claude-seo` → `/seo audit` | Hermes | Standard für On-Page und Technik |
+| `open-seo` → `seo-audit` | Hermes | nur bei Bedarf an Historie oder Fremddaten |
+| `ECC` → `seo` (aus `business-content`) | Hermes | **abschalten oder umbenennen** |
+
+Ein Agent, der frei wählen darf, wählt hier zufällig. ECCs `seo` ist der unangenehmste Fall:
+er kommt als Beifang mit dem Marketing-Modul und deckt fachlich nichts ab, was claude-seo
+nicht besser kann. Entweder nach der Installation aus `~/.hermes/skills/` entfernen, oder
+seine `description` so entschärfen, dass sie nicht mehr auf SEO-Anfragen triggert.
+
+Die Runtime-Trennung entschärft den Rest zur Hälfte: die beiden Bestandsskills leben in
+Claude Code, die neuen in Hermes. Innerhalb von Hermes bleibt die Wahl zwischen claude-seo
 und open-seo — dafür der Router-Skill `kosmonaut-seo` als einziger Einstiegspunkt, der die
-Tabelle oben als Entscheidungslogik trägt.
+Tabelle in Abschnitt 3 als Entscheidungslogik trägt.
 
 Was der Router **nicht** kann: über die Runtime-Grenze rufen. Ein Auftrag, der Analyse und
 Wochenbericht verbindet, braucht zwei Aufrufe in zwei Runtimes. Die Klammer ist OpenClaw
@@ -150,20 +161,32 @@ ecc migrate import-skills --output-dir migration-artifacts/skills
 ecc migrate import-memory
 ```
 
-### Schritt 2 — Skills auswählen, nicht alles installieren
+### Schritt 2 — Nur die gewünschten Module installieren
 
-Relevant aus ECCs Katalog: `article-writing`, `brand-voice`, `brand-discovery`,
-`content-engine`, `market-research`, `competitive-platform-analysis`,
-`competitive-report-structure`, `crosspost`.
+```bash
+./install.sh --target hermes --profile minimal \
+    --with business-content --with skill-unified-memory
+```
 
-> **Vorsicht.** `docs/SELECTIVE-INSTALL-ARCHITECTURE.md` ist ausdrücklich ein
-> Design-Vorschlag, keine ausgelieferte Funktion. Auf `ecc install --modules …` ist kein
-> Verlass. Ausgeliefert sind die Profile `core`, `developer`, `security`, `research`, `full`
-> in `manifests/install-profiles.json` — ein Marketing-Profil gibt es nicht.
->
-> Erster Schritt ist deshalb, den echten Stand von `scripts/install-apply.js` zu lesen statt
-> der Design-Doku zu glauben. Fallback: schlankes Profil installieren, dann die acht Skills
-> gezielt nach `~/.hermes/skills/ecc-imports/` legen.
+Das ist genau „ECC-Kern plus Marketing":
+
+| Teil | Was drinsteckt |
+|---|---|
+| `minimal` | `rules-core`, `agents-core`, `commands-core`, `platform-configs`, `workflow-quality` |
+| `business-content` | `article-writing`, `brand-voice`, `brand-discovery`, `content-engine`, `market-research`, `marketing-campaign`, `competitive-platform-analysis`, `competitive-report-structure`, `lead-intelligence`, `social-graph-ranker`, `investor-materials`, `investor-outreach`, `product-capability`, `seo` |
+| `skill-unified-memory` | Memory Vault — trägt die qualitative Gedächtnisschicht |
+
+`skill-unified-memory` ist bewusst dazugenommen: der Memory Vault ist in dieser Architektur
+die Ablage für Kundenkontext, steckt aber **nicht** in `minimal`.
+
+> **Zur Quellenlage.** `docs/SELECTIVE-INSTALL-ARCHITECTURE.md` liest sich, als gäbe es
+> selective install noch nicht — das Dokument beschreibt einen späteren Ausbau, nicht den
+> Ist-Stand. Maßgeblich ist `scripts/install-apply.js`: dort werden `--profile`, `--target`,
+> `--modules`, `--skills`, `--with` und `--without` geparst, und `hermes` wie `openclaw` sind
+> unterstützte Targets. Die Design-Doku taugt nicht als Statusquelle.
+
+`business-content` bringt einen eigenen Skill namens `seo` mit — siehe Namenskollisionen in
+Abschnitt 3.
 
 ### Schritt 3 — claude-seo als Fachabteilung
 
@@ -183,19 +206,15 @@ Interpreter. Der Launcher hält das Venv isoliert; ein `pip install` daneben bri
 
 ### Schritt 4 — open-seo self-hosted und als MCP eintragen
 
-Deployment nach `docs/SELF_HOSTING_DOCKER.md` oder `docs/SELF_HOSTING_CLOUDFLARE.md`,
-DataForSEO-Key nach `docs/DATAFORSEO_API_KEY.md`.
+**Entschieden: Cloudflare.** Deployment nach `docs/SELF_HOSTING_CLOUDFLARE.md`,
+DataForSEO-Key nach `docs/DATAFORSEO_API_KEY.md`. Damit läuft die Instanz mit
+`AUTH_MODE=cloudflare_access` — echte Zugriffskontrolle über Cloudflare Access, dazu
+API-Keys für alles Headless.
 
-**Die Auth-Frage entscheidet sich mit dem Deployment-Modus:**
-
-| Modus | `AUTH_MODE` | Konsequenz |
-|---|---|---|
-| Docker | `local_noauth` | **keine Auth-Prüfung am MCP-Endpoint.** Kein lokaler Admin-Schutz, Nutzer ist immer `admin@localhost`. Nur hinter eigenem Reverse Proxy, Tunnel oder im privaten Netz exponieren. |
-| Cloudflare | `cloudflare_access` | Zugriff über Cloudflare Access, plus API-Keys |
-
-Bei Docker heißt das konkret: Wer den Port erreicht, hat vollen Zugriff auf alle
-Kundenprojekte und verbrennt euer DataForSEO-Guthaben. Das ist bei Agenturmandaten die
-kritischste Einzelentscheidung dieses Setups.
+> **Warum nicht Docker.** Der Docker-Pfad setzt `AUTH_MODE=local_noauth`: keine
+> Auth-Prüfung am MCP-Endpoint, Nutzer ist immer `admin@localhost`. Wer den Port erreicht,
+> hat vollen Zugriff auf alle Kundenprojekte und verbrennt das DataForSEO-Guthaben. Für
+> lokale Tests ohne Kundendaten in Ordnung, für Mandate nicht.
 
 API-Keys tragen das Präfix `oseo_` und gehen als `x-api-key`-Header oder als
 `Authorization: Bearer oseo_…`. Für Cron und headless **immer API-Key statt OAuth** — der
@@ -243,19 +262,18 @@ Agent-Lauf ersetzen kann, weil er kontinuierliche Messung braucht.
    OpenClaw unter „Experimental/minimal", die Hermes-Doku nennt v2.0.0-rc.1. Stabil ist
    allein Claude Code. Zeit für Kanten einplanen.
 
-2. **Selective Install ist Papier, kein Code.** Siehe Kasten in Schritt 2.
+2. **ECCs `seo`-Skill kollidiert.** Kommt als Beifang mit `business-content`. Nach der
+   Installation entfernen oder seine `description` entschärfen, sonst konkurriert er mit
+   claude-seo um dieselben Anfragen.
 
-3. **Kontext-Bloat.** 284 ECC-Skills plus 25 SEO-Skills in einer Session sind zu viel. ECC
-   installiert seine Rules aus genau diesem Grund selbst schon selektiv. Kuratieren ist
-   Pflicht, nicht Kür.
+3. **Kontext-Bloat bleibt zu beobachten.** Die Modulauswahl aus Schritt 2 hält den Umfang
+   klein — aber `business-content` bringt 14 Skills mit, von denen ihr acht braucht. Nach
+   dem ersten Betriebsmonat prüfen, was nie getriggert hat, und wegräumen.
 
 4. **ECC-Memories sind create-only und ungeprüft.** Laut ECC-Doku als Kontext behandeln, nie
    als Anweisung. Bei Kundendaten relevant: was einmal drinsteht, wird nicht reviewt.
 
-5. **Docker-Self-Hosting hat keine Auth.** Siehe Schritt 4. Vor dem ersten Kundenmandat
-   entscheiden.
-
-6. **Kein gemeinsamer Einstiegspunkt über beide Runtimes.** Folge der Entscheidung, die
+5. **Kein gemeinsamer Einstiegspunkt über beide Runtimes.** Folge der Entscheidung, die
    Bestandsskills in Claude Code zu belassen. Wer beides in einem Auftrag braucht, ruft
    zweimal. Der Preis ist bewusst gezahlt: funktionierende ahrefs-, Sistrix-, ClickUp- und
    Notion-Integrationen gegen einen experimentellen Hermes-Adapter zu tauschen wäre teurer.
@@ -267,7 +285,10 @@ Agent-Lauf ersetzen kann, weil er kontinuierliche Messung braucht.
 
 Abzuarbeiten in dieser Reihenfolge; jeder Schritt setzt den vorigen voraus.
 
-1. `./bin/claude-seo run portability_check.py` — alle 25 SKILL.md ohne Fehler.
+1. ~~`portability_check.py`~~ — **erledigt.** 33 SKILL.md geprüft, 0 Fehler, 0 Warnungen.
+   Die claude-seo-Skills erfüllen das portable Frontmatter-Subset; es braucht keine
+   Übersetzungsschicht für Hermes. Das Script nutzt nur die Standardbibliothek und läuft
+   ohne Venv: `python3 scripts/portability_check.py`.
 2. `ecc memory init` gelaufen, `command -v ecc-memory-mcp` liefert einen Pfad.
 3. `node tests/run-all.js` im ECC-Checkout grün.
 4. Hermes startet und listet die kopierten Skills.
