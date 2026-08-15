@@ -16,12 +16,52 @@ Gehört zu [`seo-team-hermes.md`](./seo-team-hermes.md).
 
 | Job            | Rhythmus             | Runtime | Meldung                 |
 | -------------- | -------------------- | ------- | ----------------------- |
+| Rank-Checks    | alle 30 Minuten      | Hermes  | nie, außer bei Fehler   |
 | Drift-Wache    | täglich, 06:15       | Hermes  | nur bei Abweichung      |
 | Monatsaudit    | 1. des Monats, 04:00 | Hermes  | immer, als PDF          |
 | Credit-Wächter | montags, 08:00       | Hermes  | nur bei Unterschreitung |
 
 Zeiten bewusst vor Arbeitsbeginn und versetzt, damit sich parallele Läufe nicht um
 Chromium-Instanzen und API-Kontingente streiten.
+
+> **Job 0 ist kein Komfort, sondern Ersatz für eine kaputte Plattformfunktion.** Auf der
+> self-hosted Hetzner-Instanz feuern die in `wrangler.jsonc` deklarierten Cron-Trigger
+> nicht: der Container fährt `vite preview` über miniflare, und der Vite-Cloudflare-Plugin
+> validiert `triggers.crons` nur, statt Scheduled-Events abzusetzen. Ohne Job 0 misst das
+> Rank-Tracking nie. Belege in [`hetzner-runbook.md`](./hetzner-runbook.md), Schritt 0.
+
+---
+
+## Job 0 — Rank-Checks
+
+**Zweck:** Ersetzt den `*/5 * * * *`-Cron, der im Container nicht feuert. Das MCP-Tool
+`run_rank_tracker` ruft intern dieselbe `RankTrackingService.triggerCheck()` auf wie der
+Scheduled-Handler.
+
+**Rhythmus:** alle 30 Minuten
+**Runtime:** Hermes
+**Voraussetzung:** je Kunde ein Rank-Tracker in open-seo angelegt
+
+**Prompt:**
+
+> Rufe für jedes Projekt in open-seo `run_rank_tracker` auf. Melde nichts, wenn alle Läufe
+> angenommen wurden — antworte dann mit genau `RANKS OK`. Scheitert ein Aufruf, nenne
+> Projekt und Fehlermeldung.
+
+**Empfänger:** OpenClaw, nur wenn die Antwort nicht `RANKS OK` ist.
+
+**Abbruchbedingung:** Antwortet der MCP-Endpunkt gar nicht, als Infrastrukturproblem melden
+und die restlichen Projekte nicht durchprobieren — bei einer nicht erreichbaren Instanz
+scheitern sie ohnehin alle.
+
+**Warum 30 Minuten statt 5.** Der Originaltakt war auf Cloudflares Edge-Cron ausgelegt, wo
+ein Tick fast nichts kostet. Über Hermes ist jeder Tick ein Agent-Lauf. SERP-Positionen
+ändern sich nicht im Fünfminutentakt; 30 Minuten liefern dieselbe Aussage bei einem Bruchteil
+der Läufe. Bei Bedarf enger stellen.
+
+> **Nicht abgedeckt:** `reconcileStaleAudits`, der zweite Teil desselben Crons, hat kein
+> MCP-Gegenstück. Audits, deren Workflow stirbt, bleiben auf „running" stehen und müssen
+> gelegentlich von Hand aufgeräumt werden.
 
 ---
 
@@ -99,8 +139,9 @@ erschöpften DataForSEO-Credits scheitert.
 
 **Empfänger:** OpenClaw, nur wenn die Antwort nicht `CREDITS OK` ist.
 
-**Abbruchbedingung:** Antwortet der MCP nicht, als Verbindungsproblem melden — nicht als
-Guthabenproblem. Die beiden Fälle brauchen verschiedene Reaktionen.
+**Abbruchbedingung:** Antwortet der MCP nicht oder scheitert die Authentifizierung, als
+**Verbindungs- bzw. Auth-Problem** melden — nicht als Guthabenproblem. Ein abgelaufener
+Access-Zugang sieht sonst aus wie ein voller Credit-Stand und legt unbemerkt auch Job 0 lahm.
 
 ---
 
@@ -110,7 +151,11 @@ Guthabenproblem. Die beiden Fälle brauchen verschiedene Reaktionen.
    zu vergleichen und meldet jeden Tag einen Fehler.
 2. Die Kundenliste an einer Stelle pflegen, auf die alle drei Prompts verweisen, statt
    Domains in drei Jobs zu duplizieren.
-3. API-Key-Auth für open-seo prüfen (`oseo_…` als `x-api-key`). Cron hat keinen Browser;
-   ein OAuth-Flow scheitert dort still.
+3. Zugang zum open-seo-MCP von der Hermes-Maschine aus prüfen. Die `oseo_`-API-Keys greifen
+   hier **nicht** — sie hängen am Hosted-Modus. Auf der self-hosted Instanz führt der Weg
+   über den Reverse Proxy und dessen Authentifizierung; bei Cloudflare Access ist das eine
+   einmalige interaktive Anmeldung, danach erneuert der Client über das Refresh-Token.
+   Läuft die Access-Sitzung ab, verlieren **alle** Jobs still den Zugriff — deshalb meldet
+   Job 3 einen Auth-Fehler ausdrücklich anders als einen niedrigen Guthabenstand.
 4. Jeden Job einmal von Hand auslösen, bevor der Zeitplan greift. Ein Cronjob, der zum
    ersten Mal um 04:00 fehlschlägt, wird erst am nächsten Werktag bemerkt.

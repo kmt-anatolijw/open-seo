@@ -204,24 +204,35 @@ cp -r agents/* ~/.hermes/agents/             # 18 Subagents, Pfad an Hermes anpa
 Die Python-Scripts laufen **immer** über `claude-seo run <script>`, nie über einen nackten
 Interpreter. Der Launcher hält das Venv isoliert; ein `pip install` daneben bricht das.
 
-### Schritt 4 — open-seo self-hosted und als MCP eintragen
+### Schritt 4 — open-seo auf Hetzner und als MCP eintragen
 
-**Entschieden: Cloudflare.** Deployment nach `docs/SELF_HOSTING_CLOUDFLARE.md`,
-DataForSEO-Key nach `docs/DATAFORSEO_API_KEY.md`. Damit läuft die Instanz mit
-`AUTH_MODE=cloudflare_access` — echte Zugriffskontrolle über Cloudflare Access, dazu
-API-Keys für alles Headless.
+**Entschieden: Hetzner, self-hosted, EU-Residenz.** Vollständige Schrittfolge im
+[Hetzner-Runbook](./hetzner-runbook.md), ausgeführt vom
+[`kosmonaut-devops`](./skills/kosmonaut-devops/SKILL.md)-Agenten.
 
-> **Warum nicht Docker.** Der Docker-Pfad setzt `AUTH_MODE=local_noauth`: keine
-> Auth-Prüfung am MCP-Endpoint, Nutzer ist immer `admin@localhost`. Wer den Port erreicht,
-> hat vollen Zugriff auf alle Kundenprojekte und verbrennt das DataForSEO-Guthaben. Für
-> lokale Tests ohne Kundendaten in Ordnung, für Mandate nicht.
+Möglich ist das, weil `Dockerfile.selfhost` **workerd** im Container fährt — dieselbe
+Cloudflare-Laufzeit, nur auf eigener Hardware. Vercel schied aus: die Anwendung bindet
+Workflows, Durable Objects und importiert quer durch die Services aus `cloudflare:workers`.
 
-API-Keys tragen das Präfix `oseo_` und gehen als `x-api-key`-Header oder als
-`Authorization: Bearer oseo_…`. Für Cron und headless **immer API-Key statt OAuth** — der
-OAuth-Flow braucht einen Browser, den ein Cronjob nicht hat.
+Zwei Eigenheiten, die den Betrieb prägen:
+
+**Keine eigene Authentifizierung.** Der Docker-Pfad läuft mit `AUTH_MODE=local_noauth`, der
+Nutzer ist immer `admin@localhost`. Der Zugangsschutz muss vollständig davor — Caddy mit
+TLS, dahinter Cloudflare Access über einen Tunnel oder Auth direkt im Proxy. Das
+Port-Binding steht bereits auf `127.0.0.1`.
+
+**Keine funktionierenden Cron-Trigger.** Der Container fährt `vite preview` über miniflare;
+der Vite-Cloudflare-Plugin validiert `triggers.crons` nur und setzt keine Scheduled-Events
+ab. `runScheduledRankChecks` und `reconcileStaleAudits` werden also nie automatisch
+aufgerufen. Die Rank-Checks übernimmt **Hermes-Cron über das MCP-Tool `run_rank_tracker`**,
+das intern dieselbe `RankTrackingService.triggerCheck()` aufruft — siehe
+[`cron-jobs.md`](./cron-jobs.md). Belege in Schritt 0 des Runbooks.
+
+Die `oseo_`-API-Keys helfen hier nicht: sie hängen an `oauth-provider.ts` mit
+`getHostedBaseUrl()` und gelten nur im Hosted-Modus.
 
 Danach den MCP-Endpoint der eigenen Instanz (Pfad `/mcp`) in `~/.hermes/config.yaml` bzw.
-`mcp-configs/mcp-servers.json` eintragen.
+`mcp-configs/mcp-servers.json` eintragen — erreichbar über die Domain, nicht über den Port.
 
 ### Schritt 5 — Router-Skill
 
