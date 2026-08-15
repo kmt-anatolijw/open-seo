@@ -35,3 +35,19 @@ Do not mine an entire session for papercuts or start a broad cleanup unless the 
 After a merge-ready or other code review verifies a finding, use `maintain-greptile-rules` only when the finding exposes a recurring or high-risk repository invariant that existing `.greptile/` context and automated checks do not capture. Do not promote one-off bugs or preferences into permanent review rules.
 
 Changes to `.greptile/**`, `AGENTS.md`, `CLAUDE.md`, `.agents/skills/**`, and `.github/**` alter the review control plane and must receive explicit maintainer review. CODEOWNERS requests that review; where repository settings allow, enable GitHub's requirement for code-owner approval. Repository-specific rules live in `.greptile/`; maintainers should configure or retain a minimal org-enforced Greptile baseline for external-contribution, secret, authentication, billing, CI, and rule-tampering risks. Agents should report an unverified or missing baseline and must not mutate dashboard or organization rules without explicit user authorization.
+
+## Kosmonaut operations (fork-only — never push this section upstream)
+
+- Deploy: `pnpm deploy:selfhost --yes` (chain: preflight → vite build --mode
+  selfhost → tsc → alchemy deploy). Auth via `pnpm alchemy login` (OAuth,
+  profile in `~/.alchemy`); the `access:write` scope is NOT required because
+  the Access application is hand-managed.
+- Config lives in `.env.selfhost` (gitignored): `DATAFORSEO_API_KEY` (base64),
+  `TEAM_DOMAIN` (full https:// URL), `POLICY_AUD`. With TEAM_DOMAIN+POLICY_AUD
+  set, the deploy provisions no Access — the e-mail allowlist lives in the
+  Zero-Trust Access policy `SelfHostAllow`, not in `ACCESS_ALLOWED_EMAILS`.
+- pnpm is pinned via `packageManager` (10.30.1); sharp's install script is
+  deliberately ignored in `pnpm-workspace.yaml` (transitive miniflare/wrangler
+  dep only — pnpm 11 errors without an explicit decision).
+- Milestone masterplan: `docs/kosmonaut/plan/README.md`. Live worker:
+  `open-seo-selfhost.kosmonaut-account.workers.dev`.
