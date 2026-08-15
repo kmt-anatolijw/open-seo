@@ -41,4 +41,53 @@ Router-Skill — arbeitsfähig, noch ohne open-seo-Anbindung (die kommt in M3).
 | SEO-Anfragen landen im falschen Skill    | ECCs `seo`-Skill noch aktiv                 | Arbeitspaket 5                                                                              |
 | Unerwartete Kanten im Hermes-Adapter     | ECC führt Hermes als „experimental"         | Befund an den Orchestrator melden, nicht lokal umbauen                                      |
 
+## Review-Befunde vor Ausführung (15.08.2026)
+
+Codex-Adversarial-Review des Plans plus Host-Fakten aus der Hermes-Config-Session.
+Die Arbeitspakete oben gelten nur noch mit diesen Korrekturen.
+
+**Host-Realität (deploy/docker-compose.yml, Commit 50c2fa8):**
+
+- Hermes läuft als **externes, digest-gepinntes Upstream-Image**
+  (`nousresearch/hermes-agent@sha256:3db34ce…`), kein eigener Build.
+- Persistenz: **genau ein Volume** `hermes-agent-data:/opt/data`. Alles außerhalb
+  ist beim Container-Recreate weg.
+- Runtime-User/HOME sind im Compose nicht gesetzt — kommen aus dem Upstream-Image,
+  vor der Installation per `docker image inspect` ermitteln.
+- **Egress-Proxy erzwungen:** `HTTPS_PROXY`/`HTTP_PROXY` fest auf
+  `hermes-egress-proxy:8080` mit Ziel-Allowlist. `registry.npmjs.org`, PyPI und der
+  Chromium-Download sind ohne explizite Freigabe blockiert — eine
+  Laufzeitinstallation scheitert schon am Egress-Filter, nicht erst am Recreate.
+
+**Konsequenzen für die Arbeitspakete:**
+
+1. **Build-Zeit statt Laufzeit:** ECC-CLI (fixe Version) und claude-seo-Venv/Chromium
+   gehören in ein vom gepinnten Image abgeleitetes Image; nur Config, Skills und
+   Memory in persistente Volumes. Achtung: abgeleitetes Image = Fork eines fremden
+   gepinnten Images mit eigenem Build-/Update-Pfad — Architekturentscheidung, vor
+   Start klären.
+2. **ECC-Checkout ist Voraussetzung:** `./install.sh` und `node tests/run-all.js`
+   brauchen ein gepinntes ECC-Repo (`affaan-m/ECC`, Commit/Tag festlegen).
+   „Setzt voraus: nichts" stimmt nicht; `npm install -g ecc-universal` liefert den
+   Checkout nicht.
+3. **ECC-Memory integrieren, nicht nur installieren:** eigener `ecc-memory-mcp`-Prozess
+   mit eigener `ECC_MEMORY_HARNESS`-Identität, registriert in `~/.hermes/config.yaml`;
+   `ecc memory init --scope project` aus explizit benanntem Projektverzeichnis.
+4. **Agent-Pfad verifizieren:** gültigen Subagent-Pfad der laufenden Hermes-Version
+   ermitteln, sonst ist die Abnahme grün, ohne dass `/seo audit` delegieren kann.
+5. **ECC-`seo`-Skill gar nicht erst installieren:** prüfen, ob `install-apply.js` im
+   gepinnten Stand `--without seo` unterstützt; nur sonst nachträglich deterministisch
+   entfernen (keine freien `description`-Edits — lokaler Drift).
+6. **Abnahme zweistufig:** Build-Kontext (portability_check, ECC-Tests) getrennt von
+   Runtime-Gates im finalen Container als Runtime-User; danach Container-Recreate und
+   Runtime-Gates wiederholen (Persistenzbeweis). Router-Routen nach open-seo müssen
+   bis M3 sauber fail-closed enden.
+7. **Skill-Manifest festlegen:** Plan sagt 25 Skills, portability_check zählt
+   33 SKILL.md (Extension-Mirrors). Vor der Abnahme das Soll-Manifest fixieren.
+
+**Prozess:** M2 wird von der Hermes-Config-Session über deren GSD-Flow ausgeführt
+(eigene Phase, Plan-Gate mit Cross-AI-Review, Build-Gate mit hermes-security) —
+nicht als direkte Installation aus dieser Session. Start erst nach Freigabe des
+Users in der Hermes-Session; aktuell laufen dort die Build-Gates für Phase 04.1.
+
 Teil des [Masterplans](./README.md).

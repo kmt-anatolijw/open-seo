@@ -38,7 +38,7 @@ das Ganze ab.
 | Meilenstein                      | Teilplan                                         | Team                | Setzt voraus | Status              |
 | -------------------------------- | ------------------------------------------------ | ------------------- | ------------ | ------------------- |
 | M1 open-seo läuft auf Cloudflare | [m1-cloudflare.md](./m1-cloudflare.md)           | kosmonaut-devops    | —            | fertig (15.08.2026) |
-| M2 Hermes-Werkbank steht         | [m2-hermes.md](./m2-hermes.md)                   | Hermes-Setup        | —            | offen               |
+| M2 Hermes-Werkbank steht         | [m2-hermes.md](./m2-hermes.md)                   | Hermes-Config-Session (GSD) | —    | delegiert 15.08.2026, wartet auf User-Freigabe |
 | M3 Verbindung steht              | [m3-verbindung.md](./m3-verbindung.md)           | kosmonaut-devops    | M1 + M2      | offen               |
 | M4 Automatisierung scharf        | [m4-automatisierung.md](./m4-automatisierung.md) | Hermes-Betrieb      | M3           | offen               |
 | M5 Abnahme                       | [m5-abnahme.md](./m5-abnahme.md)                 | Orchestrator + [DU] | M1–M4        | offen               |
