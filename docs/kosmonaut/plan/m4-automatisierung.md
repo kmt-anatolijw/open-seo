@@ -7,7 +7,7 @@ Hermes-Cron und melden über OpenClaw.
 | -------------- | ----------------------------------------------------------------------------------- |
 | Team           | Hermes-Betriebs-Agent auf der Hermes-Maschine                                       |
 | Verfahren      | [cron-jobs.md](../cron-jobs.md) — die Prompts sind vollständig, inkl. Abbruchregeln |
-| Setzt voraus   | M3 — die Kundenliste bestätigt [DU] in Arbeitspaket 1                               |
+| Setzt voraus   | M3 und M6a-Kontrollrahmen (Budget-Gate + Low-Trust aktiv, [agenten-strategie.md](../agenten-strategie.md)) — die Kundenliste bestätigt [DU] in Arbeitspaket 1 |
 | Übergabe an M5 | drei Jobs mit je einem grünen Handlauf, Zeitplan aktiv                              |
 
 **Keinen Rank-Check-Job anlegen.** Die Rank-Checks feuern auf Cloudflare als

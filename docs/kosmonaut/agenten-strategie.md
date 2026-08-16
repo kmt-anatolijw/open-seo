@@ -1,7 +1,7 @@
 # Von Tools zu Entscheidungen: Agenten-Teams für Kosmonaut-SEO
 
 Strategie-Ergänzung zum [Konzept](./seo-team-hermes.md) und [Masterplan](./plan/README.md).
-Stand 16.08.2026, Rev. 2 nach Codex-Adversarial-Review (Verdikt REWORK eingearbeitet).
+Stand 16.08.2026, Rev. 3 nach drei Codex-Review-Zyklen.
 Die Technik (M1 fertig, M2 delegiert an die Hermes-Session, M3 vorbereitet) beantwortet
 „womit". Dieses Dokument beantwortet „wer entscheidet was, auf welcher Datenbasis,
 mit wie viel Autonomie".
@@ -84,12 +84,16 @@ bzw. R2 abgelegt): Bundle-ID, `company_id`, Scope, Quelle+Abfragezeit+Parameter
 (Land, Gerät, Zeitraum), Rohdaten-Verweis, TTL. Der Verifizierer arbeitet NUR auf
 Bundles — er holt nichts erneut.
 
-**Evidence-Store-Regeln (fail-closed):** Namespace strikt je `company_id`
-(Pfad-Präfix in R2 bzw. Projekt-Zuordnung in open-seo); Worker lesen und
-schreiben ausschließlich im Namespace ihrer Company — Cross-Company-Zugriff ist
-ein Kill-Switch-Ereignis. Retention: Daten-TTL (Abschnitt 3, Punkt 2) + 90 Tage
-für die Nachmess-Historie; bei Mandats-Ende Export an den Kunden und Löschung,
-gleiche Regel wie für ECC-Memory.
+**Evidence-Store-Regeln (fail-closed):** Die Trennung je `company_id` wird
+**speicherseitig erzwungen**, nicht nur vereinbart: je Company ein eigener
+R2-Bucket oder ein prefix-gebundenes API-Token (R2 Scoped Credentials) bzw. in
+open-seo die Projekt-Bindung des MCP-Zugangs — ein Worker BESITZT technisch
+keinen Zugriff auf fremde Namespaces. Abnahmekriterium in M6a: ein
+Cross-Company-Leseversuch schlägt im Test technisch fehl. Der Kill-Switch
+(Abschnitt 5) bleibt als zweite Verteidigungslinie für alles, was der Erzwingung
+entgeht. Retention: Daten-TTL (Abschnitt 3, Punkt 2) + 90 Tage für die
+Nachmess-Historie; bei Mandats-Ende Export an den Kunden und Löschung, gleiche
+Regel wie für ECC-Memory.
 
 **Maßnahmen-Karte:** Was (konkret), Warum (Befund + Bundle-IDs), Baseline (Metrik
 vor Umsetzung), Aufwand (S/M/L), erwarteter Effekt (Metrik + Richtung),
@@ -117,7 +121,7 @@ Explizites Mapping (Codex-Befund: vorher vermischt):
 
 | Ebene | Objekt | Lebensdauer |
 | --- | --- | --- |
-| Paperclip **Company** | ein Mandant (Pilot: KOSMONAUT Germany) | persistent; trägt Budget, Approval-Queue, Audit-Log |
+| Paperclip **Company** | ein Mandant (Pilotwahl: offene Abstimmung, Abschnitt 6) | persistent; trägt Budget, Approval-Queue, Audit-Log |
 | Paperclip **Employee** | genau ein Hermes-Orchestrator je Company | persistent |
 | Hermes **Worker** (Subagents) | Datensammler (je Quelle), Analyst (claude-seo), Verifizierer | kurzlebig, je Lauf; erben `company_id`, Budget-Rest, Tool-Allowlist |
 | Repo-Agent | Executor im jeweiligen Website-Repo | je Maßnahme; erzeugt ausschließlich PRs |
@@ -181,8 +185,9 @@ Monatsreview.
 6. **M8b — Stufe 3** frühestens nach zwei vollen Stufe-2-Messfenstern; getrennter
    Meilenstein, weil das Aufstiegskriterium Beobachtungszeit erzwingt.
 
-Aufnahme von M6a–M8b in die Masterplan-Tabelle erfolgt durch den Orchestrator
-(M6a sofort nach M3, Rest bei M5-Abschluss).
+M6a ist im [Masterplan](./plan/README.md) als eigene Zeile und als
+Voraussetzung von M4 verankert (erledigt 16.08.2026); M6b–M8b nimmt der
+Orchestrator bei M5-Abschluss auf.
 
 **Pilotmandat — offener Abstimmungspunkt:** Diese Strategie schlägt
 **kosmonaut.io** als SEO-Pilot vor (Datenlage komplett: open-seo-Projekt mit GSC,
