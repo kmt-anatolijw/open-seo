@@ -3,7 +3,7 @@
 Start 16.08.2026 · Pilotmandat gemäß [Agenten-Strategie](./agenten-strategie.md)
 (User-Freigabe 16.08.2026). Datenbasis: GSC 90 Tage (Service-Account) +
 open-seo-Projekt „KOSMONAUT Germany" (GSC-Connect, Backlink-Pulse, Site-Audit,
-Rank-Tracker mit 45 Keywords, DE, Desktop+Mobile, wöchentlich, ~0,92 $/Check).
+Rank-Tracker mit 62 Keywords, DE, Desktop+Mobile, wöchentlich, ~0,92 $/Check).
 
 ## Ausgangslage (GSC, 90 Tage)
 
@@ -62,11 +62,57 @@ Pos 46 → 20–25.
 Snippet-Optimierung + Verlinkung auf kommerzielle Seiten — Traffic ist da,
 er konvertiert nur nicht zu Klicks.
 
+### F — Zukunfts- und Strategie-Cluster (Ahrefs-validiert, 16.08.2026)
+
+Auf Zuruf des Users ergänzt: Headless/Composable ist die Stärke, AI/Agentic
+Commerce das Zukunftsfeld, Partner-Technologien der kommerzielle Kern,
+OXID-Bestandsmarkt das Halte-Geschäft. Tracker um 17 Keywords erweitert
+(jetzt 62). Ahrefs-Kennzahlen (DE, Vol/Monat · KD · CPC):
+
+| Keyword | Vol | KD | Einordnung |
+| --- | --- | --- | --- |
+| shopify plus agentur | 2.956 | **1** | höchstes kommerzielles Volumen bei minimaler Difficulty — Priorität 1 im Partner-Cluster (aktuell Pos 41) |
+| shopware agentur | 2.962 | 3 | Traffic-Potenzial 3.100 — Cluster D bestätigt |
+| headless cms | 1.812 | 2 | Headless-Stärke ausspielbar |
+| shopify agentur | 1.647 | 26 | härtester Wettbewerb im Set |
+| headless commerce | 1.023 | **0** | Kernthema, praktisch unbesetzt |
+| e-commerce agentur | 1.006 | 4 | Kategorie-Keyword, Traffic-Potenzial 2.000 |
+| produktkonfigurator | 502 | 3 | Cluster B skaliert |
+| agentic commerce | 386 | **0** | Zukunfts-Keyword, JETZT früh besetzen (CPC 5 $) |
+| composable commerce | 267 | 0 | mit „mach architektur" (190/0) das Composable-Feld |
+| b2b commerce / b2b shopsystem / b2b e-commerce agentur | 255/152/114 | 0 | B2B-Cluster, CPC bis 12 $ |
+| headless commerce agentur | 168 | – | kommerzieller Headless-Intent |
+| oxid eshop / oxid agentur | 74/34 | 0–3 | kleines Volumen, hoher Business-Wert (Bestandsmarkt-Strategie) |
+
+Ahrefs-Gegencheck der Domain: nur 12 organische Keywords im Index — bestätigt
+den GSC-Befund (Non-Brand unerschlossen). Auffällig: `master data management`
+laut Ahrefs Pos 1 (4.800 Vol) auf /newsroom/insights/mdm/ — GSC zeigt für die
+Seite Ø Pos 35; Widerspruch nach Evidenzmatrix zu klären, bevor darauf gebaut
+wird.
+
+### Wettbewerbs-Erkenntnisse (KMT-Webseite-Session, 16.08.2026)
+
+Benchmarks: **DEPT (deptagency.com)** und **norisk.group** (München). Dritter
+Name („Hamburger Agentur") noch offen — beim User nachgefragt.
+
+- **DEPT-Muster übernehmen:** Facetten-Architektur Service × Industry, jeder
+  Case eine eigene URL (`/case/<kunde>/`), und vor allem
+  **`/partner/<technologie>/` als eigene Seitenebene** (DEPT: Adobe, Google,
+  Optimizely, Salesforce, Shopify Plus) — deckt sich exakt mit unserem
+  Partner-Cluster (commercetools, Shopware, Shopify Plus, OXID; die
+  /expertise/-Seiten sind der Ansatz dazu, brauchen aber Agentur-Intent, siehe
+  Karten A1/A2).
+- **norisk-Lücke nutzen:** Cases dort nur als Anker auf einer Sammelseite —
+  keine indexierbaren Einzel-URLs. KOSMONAUT hat /projekte/<kunde>/ bereits als
+  Einzel-URLs (Lucky Bike Pos 11, Linus Pos 9,5) — ausbaubar zu Case-SEO.
+- **Eigene Schwäche:** Startseite inhaltlich dünn (h1 „Unlocking E-Commerce
+  Growth.", nur zwei h2) — Architektur-Thema für den Website-Relaunch
+  (KMT-Webseite-Session), nicht für Cluster-A-Karten.
+
 ## Betrieb (wöchentlicher Takt)
 
-- **Rank-Check**: wöchentlich (45 Keywords, ~0,92 $/Check). 60 Tage ≈ 9 Checks
-  ≈ **8,30 $** — DataForSEO-Guthaben (Stand: 1 $) muss aufgeladen werden;
-  Empfehlung 20 $ (Puffer für Keyword-Metriken und SERP-Checks).
+- **Rank-Check**: wöchentlich (62 Keywords, ~1,25 $/Check geschätzt). 60 Tage ≈ 9 Checks
+  ≈ **11,50 $** — User lädt DataForSEO heute auf (bestätigt 16.08.2026).
 - **Messpunkte**: Tag 0 Baseline (Check heute gelaufen), Tag 30 Zwischenstand,
   Tag 60 Abschluss — je: Positionsverteilung, Non-Brand-Klicks (GSC), Klicks der
   fünf Cluster.
