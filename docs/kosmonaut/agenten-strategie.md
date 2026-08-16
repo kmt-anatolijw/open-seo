@@ -84,6 +84,13 @@ bzw. R2 abgelegt): Bundle-ID, `company_id`, Scope, Quelle+Abfragezeit+Parameter
 (Land, Gerät, Zeitraum), Rohdaten-Verweis, TTL. Der Verifizierer arbeitet NUR auf
 Bundles — er holt nichts erneut.
 
+**Evidence-Store-Regeln (fail-closed):** Namespace strikt je `company_id`
+(Pfad-Präfix in R2 bzw. Projekt-Zuordnung in open-seo); Worker lesen und
+schreiben ausschließlich im Namespace ihrer Company — Cross-Company-Zugriff ist
+ein Kill-Switch-Ereignis. Retention: Daten-TTL (Abschnitt 3, Punkt 2) + 90 Tage
+für die Nachmess-Historie; bei Mandats-Ende Export an den Kunden und Löschung,
+gleiche Regel wie für ECC-Memory.
+
 **Maßnahmen-Karte:** Was (konkret), Warum (Befund + Bundle-IDs), Baseline (Metrik
 vor Umsetzung), Aufwand (S/M/L), erwarteter Effekt (Metrik + Richtung),
 **Messfenster** (z. B. 28 Tage nach Merge) und **Kontrollsignal** (Vergleichsmetrik,
@@ -118,9 +125,12 @@ Explizites Mapping (Codex-Befund: vorher vermischt):
 
 Wichtig und ehrlich: Paperclips Mandanten-Trennung ist **logische** Isolation
 (Company-Objekte, Rollen, Budgets) — Runtime, Secrets und Egress trennt sie nicht
-von selbst. Die harten Grenzen kommen aus dem Hermes-Deploy (Egress-Proxy,
-Low-Trust-Sandbox, Secret-Scope) gemäß KONZEPT.md — das ist Infrastruktur der
-Hermes-Session, nicht dieser Strategie.
+von selbst. Härtere Grenzen liefert der Hermes-Deploy (Egress-Proxy mit
+Allowlist, Low-Trust-Sandbox) — mit den in KONZEPT.md offen ausgewiesenen
+Restrisiken: Egress ist geteilt (Exfiltrations-Restrisiko), die
+Secret-Scope-Mechanik ist noch in Arbeit. Beides ist Infrastruktur der
+Hermes-Session; diese Strategie behauptet keine Isolation, die dort noch nicht
+existiert.
 
 **ECC-Memory-Regeln** (Kundendaten!): Nur Datenklassen „SEO-Fachkontext" und
 „Präferenzen" — keine PII, keine Zugangsdaten, keine Vertragsdaten. Memories sind
@@ -132,8 +142,8 @@ eigener Scope; Löschregel: Mandats-Ende = Memory-Export + Löschung.
 | Stufe | Agenten dürfen | Mensch | Aufstiegskriterium (messbar) |
 | --- | --- | --- | --- |
 | **0 — assistiert** (heute) | Daten holen, analysieren auf Zuruf | stößt an, liest alles | M1–M3 abgenommen |
-| **1 — geplant** | Cron-Läufe + Maßnahmen-Karten erzeugen | genehmigt jede Karte in Paperclip | ≥ 20 Karten UND ≥ 30 Tage Betrieb UND 0 HIGH-Fehler (falscher Mandant, erfundener Beleg, Budget-Riss) UND Ablehnungsquote < 30 % |
-| **2 — teilautonom** | Karten mit Aufwand S + reversibel + eigenes Objekt als PR umsetzen (Merge bleibt beim Menschen) | genehmigt PRs + alles über Schwelle | ≥ 10 gemergte Stufe-2-Maßnahmen UND 2 abgeschlossene Messfenster UND 0 Regressions-Reverts |
+| **1 — geplant** | Cron-Läufe + Maßnahmen-Karten erzeugen; **nach menschlicher Karten-Freigabe** darf der Executor den zugehörigen PR erstellen (Merge bleibt beim Menschen) | genehmigt jede Karte in Paperclip + jeden Merge | ≥ 20 Karten UND ≥ 30 Tage Betrieb UND 0 HIGH-Fehler (falscher Mandant, erfundener Beleg, Budget-Riss) UND Ablehnungsquote < 30 % |
+| **2 — teilautonom** | Karten mit Aufwand S + reversibel + eigenes Objekt **ohne Einzelfreigabe der Karte** als PR umsetzen (Merge bleibt beim Menschen) | genehmigt PRs + alles über Schwelle | ≥ 10 gemergte Stufe-2-Maßnahmen UND 2 abgeschlossene Messfenster UND 0 Regressions-Reverts |
 | **3 — autonom im Budget** | kompletter Kreis inkl. Nachmessen innerhalb Budget/Policy; Merge weiter nur nach PR-Review | Stichproben, Eskalationen, Monatsreview | — |
 
 „Reversibel" maschinenprüfbar: Änderung liegt als PR vor, betrifft nur Inhalte/Meta
@@ -147,28 +157,41 @@ Monatsreview.
 
 ## 6. Die nächsten Schritte (neu geschnitten, M4/M5 unangetastet)
 
-1. **M2/M3 abschließen** (läuft). M4 (Cron scharf) und M5 (Abnahme) bleiben exakt wie
-   im Masterplan definiert — die Sentinel-Outputs (`KEINE ABWEICHUNG`, `CREDITS OK`)
-   und wörtlichen Prompts aus [cron-jobs.md](./cron-jobs.md) werden NICHT angefasst.
-2. **M6a — Kontrollrahmen zuerst:** Paperclip-Company „KOSMONAUT Germany" + Employee
+1. **M2/M3 abschließen** (läuft). Die INHALTE von M4 (Cron scharf) und M5 (Abnahme)
+   bleiben exakt wie im Masterplan definiert — Sentinel-Outputs (`KEINE ABWEICHUNG`,
+   `CREDITS OK`) und wörtliche Prompts aus [cron-jobs.md](./cron-jobs.md) werden
+   NICHT angefasst. Aber: **der Kontrollrahmen (M6a) zieht VOR den ersten echten
+   M4-Datenlauf** — Reihenfolge neu: M2/M3 → M6a → M4 → M5 („Guardrails vor echten
+   Kundendaten", KONZEPT.md). Der Orchestrator spiegelt diese Reihenfolge im
+   Masterplan.
+2. **M6a — Kontrollrahmen:** Paperclip-Company des Pilotmandats + Employee
    (Hermes-Orchestrator), Budget-Guard scharf, Low-Trust-Preset, Approval-Queue.
-   Guardrails vor Datenausbau — nicht umgekehrt.
+   Startbedingung für M4-Cron-Betrieb — kein geplanter Lauf auf Kundendomains
+   ohne Budget-Gate und Low-Trust-Preset.
 3. **M6b — Tool-Preflights + Anbindung:** Abnahmematrix VOR jeder Anbindung:
    Screaming Frog (auf welcher Maschine? Lizenz? headless-Betrieb), Ahrefs
    (Scopes/Kosten je Call), GA4 (Scopes, Property-Mapping), DataForSEO
    (Mindestguthaben definieren und aufladen — aktuell 1 USD, untauglich). Dann
    Anbindung + je Quelle ein Datensammler-Prompt.
-4. **M7 — Evidence-Pilot:** Pipeline aus Abschnitt 3 einmal komplett auf kosmonaut.io:
-   Cron-Befunde → Evidence-Bundles → Verifizierer → Maßnahmen-Karten →
-   Paperclip-Approval → 1–2 PRs im Website-Repo → Messfenster. Stufe 1 beginnt.
+4. **M7 — Evidence-Pilot:** Pipeline aus Abschnitt 3 einmal komplett auf dem
+   Pilotmandat: Cron-Befunde → Evidence-Bundles → Verifizierer → Maßnahmen-Karten
+   → Paperclip-Approval → 1–2 PRs, die der Executor NACH der Karten-Freigabe
+   erstellt (Stufe-1-konform, siehe Abschnitt 5) → Messfenster.
 5. **M8a — Stufe 2** nach erfülltem Kriterium aus Abschnitt 5.
 6. **M8b — Stufe 3** frühestens nach zwei vollen Stufe-2-Messfenstern; getrennter
    Meilenstein, weil das Aufstiegskriterium Beobachtungszeit erzwingt.
 
-Aufnahme von M6a–M8b in die Masterplan-Tabelle erfolgt beim M5-Abschluss durch den
-Orchestrator. Pilotmandat: **kosmonaut.io** (open-seo-Projekt läuft mit GSC,
-Backlinks, Audit). Zweitmandat danach: mysilkskin.de (GSC-Zugriff über den
-Service-Account besteht).
+Aufnahme von M6a–M8b in die Masterplan-Tabelle erfolgt durch den Orchestrator
+(M6a sofort nach M3, Rest bei M5-Abschluss).
+
+**Pilotmandat — offener Abstimmungspunkt:** Diese Strategie schlägt
+**kosmonaut.io** als SEO-Pilot vor (Datenlage komplett: open-seo-Projekt mit GSC,
+Backlinks, Audit; eigene Domain = geringstes Risiko). KONZEPT.md fixiert für den
+allgemeinen Hermes-Mandanten-Rollout jedoch die Reihenfolge DigitalPhoenix →
+MySilkSkin → Tiaex → KOSMONAUT. Ob der SEO-Pilot davon abweichen darf,
+entscheidet der User; bis dahin gilt die KONZEPT.md-Reihenfolge als Default.
+Zweitmandat aus SEO-Sicht: mysilkskin.de (GSC-Zugriff über den Service-Account
+besteht).
 
 Teil der Kosmonaut-Doku; Meilenstein-Zuschnitte pflegt der Orchestrator im
 [Masterplan](./plan/README.md).
