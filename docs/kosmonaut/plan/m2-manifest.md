@@ -73,9 +73,9 @@ competitive-report-structure,marketing-campaign
 
 (= business-content-Pfade außer `seo`; `skill-unified-memory` ist im
 minimal-Profil bereits enthalten, ein separates `--with` entfällt.
-**Zählabgleich im Plan-Gate:** die Liste oben hat 13 Einträge, der Befund
-sprach von „14 Pfaden außer seo" — gegen `manifests/install-modules.json`
-abgleichen, ob ein Pfad fehlt oder 14 = 13 + seo gemeint war.)
+Zählabgleich geklärt 17.08.: business-content hat laut
+`manifests/install-modules.json` 14 Pfade gesamt, davon einer `seo` —
+die 13er-Liste oben ist maschinell abgeglichen vollständig und maßgeblich.)
 
 ## Abnahme-Zählwerte
 
