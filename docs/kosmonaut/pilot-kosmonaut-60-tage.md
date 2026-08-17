@@ -116,9 +116,15 @@ Name („Hamburger Agentur") noch offen — beim User nachgefragt.
 - **Messpunkte**: Tag 0 Baseline (Check heute gelaufen), Tag 30 Zwischenstand,
   Tag 60 Abschluss — je: Positionsverteilung, Non-Brand-Klicks (GSC), Klicks der
   fünf Cluster.
-- **Erfolgskriterium Tag 60**: Cluster A: ≥ 3 Keywords in Top 5; Cluster B:
-  ≥ 2 in Top 3; Cluster C: neue Seite indexiert + erste Top-20-Position;
-  Cluster D: shopware agentur ≤ Pos 25; Non-Brand-Klicks/Woche ≥ 5× Baseline.
+- **Erfolgskriterium Tag 60** (nachgeführt 17.08. gemäß Council + Plan-Fassung 2):
+  Cluster A: ≥ 3 Keywords in Top 5; Cluster B: ≥ 2 in Top 3; Cluster D:
+  shopware agentur Pos 47 → 20–25 (kein Klick-Versprechen — shopware.com hält
+  Pos 1, 2 und 9); Non-Brand-Klicks/Woche ≥ 5× Baseline; dazu die A0-KPIs
+  (CTA-Klicks, Formular-Starts, Kontaktseiten-Aufrufe). Cluster-C-Kriterium
+  gestrichen (Council 4/4); Lead-Bewertung als Nachmessung am Tag 90.
+  Maßgeblicher Umsetzungsplan: Content-Plan Fassung 2 (kmt-website-fix,
+  `docs/content-plan-60-tage`, Commit `980b784`) — Kalender: Tag 1 = 18.08.,
+  Merge-Deadline Tag 25 = 11.09., Tag 60 = 16.10.2026.
 - Umsetzung der On-Page-Maßnahmen: claude-seo (`/seo page`, `/seo technical`)
   liefert die konkreten Änderungen je URL; Umsetzung als PRs im Website-Repo
   (Stufe-1-konform: Karte → Freigabe → PR).

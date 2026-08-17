@@ -82,3 +82,40 @@ Dieses Urteil ÜBERSTIMMT bei Konflikt die Prioritäten des 60-Tage-Plans.
 
 ---
 *Grundsatz des Urteils: Die vier Perspektiven widersprechen sich weniger, als es scheint — sie beschreiben dieselbe Lücke von vier Seiten: Der Plan ist ein guter Ranking-Plan, dem Vorbedingungen (CMS-Governance), Messkette (Leads) und Leitplanken (URL-Matrix) fehlen. Das Urteil ergänzt diese drei und schneidet alles ab, was im 60-Tage-Fenster keine Klicks oder Anfragen liefern kann.*
+
+---
+
+## Addendum — Nachführungen vom 17.08.2026 (nach Plan-Fassung 2)
+
+Quelle: Content-Plan Fassung 2 (kmt-website-fix, Branch `docs/content-plan-60-tage`,
+Commits `f49733b` + `980b784`) und KMT-SXO-Prüfung mit Ahrefs-SERP DE vom 17.08.2026.
+
+1. **D1 (Shopify Plus) — Zweitbedingung Partnerstatus.** SERP-Beleg: shopstrategen.de
+   rankt mit DR 6 auf Pos 10 (Autorität ist nicht die Hürde — stützt Pro-Seite),
+   aber JEDES rankende Ergebnis führt eine Akkreditierung im Title („offizieller
+   Shopify Plus Partner" u. ä. — stützt Brands Einwand). Konditionalität erweitert:
+   Karte startet nur mit belastbarem Referenz-Case UND benennbarem
+   Shopify-Partnerstatus. Fehlt eines von beiden → Relaunch-Briefing.
+2. **D2-Ausnahme Darkstar.** Die Hub-Verschiebung bleibt; die Darkstar-Produktseite
+   (Ersatz der Frontastic-URL per 301) ist davon ausgenommen — neuer Fakt der
+   KMT-Session: eigenes Middleware-Produkt, produktiv bei SW-Motech. Vier
+   Geschäftsentscheidungen als Livegang-Blocker; Bewertung erst Tag 90 (liegt
+   hinter Merge-Deadline 11.09.).
+3. **Evidenzregel ergänzt (QS-Fall Frontastic).** Ahrefs-GSC-Konnektor liefert
+   Seiten-Aggregate; als Query-Werte gelesen ergab das ein Phantom-Ranking
+   (Frontastic „Pos 7,9" — real laut GSC query+page: 1 Impr./Pos 69; beste
+   Headless-URL ist /expertise/commercetools/ mit 144 Impr./Pos 22,4). Regel:
+   Wo eine Zahl eine Entscheidung trägt, wird sie nach Query UND Seite
+   aufgeschlüsselt (Service-Account-GSC als Referenz). Konsequenz im Plan:
+   Composable-Framing in A1 + Link commercetools→Darkstar ist die tragende
+   Headless-Maßnahme des Fensters, nicht der 301.
+4. **Risiko 3 konkretisiert (Roomle).** /expertise/produktkonfigurator-roomle/
+   hält das Hauptranking des Konfigurator-Clusters (augmented reality
+   konfigurator: 279 Impr./Pos 8,4) und fehlte in der Bestandsaufnahme.
+   Matrix-Regel Pflicht: 301 in die LP oder De-Optimierung auf die Marke —
+   Entscheidung Anatolij (Plan Teil 7, Punkt 3a) VOR dem Bau der LP.
+5. **Schema-Befund (KMT, code-verifiziert).** structured-data.ts liefert nur
+   Organization/WebSite/BreadcrumbList — kein Service/FAQPage/Article. FAQPage
+   bringt seit 2023 keine Rich Results mehr (Wert: AI-Extraktion); Schema-Arbeit
+   ist Code-PR mit Deploy, nicht CMS-Pflege. Karten A1–A3 sind davon unberührt
+   (enthalten kein FAQ-Markup); betrifft Aufwandsschätzungen künftiger Seiten.
