@@ -10,11 +10,28 @@
 | Setzt voraus   | M1 (Worker-Hostname), M2 (Hermes läuft)                                                              |
 | Übergabe an M4 | funktionierender MCP-Zugang, dessen Refresh-Token headless trägt                                     |
 
+## Auth-Weg (entschieden 18.08.2026 — Weg A: Managed OAuth)
+
+D-09(d)-Befund der Hermes-Config-Session, verifiziert am Upstream-Code von
+NousResearch/hermes-agent: `tools/mcp_oauth.py` beherrscht Discovery, Dynamic
+Client Registration, PKCE und Token-Exchange (inkl. redirect_uri/Port-Cache
+gegen den Restart-Fall); Tokens persistieren unter `HERMES_HOME/mcp-tokens/`
+(liegt laut 04.3-Image-Layout im persistenten Volume, überlebt
+Container-Recreates). Damit: **kein openseo-Patch, kein Service-Token, kein
+Cloudflare-Dashboard-Moment.** Das email-Claim-Erfordernis des
+Selfhost-MCP-Pfads ist erfüllt (Identity-JWT). Fallback bleibt Weg B
+(Service-Token + openseo-Patch für common_name-Mapping), nur falls der
+OAuth-Flow im Container praktisch hakt — dann Befund an den Orchestrator.
+
+Hermes-seitiger M3-Scope zusätzlich: `openseo.tiaex.ai` in die
+Egress-Allowlist des hermes-agent (erzwungener Egress-Proxy).
+
 ## Menschliche Schritte [DU]
 
-- Managed OAuth im Zero-Trust-Dashboard einschalten und die Loopback-Redirect-URIs
-  freigeben — Klickpfad im Runbook, Schritt 5
-- Einmalige interaktive MCP-Anmeldung auf der Hermes-Maschine
+- ~~Managed OAuth im Zero-Trust-Dashboard einschalten~~ **erledigt 16.08.2026**
+  (Discovery auf `openseo.tiaex.ai/mcp` verifiziert)
+- Einmalige interaktive MCP-Anmeldung auf der Hermes-Maschine (~1 Minute) —
+  wird gebündelt erst abgerufen, wenn M2 durch ist und der Eintrag steht
 
 ## Arbeitspakete
 
