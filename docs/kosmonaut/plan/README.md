@@ -38,7 +38,7 @@ das Ganze ab.
 | Meilenstein                      | Teilplan                                         | Team                | Setzt voraus | Status              |
 | -------------------------------- | ------------------------------------------------ | ------------------- | ------------ | ------------------- |
 | M1 open-seo läuft auf Cloudflare | [m1-cloudflare.md](./m1-cloudflare.md)           | kosmonaut-devops    | —            | fertig (15.08.2026) |
-| M2 Hermes-Werkbank steht         | [m2-hermes.md](./m2-hermes.md)                   | Hermes-Config-Session (GSD) | —    | delegiert 15.08.2026, wartet auf User-Freigabe |
+| M2 Hermes-Werkbank steht         | [m2-hermes.md](./m2-hermes.md)                   | Hermes-Config-Session (GSD) | —    | läuft — Freigabe 17.08.2026, Priorität angeordnet |
 | M3 Verbindung steht              | [m3-verbindung.md](./m3-verbindung.md)           | kosmonaut-devops    | M1 + M2      | offen               |
 | M6a Kontrollrahmen               | [agenten-strategie.md](../agenten-strategie.md), Abschnitt 6 | Hermes-Betrieb | M3    | definiert 16.08.2026 |
 | M4 Automatisierung scharf        | [m4-automatisierung.md](./m4-automatisierung.md) | Hermes-Betrieb      | M3 **+ M6a** | offen               |
@@ -67,7 +67,7 @@ lebt in dieser Policy, nicht in `ACCESS_ALLOWED_EMAILS`).
 | in M1  | `alchemy login` + `bootstrap` im Browser bestätigen; beide Werte in `.env.selfhost` | M1          |
 | in M3  | Managed OAuth im Zero-Trust-Dashboard einschalten, Redirect-URIs freigeben          | M3          |
 | in M3  | einmalige interaktive MCP-Anmeldung auf der Hermes-Maschine                         | M3          |
-| in M4  | Kundenliste bestätigen: welche Domains überwacht werden                             | M4          |
+| in M4  | Kundenliste bestätigen — entschieden 17.08.2026: kosmonaut.io, mysilkskin.de, shop.wenko.de (Default aus den angebundenen GSC-Properties) | M4          |
 | in M5  | Abnahme gegenzeichnen                                                               | M5          |
 
 ## Grundregeln für alle Teams
