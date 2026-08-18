@@ -31,11 +31,15 @@ D6-Entscheidung: 301 auf /services/), 4 alte News, 2 Projekt-Cases
 ## Befund 2 — dev-Subdomain ist teilindexiert (Hygiene/Leak)
 
 `https://dev.kosmonaut.io/rechtlichehinweise/impressum/` sammelt Impressionen
-in der GSC (sc-domain-Property fängt Subdomains). Das widerspricht der
-erwarteten Zwangs-noindex-Regel für Nicht-Prod (`NEXT_PUBLIC_VERCEL_ENV`) —
-entweder greift sie auf dieser Route/diesem Deploy nicht, oder ein älterer
-Stand ist erreichbar. **An KMT-Session gemeldet:** dev-Subdomain prüfen
-(noindex verifizieren, besser Zugriffsschutz), URL-Entfernung in GSC erwägen.
+in der GSC (sc-domain-Property fängt Subdomains). **Diagnose (KMT, 18.08.):
+Konfiguration ist korrekt** — dev liefert robots.txt `Disallow: /` UND meta
+`noindex,nofollow`. Es ist das klassische Robots-Paradox: Disallow verhindert
+das Crawlen, dadurch liest Google das noindex nie („Indexiert, obwohl durch
+robots.txt blockiert"). Abhilfe: (a) GSC-Removal-Request für die
+dev-Subdomain — das Removals-Tool ist UI-only (kein API-Endpoint), also ein
+Anatolij-Klick, auf der gebündelten Entscheidungsliste; (b) Disallow auf
+Nicht-Prod lockern, damit noindex gelesen wird — Backlog, kein
+Offensive-Blocker.
 
 ## Befund 3 — Kleinigkeiten
 
