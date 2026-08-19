@@ -11,27 +11,30 @@ Ist-Werte live von Prod gezogen (fetch_page, 19.08.2026, HTTP 200).
 
 ---
 
-## ⚠ Vorab-Befund: Title-Suffix wird vom Code angehängt
+## ✅ Erledigt: Title-Suffix ist Content, nicht Code
 
-Alle drei Prod-Titles enden auf `- Kosmonaut`, zwei zusätzlich auf
-`| Kosmonaut E-Commerce Agentur aus OWL`. A1 führt „Kosmonaut" dadurch
-doppelt. Das heißt: der Wert im Strapi-Title-Feld ist **nicht** der Title in
-der SERP — ein Template hängt an.
+**Aufgelöst 19.08.2026 durch die KMT-Session**, mit zwei unabhängigen Belegen:
+`app/[[...rest]]/page.tsx:79` reicht `res.Title` unverändert an
+`generateFullMetadata` weiter, in `utils/seo/metadata.ts` gibt es keine
+Konkatenation, ein Next-`title.template` existiert nirgends im Repo;
+Live-Gegenprobe zeichengleich mit dem Strapi-Feld.
 
-**Vor dem Eintragen zu klären (KMT, Code):** Wie lautet das
-`metadata.title.template` bzw. der Suffix-Aufbau? Danach gilt für die
-Vorlage: Wenn der Code die Marke anhängt, wird `| KOSMONAUT` aus den
-Soll-Titles unten **gestrichen** (sonst doppelte Marke und >80 Zeichen). Die
-Längenangaben unten sind ohne Suffix gerechnet.
+**Folge:** Der Marken-Anhang „- Kosmonaut" steht redaktionell im Feld. Die
+Soll-Titles müssen die Marke selbst mitbringen — `| KOSMONAUT` bleibt drin,
+nichts wird gestrichen. Die Längen unten gelten wie gerechnet, und die
+Marken-Dopplung bei A1 verschwindet mit dem neuen Wert von allein.
 
----
+Damit wird die Längenfrage (D11) zur eigentlichen Entscheidung: die
+freigegebenen Fassungen sind 77 bzw. 70 Zeichen lang und werden in der SERP
+abgeschnitten.
 
 ## A1 — `https://kosmonaut.io/expertise/commercetools/`
 
 | Feld | Wert |
 | --- | --- |
 | **Title (Soll, freigegeben)** | `commercetools Agentur – zertifizierter Partner für B2B, B2C & D2C \| KOSMONAUT` (77 Z.) |
-| **Title (QS-Variante, empfohlen)** | `commercetools Agentur & Solution Partner für B2B & D2C \| KOSMONAUT` (66 Z.) |
+| **Title (QS-Empfehlung, final)** | `commercetools Agentur & Solution Partner \| KOSMONAUT` (52 Z.) |
+| Title (Alternative mit Zielgruppen) | `commercetools Agentur & Solution Partner für B2B & D2C \| KOSMONAUT` (66 Z.) |
 | Title (Ist, Prod 19.08.) | `Kosmonaut - commercetools Partner und – maßgeschneiderter E-Commerce für B2B, B2C und D2C - Kosmonaut` (101 Z.) |
 | **Meta-Description (Soll)** | `commercetools Agentur mit Implementierungs-Erfahrung: Composable Commerce für B2B, B2C und D2C — Beratung, Entwicklung, Betrieb. Jetzt Projekt anfragen.` (152 Z.) |
 | Description (Ist) | „Ein Shopsystem für den E-Commerce, das sich ganz nach dem Schwerpunkt…" (209 Z., abgeschnitten in der SERP) |
@@ -41,8 +44,13 @@ Längenangaben unten sind ohne Suffix gerechnet.
 
 **QS-Flags A1**
 
-1. **77 Zeichen sind zu lang** — die eigene A2-Karte fordert ≤ 65. Empfehlung:
-   QS-Variante (66 Z.) oder `commercetools Agentur – Solution Partner | KOSMONAUT` (52 Z.).
+1. **77 Zeichen sind zu lang** — die eigene A2-Karte fordert ≤ 65, und der
+   Suffix ist Content, wird also mitgezählt. Empfehlung ist die 52-Zeichen-
+   Fassung: `commercetools agentur` (445 + 475 Impr. auf zwei URLs) und
+   `commercetools partner` (Pos 6,4) sind die einzigen Query-Gruppen mit
+   belegter Nachfrage; B2B/B2C/D2C tauchen in den GSC-Queries dieser Seite
+   nicht auf und kosten nur Zeichen. Zielgruppen-Fassung (66 Z.) als
+   Alternative, falls die Positionierung im Title stehen soll.
 2. **Statusbezeichnung.** „zertifizierter Partner" ist belegt, aber die
    offizielle Bezeichnung lautet **commercetools Solution Partner /
    Systems Integrator** (Beleg: `/newsroom/news/commercetools/` — Training und
@@ -91,7 +99,7 @@ Längenangaben unten sind ohne Suffix gerechnet.
 | Feld | Wert |
 | --- | --- |
 | **Title (Soll, freigegeben)** | `APIs – Warum Schnittstellen unverzichtbar sind \| KOSMONAUT API-Agentur` (70 Z.) |
-| **Title (QS-Variante)** | `Warum APIs unverzichtbar sind \| KOSMONAUT API-Agentur` (53 Z.) |
+| **Title (QS-Empfehlung, final)** | `Warum APIs unverzichtbar sind \| KOSMONAUT API-Agentur` (53 Z.) |
 | Title (Ist, Prod 19.08.) | `APIs – Warum Schnittstellen unverzichtbar sind \| Kosmonaut E-Commerce Agentur aus OWL - Kosmonaut` (97 Z.) |
 | **Meta-Description** | in der Karte nicht definiert. Vorschlag zur Freigabe: `Wie APIs und Schnittstellen Systeme verbinden — und was eine API-Agentur bei ERP-, PIM- und Shop-Anbindung übernimmt. Praxis aus über 50 Projekten.` (149 Z.) |
 | Description (Ist) | „API oder Schnittstellen verbinden externe Dienste oder Software um Datenpunkte zu verknüpfen und Prozesse zu automatisieren." (125 Z.) |
