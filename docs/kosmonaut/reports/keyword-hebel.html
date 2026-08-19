@@ -179,6 +179,7 @@ h3 {
 }
 p { margin: 0; max-width: 74ch; }
 p + p { margin-top: 0.7rem; }
+section h3 { font-size: 1.06rem; margin: 2.2rem 0 0.6rem; letter-spacing: -0.01em; }
 .lede { color: var(--ink-soft); max-width: 72ch; }
 
 /* Karten-Marker A1/A2/A3 */
@@ -491,11 +492,11 @@ a:focus-visible, tr:focus-visible { outline: 2px solid var(--copper); outline-of
         </thead>
         <tbody>
           <tr>
-            <td class="stack"><strong>Programmierung</strong><span class="q">schnittstellen programmierung</span> · <span class="q">schnittstellenprogrammierung</span></td>
+            <td class="stack"><strong>Schnittstellen</strong><span class="q">api schnittstelle</span> · <span class="q">schnittstellen programmierung</span></td>
             <td class="num">336 · 36,6<br>17 · 57,3</td>
-            <td class="num">150</td>
-            <td>Eigener Abschnitt „Schnittstellenprogrammierung“ mit Leistungsbeschreibung</td>
-            <td>Größte Einzelanfrage der Seite, heute praktisch unsichtbar <span class="chip chip-gain">größter Hebel</span></td>
+            <td class="num"><strong>2.397</strong><br><span class="q">Singular</span></td>
+            <td>Eigener Abschnitt <strong>„API-Schnittstelle“</strong> mit Leistungsbeschreibung</td>
+            <td>Größte Einzelanfrage der Seite — die Nachfrage liegt aber beim Singular <span class="chip chip-gain">größter Hebel</span></td>
           </tr>
           <tr>
             <td class="stack"><strong>Kommerziell</strong><span class="q">api schnittstellen agentur</span></td>
@@ -551,12 +552,12 @@ a:focus-visible, tr:focus-visible { outline: 2px solid var(--copper); outline-of
         </thead>
         <tbody>
           <tr>
-            <td><strong>Schnittstellenprogrammierung</strong></td>
+            <td><strong>API-Schnittstelle</strong><br><span class="q">war: Schnittstellenprogrammierung</span></td>
             <td>API-Artikel</td>
             <td class="num">336</td>
             <td class="num">36,6</td>
             <td class="num">15–20</td>
-            <td>Größte unbediente Anfrage der Domain in dieser Gruppe</td>
+            <td>Größte unbediente Anfrage der Seite — Schreibweise korrigiert, siehe unten</td>
           </tr>
           <tr>
             <td><strong>OXID eShop Agentur</strong></td>
@@ -610,6 +611,38 @@ a:focus-visible, tr:focus-visible { outline: 2px solid var(--copper); outline-of
       </table>
     </div>
     <p class="note">Alle sieben zusammen: rund 724 Einblendungen, die heute auf Positionen liegen, von denen praktisch niemand klickt. Die Erwartungswerte sind aus den Positionssprüngen vergleichbarer Überschriften auf denselben Seiten abgeleitet, nicht aus Branchendurchschnitten.</p>
+
+    <h3>Nachtrag 19.08. abends: die Marktzahlen kippen die Reihenfolge</h3>
+    <p>Bis hierhin beruhte die Priorisierung auf <em>eigenen</em> Einblendungen — wie oft Google die Seite zeigt. Seit der Anbindung an die Marktdaten steht daneben, wie groß der Markt dahinter überhaupt ist. Das ändert die Reihenfolge.</p>
+
+    <div class="proof">
+      <div class="label">Die Messfalle</div>
+      <p>Google Ads meldet Singular und Plural als <strong>eine gruppierte Zahl</strong> und gibt sie für beide Schreibweisen aus. Wer das nicht auflöst, hält jede Variante für gleich stark. Aufgelöst sieht es so aus:</p>
+      <table style="margin-top:0.8rem">
+        <thead><tr><th>Schreibweise</th><th class="num">gruppiert</th><th class="num">aufgelöst</th></tr></thead>
+        <tbody>
+          <tr class="own"><td><span class="q">api schnittstelle</span> — Singular</td><td class="num">—</td><td class="num"><strong>2.397</strong></td></tr>
+          <tr><td><span class="q">api schnittstellen</span> — Plural</td><td class="num">2.400</td><td class="num">1</td></tr>
+          <tr><td><span class="q">schnittstellen programmierung</span></td><td class="num">170</td><td class="num">1</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>Die Überschrift muss „API-Schnittstelle“ heißen, nicht „Schnittstellenprogrammierung“.</strong> Gleicher Aufwand, ein Markt statt keiner. Das Wort trägt 2.397 Suchen im Monat bei niedriger Schwierigkeit und transaktionaler Absicht — jemand, der das sucht, will es beauftragen.</p>
+
+    <div class="tscroll">
+      <table>
+        <thead><tr><th>Neue Reihenfolge</th><th>Überschrift</th><th class="num">Volumen/Mon</th><th class="num">Schwierigkeit</th><th class="num">CPC</th></tr></thead>
+        <tbody>
+          <tr class="own"><td class="num"><strong>1</strong></td><td>Headless Commerce Agentur</td><td class="num">210</td><td class="num"><strong>1</strong></td><td class="num">25,49 €</td></tr>
+          <tr class="own"><td class="num"><strong>2</strong></td><td>OXID eShop Agentur</td><td class="num">40</td><td class="num">9</td><td class="num">21,01 €</td></tr>
+          <tr class="own"><td class="num"><strong>3</strong></td><td>API-Schnittstelle <span class="q">vorher Platz 1</span></td><td class="num"><strong>2.397</strong></td><td class="num">14</td><td class="num">2,72 €</td></tr>
+          <tr><td class="num">4–7</td><td>Longtail-Fragen und OXID Enterprise</td><td class="num">kein messbares Volumen</td><td class="num">—</td><td class="num">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="note"><strong>Warum die beiden Zahlen sich nicht widersprechen:</strong> Die 336 Einblendungen sind gemessen — eigene Search Console, eigene Domain. Das Suchvolumen ist modelliert. Bei Konflikt gilt die Messung. Die Marktzahl entwertet die Maßnahme nicht, sie erklärt, <em>warum</em> aus den Einblendungen nie Klicks wurden: Die Seite erscheint für ein Umfeld von Varianten, von denen keine einzelne nennenswert gesucht wird. Und sie zeigt, wohin die Nachfrage stattdessen gehört.</p>
   </section>
 
   <section>
