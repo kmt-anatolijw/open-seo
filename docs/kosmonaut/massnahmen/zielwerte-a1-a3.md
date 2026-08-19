@@ -75,7 +75,8 @@ abgeschnitten.
 
 | Feld | Wert |
 | --- | --- |
-| **Title (Soll, freigegeben)** | `OXID Agentur \| Enterprise-Partner für B2B, B2C & D2C \| KOSMONAUT` (64 Z.) |
+| **Title (QS-Empfehlung, final)** | `OXID eShop Agentur & Diamant-Partner \| KOSMONAUT` (48 Z.) |
+| Title (Soll, freigegeben — überholt) | `OXID Agentur \| Enterprise-Partner für B2B, B2C & D2C \| KOSMONAUT` (64 Z.) |
 | Title (Ist, Prod 19.08.) | `Prämierte OXID Agentur \| Mehrfach ausgezeichnet für D2C, B2C und B2B Projekte \| Kosmonaut E-Commerce Agentur aus OWL - Kosmonaut` (128 Z.) |
 | **Meta-Description** | **unverändert lassen** — Ist ist gut (157 Z.): „OXID Enterprise Partner. Über 15 Jahre OXID Erfahrung, mehr als 50 OXID Projekte, nur zertifizierte OXID Entwickler \| OXID eShop Full-Service aus einer Hand" |
 | **H1 (Soll)** | `OXID Agentur – prämierte E-Commerce-Projekte auf OXID eShop` |
@@ -84,11 +85,18 @@ abgeschnitten.
 
 **QS-Flags A2**
 
-1. „Enterprise-Partner" ist kein neuer Claim — die Ist-Description führt ihn
-   bereits. Zertifizierungsbeleg: `/newsroom/news/oxid-zertifizierung/`
-   („OXID eShop Enterprise Edition Certified Development", 10 Entwickler,
-   Oktober 2020). Aktualität ebenfalls bestätigen lassen.
-2. Der Ist-Title trägt „Prämierte" — das entfällt im Soll. Bewusst so
+1. **Statusfrage geklärt (Anatolij, 19.08.2026): Kosmonaut ist OXID
+   Diamant-Partner** — die höchste der aktuellen Stufen (Kristall → Rubin →
+   Diamant). „Enterprise-Partner" ist die abgelöste Nomenklatur und gehört
+   nicht mehr in den Title. Empfehlung oben führt stattdessen „Diamant-Partner".
+2. Die Empfehlung deckt zusätzlich `oxid eshop agentur` ab (176 Impr./Pos 17,8,
+   zweitgrößte Query der Seite, bisher in keinem Feld der Seite vorhanden) und
+   `oxid partner` (24 Impr./Pos 20,8) — bei 48 Zeichen, also mit Reserve.
+3. Die Ist-Description führt weiterhin „OXID Enterprise Partner". Sie sollte
+   im selben Zug auf „Diamant-Partner" gezogen werden; Zertifizierungsbeleg
+   `/newsroom/news/oxid-zertifizierung/` (Certified Development, 10 Entwickler,
+   Oktober 2020 — Zahl laut Anatolij inzwischen höher, aktuelle Zahl nachtragen).
+4. Der Ist-Title trägt „Prämierte" — das entfällt im Soll. Bewusst so
    freigegeben (Intent vor Auszeichnung); die Auszeichnung bleibt in H1 und
    Description erhalten.
 
@@ -122,13 +130,16 @@ abgeschnitten.
 
 ## Zusammenfassung der offenen Punkte
 
-| # | Punkt | Wer |
-| --- | --- | --- |
-| 1 | Title-Suffix im Code klären, danach `\| KOSMONAUT` in den Soll-Titles streichen oder behalten | KMT |
-| 2 | Gekürzte Title-Varianten A1/A3 freigeben (freigegebene Fassung ist 77 bzw. 70 Z.) | Anatolij |
-| 3 | A3-Description freigeben (neu vorgeschlagen) | Anatolij |
-| 4 | Aktualität commercetools-Solution-Partner- und OXID-Enterprise-Status bestätigen | Anatolij |
-| 5 | Sichtbaren Ankertext „commercetools Agentur" in `/newsroom/news/commercetools/` setzen | KMT |
+| # | Punkt | Wer | Stand |
+| --- | --- | --- | --- |
+| 1 | Title-Suffix im Code klären | KMT | **erledigt 19.08.** — kein Template, Suffix ist Content |
+| 2 | OXID-Partnerstufe bestätigen | Anatolij | **erledigt 19.08.** — Diamant-Partner |
+| 3 | Gekürzte Titles A1/A2/A3 freigeben | Anatolij | offen (D11) |
+| 4 | A3-Description freigeben | Anatolij | offen (D12) |
+| 5 | Aktuelle Zahl zertifizierter OXID-Entwickler | Anatolij | offen — für Title-Description und Schema |
+| 6 | Shopware-Partnerstufe (Bronze/Silver/Gold/Platinum) | Anatolij | offen — fehlt im Schema |
+| 7 | Sichtbaren Ankertext „commercetools Agentur" setzen | KMT | offen |
+| 8 | Organization-Schema einbauen — Domain liefert null JSON-LD | KMT | offen, Vorlage liegt |
 
 Teil der Kosmonaut-Doku · [Karten](./2026-08-16-cluster-a.md) ·
 [Matrix](../keyword-url-matrix.md) · [Council + Addendum](../council-urteil-2026-08-17.md)
