@@ -79,6 +79,39 @@ Einrichtung zurück statt als stiller Default mitzulaufen. Die Grundsatzfrage
 — ist Visual Editing perspektivisch gewollt? — legt die KMT-Session Anatolij
 vor dem Merge vor.
 
+## Bindende Messregel (Anatolij, 19.08.2026)
+
+**Content-Inhalte werden nie aus dem gerenderten HTML gelesen, sondern immer
+direkt aus der Strapi-API.** Das gilt für alle Ist-Werte — Title,
+Description, H1, H2, Seitenleisten, Fließtext — und damit für jede Längen-
+und Zeichenmessung, an der die ≤ 65-Zeichen-Regel hängt.
+
+Aus dem HTML nur noch, was es dort auch wirklich gibt: Markup-Struktur,
+Landmarks, Response-Header, Vorhandensein von JSON-LD, Rendering-Verhalten.
+
+Die frühere Fassung („unsichtbare Zeichen vor der Messung strippen") ist damit
+überholt. Sie hätte nur dieses eine Symptom behandelt; zwischen CMS-Wert und
+ausgeliefertem HTML liegen weitere Schritte, die einen Wert verändern können —
+Fallbacks, Trunkierung, Templates. Genau diese Falle hat hier schon einmal zu
+einer falschen Annahme geführt (vermutetes Title-Template, das es nicht gab).
+
+**Präzisierung zur Ursache:** Vercel ist der Auslöser, nicht der Encoder.
+Kodiert wird in Strapi. Zwei Aufrufe gegen dieselbe API, ohne Vercel
+dazwischen:
+
+| Aufruf | Unsichtbare Zeichen | Headline |
+| --- | --- | --- |
+| `?populate=deep` | 0 | 65 Zeichen |
+| `?populate=deep&encodeSourceMaps=true` | 31.324 | 657 Zeichen |
+
+Daraus folgt: **Auch die Strapi-API liefert verunreinigte Werte, wenn jemand
+den Parameter setzt.** Wer Ist-Werte zieht, ruft ohne `encodeSourceMaps` ab —
+dann stimmt die Antwort in jeder Umgebung.
+
+**Gültig bleiben** die Ist-Werte für A1–A3: Sie stammen aus dem Prod-HTML vom
+19.08.2026, Prod läuft als `production`, das Flag ist dort aus, die Messung
+ergab 0 unsichtbare Zeichen. Künftige Ist-Werte kommen trotzdem aus der API.
+
 ## Was der Vorgang gezeigt hat
 
 Die Messung war korrekt und über drei Wege belastbar; die erste
