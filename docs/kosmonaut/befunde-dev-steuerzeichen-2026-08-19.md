@@ -18,31 +18,77 @@ Verteilung: In **jeder** Überschrift. Das `<h1>` trägt 592 solcher Zeichen,
 die geprüften `<h2>` jeweils 564 bis 596. Sie stehen als zusammenhängende
 Sequenz **hinter** dem sichtbaren Text, nicht zwischen den Buchstaben.
 
-## Bewertung
+## Verifikation (nachgeschärft 19.08.2026)
 
-1. **Die dev-Seite ist mehr als doppelt so groß wie dieselbe Seite auf Prod**
-   — 212 KB statt 97 KB, und der Unterschied besteht praktisch vollständig
-   aus unsichtbaren Zeichen. Das sind rund 17 % reiner Ballast.
-2. **Das Muster deutet auf ein Wasserzeichen oder ein Werkzeug-Artefakt.**
-   Lange gemischte Sequenzen aus ZWNJ/ZWJ/ZWSP/BOM hinter Textblöcken sind
-   die typische Form unsichtbarer Textmarkierung. Sie entstehen nicht
-   zufällig und nicht beim normalen Redigieren.
-3. **Prod ist sauber.** Der Effekt kommt also aus dem dev-Zweig oder aus dem
-   dev-Strapi — und würde mit dem main-Port auf die Live-Seite gelangen.
-4. **Risiko für die Textverarbeitung.** Solange die Zeichen hinter dem Text
-   stehen, ist die Tokenisierung der Überschriften vermutlich unbeschädigt.
-   Stünden sie zwischen Buchstaben, wären die Überschriften für Suchmaschinen
-   keine erkennbaren Wörter mehr. Das ist zu prüfen, bevor portiert wird.
+Auf Nachfrage von Anatolij über drei unabhängige Wege gegengeprüft:
 
-## Empfehlung
+| Abrufweg | Seite | Unsichtbare Zeichen |
+| --- | --- | --- |
+| einfacher Fetcher | dev `/expertise/commercetools/` | 36.044 |
+| **Playwright, echter Chrome** | dev `/expertise/commercetools/` | **36.044 — identisch** |
+| einfacher Fetcher | dev `/expertise/oxid-shop/` | 48.416 |
+| Playwright, echter Chrome | Prod `/expertise/commercetools/` | 0 |
 
-Vor dem main-Port klären: Woher stammen die Sequenzen — Redaktionsinhalt im
-dev-Strapi, ein Build-Schritt oder ein Editor-Werkzeug? Danach entfernen und
-eine Prüfung in die Gates aufnehmen, die unsichtbare Steuerzeichen in
-Überschriften und Meta-Feldern abweist.
+Zwei völlig verschiedene Clients liefern zeichengenau dieselbe Zahl. Ein
+Artefakt des Abrufwerkzeugs ist damit ausgeschlossen. Der Effekt ist real und
+auf dev reproduzierbar.
 
-Das gehört zu der Bedingung „Komponenten und Patterns sauber und fehlerfrei"
-(Anatolij, 19.08.2026), die vor dem Port erfüllt sein soll.
+## Wo genau die Sequenzen sitzen
+
+**62 Sequenzen** mit jeweils 20 und mehr Zeichen, die längste 632 Zeichen.
+Jede sitzt **am Ende eines Textblocks, unmittelbar vor dem schließenden Tag**:
+
+```
+…für B2B, B2C und D2C[592 unsichtbare Zeichen]</h1>
+…mit dem Fokus auf eine einzigartige Customer Experience.[576]</p>
+```
+
+Sie sind auch im Next-Flight-Payload enthalten (18.640 von 103.571 Zeichen)
+— also in den serialisierten **Serverdaten**, nicht erst im Browser-DOM.
+Damit ist eine clientseitige Injektion ausgeschlossen.
+
+**Widerlegte Hypothese:** Kein Vercel-Toolbar-, Preview- oder
+Draft-Mode-Marker im Dokument (`vercel`, `toolbar`, `speed-insights`,
+`draft`, `live-preview` kommen auf dev wie auf Prod null Mal vor). Es ist
+also kein Preview-only-Feature der Hosting-Umgebung.
+
+## Offen: Strapi oder Render-Schritt?
+
+Die Sequenzen hängen an jedem Rich-Text-Block. Eine Stichprobe auf die
+Strapi-Feldnamen im Payload (`Headline`, `Title`, `Text`, `Subline`,
+`MetaDescription`, `BreadcrumbText`) fand sie dort **nicht** — dieser Test ist
+aber zu schwach, um Strapi freizusprechen: Er greift nur bei kurzen Werten
+und einer bestimmten Serialisierungsform.
+
+**Die Frage lässt sich nur an der Quelle entscheiden.** Prüfauftrag an die
+KMT-Session (Anatolij, 19.08.2026): direkter API-Call gegen
+`dev-strapi.kosmonaut.io` für den commercetools-Eintrag, Response auf
+U+200B, U+200C, U+200D und U+FEFF prüfen; dieselbe Prüfung gegen
+`strapi.kosmonaut.io`.
+
+- **Treffer im Strapi-Response** → die Zeichen stecken im Redaktionsinhalt.
+  Herkunft klären (aus welchem Werkzeug wurden die Texte eingefügt?), Felder
+  bereinigen, Eingangsprüfung ergänzen.
+- **Strapi-Response sauber** → ein Schritt zwischen Datenabruf und Auslieferung
+  fügt sie ein. Dann die Markdown- oder Rich-Text-Verarbeitung prüfen.
+
+## Grundsatz (Anatolij, 19.08.2026)
+
+**Solche Steuerzeichen dürfen nicht vorkommen** — unabhängig davon, welche
+Stufe sie einträgt. Nach der Ursachenklärung gehört eine Prüfung in die
+Gates, die unsichtbare Steuerzeichen in Überschriften, Meta-Feldern und
+Fließtext abweist.
+
+## Warum das zählt
+
+1. Die dev-Seite ist mehr als doppelt so groß wie dieselbe Seite auf Prod —
+   212 KB statt 97 KB, praktisch vollständig unsichtbarer Ballast.
+2. Solange die Zeichen **hinter** dem Text stehen, ist die Worterkennung
+   vermutlich unbeschädigt. Stünden sie zwischen Buchstaben, wären die
+   Überschriften für Suchmaschinen keine erkennbaren Wörter mehr. Das ist vor
+   einem Port zu prüfen.
+3. Jede Content-Messung auf dev — Textlänge, Lesbarkeit, Keyword-Dichte —
+   ist verzerrt, solange das besteht.
 
 ## Nebenbefund: zwei getrennte CMS-Instanzen
 
