@@ -1,0 +1,92 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "@id": "https://kosmonaut.io/#organization",
+  "name": "KOSMONAUT Germany GmbH",
+  "alternateName": "KOSMONAUT",
+  "url": "https://kosmonaut.io/",
+  "description": "E-Commerce-Agentur aus Ostwestfalen-Lippe für B2B-, B2C- und D2C-Handel. Umsetzung auf commercetools, OXID eShop, Shopware und Shopify Plus.",
+  "telephone": "+49-5242-5819990",
+  "vatID": "DE305161792",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Nickelstr. 1a",
+    "postalCode": "33378",
+    "addressLocality": "Rheda-Wiedenbrück",
+    "addressRegion": "Nordrhein-Westfalen",
+    "addressCountry": "DE"
+  },
+  "areaServed": {
+    "@type": "Country",
+    "name": "Deutschland"
+  },
+  "founder": [
+    { "@type": "Person", "name": "Stephan Engau" },
+    { "@type": "Person", "name": "Anatolij Woromsbecher" }
+  ],
+  "award": [
+    "Shop Usability Award – Agentur des Jahres",
+    "Shop Usability Award – vierfacher Gewinner"
+  ],
+  "hasCredential": [
+    {
+      "@type": "EducationalOccupationalCredential",
+      "credentialCategory": "Partnerstatus",
+      "name": "OXID eSales Diamant-Partner",
+      "recognizedBy": {
+        "@type": "Organization",
+        "name": "OXID eSales AG",
+        "url": "https://www.oxid-esales.com/"
+      }
+    },
+    {
+      "@type": "EducationalOccupationalCredential",
+      "credentialCategory": "Zertifizierung",
+      "name": "OXID eShop Enterprise Edition Certified Development",
+      "description": "Zertifizierte Entwicklerinnen und Entwickler im Team.",
+      "recognizedBy": {
+        "@type": "Organization",
+        "name": "OXID eSales AG",
+        "url": "https://www.oxid-esales.com/"
+      }
+    },
+    {
+      "@type": "EducationalOccupationalCredential",
+      "credentialCategory": "Partnerstatus",
+      "name": "commercetools Solution Partner / Systems Integrator",
+      "recognizedBy": {
+        "@type": "Organization",
+        "name": "commercetools GmbH",
+        "url": "https://commercetools.com/"
+      },
+      "url": "https://commercetools.com/partners/kosmonaut"
+    },
+    {
+      "@type": "EducationalOccupationalCredential",
+      "credentialCategory": "Partnerstatus",
+      "name": "Shopify Plus Partner",
+      "recognizedBy": {
+        "@type": "Organization",
+        "name": "Shopify Inc.",
+        "url": "https://www.shopify.com/"
+      }
+    }
+  ],
+  "knowsAbout": [
+    "commercetools",
+    "Composable Commerce",
+    "Headless Commerce",
+    "OXID eShop",
+    "Shopware",
+    "Shopify Plus",
+    "API- und Schnittstellenentwicklung",
+    "Produktdatenmanagement",
+    "Omnichannel-Commerce",
+    "B2B-E-Commerce",
+    "Direct-to-Consumer"
+  ],
+  "sameAs": [
+    "https://de.linkedin.com/company/kosmonaut-io",
+    "https://commercetools.com/partners/kosmonaut"
+  ]
+}
