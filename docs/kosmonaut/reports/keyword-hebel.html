@@ -1,0 +1,809 @@
+<title>Kosmonaut Keyword-Hebel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+<style>
+:root {
+  --ground: #F6F7F9;
+  --surface: #FFFFFF;
+  --surface-sunk: #EEF1F5;
+  --ink: #16233B;
+  --ink-soft: #47536B;
+  --ink-faint: #78849B;
+  --rule: #D8DEE7;
+  --rule-strong: #B9C3D1;
+  --copper: #A8562F;
+  --copper-soft: #F0E2DA;
+  --gain: #2C6A50;
+  --gain-soft: #DFEDE6;
+  --warn: #9A6A18;
+  --warn-soft: #F3E9D5;
+  --crit: #9C3833;
+  --crit-soft: #F5E1E0;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #10192B;
+    --surface: #16223A;
+    --surface-sunk: #1C2A45;
+    --ink: #E9EDF4;
+    --ink-soft: #AEB9CC;
+    --ink-faint: #7C89A1;
+    --rule: #2C3B57;
+    --rule-strong: #435472;
+    --copper: #E0906A;
+    --copper-soft: #3A2A22;
+    --gain: #74BE9C;
+    --gain-soft: #1B3A2E;
+    --warn: #DCAE5E;
+    --warn-soft: #3A2E19;
+    --crit: #E28A85;
+    --crit-soft: #3A2120;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #10192B;
+  --surface: #16223A;
+  --surface-sunk: #1C2A45;
+  --ink: #E9EDF4;
+  --ink-soft: #AEB9CC;
+  --ink-faint: #7C89A1;
+  --rule: #2C3B57;
+  --rule-strong: #435472;
+  --copper: #E0906A;
+  --copper-soft: #3A2A22;
+  --gain: #74BE9C;
+  --gain-soft: #1B3A2E;
+  --warn: #DCAE5E;
+  --warn-soft: #3A2E19;
+  --crit: #E28A85;
+  --crit-soft: #3A2120;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: clamp(2rem, 5vw, 4.5rem) clamp(1rem, 4vw, 3rem) 5rem;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2.5rem, 5vw, 4rem);
+}
+
+/* ---- Kopf ---- */
+.masthead { display: flex; flex-direction: column; gap: 1rem; }
+.eyebrow {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--copper);
+}
+h1 {
+  font-family: Archivo, "IBM Plex Sans", sans-serif;
+  font-weight: 700;
+  font-size: clamp(2rem, 5vw, 3.1rem);
+  line-height: 1.05;
+  letter-spacing: -0.022em;
+  margin: 0;
+  text-wrap: balance;
+}
+.standfirst {
+  font-size: clamp(1.02rem, 2vw, 1.16rem);
+  color: var(--ink-soft);
+  max-width: 62ch;
+  margin: 0;
+}
+.sourceline {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.74rem;
+  color: var(--ink-faint);
+  line-height: 1.7;
+  border-top: 1px solid var(--rule);
+  padding-top: 0.9rem;
+}
+
+/* ---- Messtafel ---- */
+.gauge {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
+}
+.gauge > div {
+  padding: 1.1rem 1.2rem 1.25rem 0;
+  border-right: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.gauge > div:last-child { border-right: 0; }
+.gauge dt {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.gauge dd {
+  margin: 0;
+  font-family: Archivo, sans-serif;
+  font-weight: 600;
+  font-size: 1.85rem;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.gauge dd small {
+  display: block;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-weight: 400;
+  font-size: 0.78rem;
+  letter-spacing: 0;
+  color: var(--ink-soft);
+  line-height: 1.45;
+  margin-top: 0.2rem;
+}
+.gauge .alarm dd { color: var(--crit); }
+
+/* ---- Sektionen ---- */
+section { display: flex; flex-direction: column; gap: 1.1rem; }
+.sec-head { display: flex; flex-direction: column; gap: 0.35rem; }
+h2 {
+  font-family: Archivo, sans-serif;
+  font-weight: 600;
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  margin: 0;
+  text-wrap: balance;
+}
+h3 {
+  font-family: Archivo, sans-serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: -0.005em;
+  margin: 0.6rem 0 0;
+}
+p { margin: 0; max-width: 74ch; }
+p + p { margin-top: 0.7rem; }
+.lede { color: var(--ink-soft); max-width: 72ch; }
+
+/* Karten-Marker A1/A2/A3 */
+.card-id {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--copper);
+}
+.card-id .url {
+  color: var(--ink-faint);
+  font-weight: 400;
+  letter-spacing: 0;
+  word-break: break-all;
+}
+
+/* ---- Tabellen ---- */
+.tscroll {
+  overflow-x: auto;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.855rem;
+  min-width: 720px;
+}
+thead th {
+  text-align: left;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  padding: 0.75rem 0.9rem;
+  border-bottom: 1px solid var(--rule-strong);
+  vertical-align: bottom;
+  white-space: nowrap;
+}
+tbody td {
+  padding: 0.72rem 0.9rem;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+  line-height: 1.5;
+}
+tbody tr:last-child td { border-bottom: 0; }
+tbody tr:hover { background: var(--surface-sunk); }
+td.num, th.num {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.q {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.8em;
+  color: var(--ink);
+  background: var(--surface-sunk);
+  padding: 0.08em 0.34em;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+td .q { white-space: normal; }
+.stack { display: flex; flex-direction: column; gap: 0.28rem; }
+
+/* Chips */
+.chip {
+  display: inline-block;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.16em 0.5em;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+.chip-gain { background: var(--gain-soft); color: var(--gain); }
+.chip-warn { background: var(--warn-soft); color: var(--warn); }
+.chip-crit { background: var(--crit-soft); color: var(--crit); }
+.chip-flat { background: var(--copper-soft); color: var(--copper); }
+
+/* Beweis-Block */
+.proof {
+  background: var(--surface);
+  border-left: 3px solid var(--copper);
+  padding: 1.1rem 1.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.proof .label {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--copper);
+}
+.proof p { font-size: 0.94rem; }
+
+.note {
+  font-size: 0.86rem;
+  color: var(--ink-soft);
+  border-left: 2px solid var(--rule-strong);
+  padding-left: 0.9rem;
+  max-width: 76ch;
+}
+
+ul.plain { margin: 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.4rem; }
+ul.plain li { max-width: 72ch; }
+
+footer {
+  border-top: 1px solid var(--rule);
+  padding-top: 1.2rem;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.72rem;
+  color: var(--ink-faint);
+  line-height: 1.75;
+}
+a { color: var(--copper); }
+a:focus-visible, tr:focus-visible { outline: 2px solid var(--copper); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="eyebrow">Analyse vor Umsetzung · kosmonaut.io · 19.08.2026</div>
+    <h1>Die Sichtbarkeit ist da. Der Klick fehlt.</h1>
+    <p class="standfirst">In 90 Tagen hat kosmonaut.io 42.271 Einblendungen in der Google-Suche gesammelt und daraus 51 Klicks gezogen — 10 davon außerhalb des eigenen Markennamens. Diese Analyse zeigt pro geplanter Änderung, welche Suchanfragen sie adressiert, was sie leisten soll und wo die Früchte am tiefsten hängen.</p>
+    <div class="sourceline">
+      Quellen: Search Console Service-Account, sc-domain:kosmonaut.io, 90 Tage, Dimensionen query + page (1.530 Zeilen) · Ahrefs Keywords Explorer DE · Live-HTML der Zielseiten via fetch_page, 19.08.2026, HTTP 200 · Partnerprogramm-Recherche über die Anbieterseiten<br>
+      Evidenzregel: Wo eine Zahl eine Entscheidung trägt, ist sie nach Suchanfrage <em>und</em> Seite aufgeschlüsselt. Search Console gilt als Wahrheit, Ahrefs nur als Marktkontext.
+    </div>
+  </header>
+
+  <dl class="gauge">
+    <div>
+      <dt>Einblendungen 90 Tage</dt>
+      <dd>42.271</dd>
+    </div>
+    <div class="alarm">
+      <dt>Klickrate gesamt</dt>
+      <dd>0,12 %<small>Marktüblich sind 2–4 % bei diesen Positionen</small></dd>
+    </div>
+    <div class="alarm">
+      <dt>Klicks ohne Marke</dt>
+      <dd>10<small>aus 38.962 Einblendungen</small></dd>
+    </div>
+    <div>
+      <dt>In Schlagdistanz</dt>
+      <dd>13.523<small>Einblendungen auf Position 4–20, null Klicks</small></dd>
+    </div>
+  </dl>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow">Der Befund in einem Satz</div>
+      <h2>Google zeigt die Seiten längst — sie sind nur nicht anklickbar formuliert.</h2>
+    </div>
+    <p class="lede">38 der 39 nicht-markenbezogenen Klicks fehlen nicht, weil die Positionen zu schlecht wären. Sie fehlen, weil auf Position 7 bis 15 ein Titel steht, der das gesuchte Wort nicht enthält. Zwei Beispiele aus den Daten: <span class="q">commercetools agentur</span> steht auf Position 15,0 — im Seitentitel kommt „Agentur" nicht vor. <span class="q">api schnittstellen agentur</span> steht auf Position 7,4 — die Seite ist ein reiner Erklärartikel ohne ein einziges Angebot.</p>
+    <div class="proof">
+      <div class="label">Beleg, dass Überschriften wirken</div>
+      <p>Der Artikel <span class="q">/newsroom/insights/apisunverzichtbar/</span> trägt die Überschrift „Was sind APIs?“ — und rankt für die Suchanfrage <span class="q">was sind apis</span> auf Position 11,2. Auf derselben Seite fehlt eine Überschrift zu „Schnittstellenprogrammierung“; genau diese Anfrage liegt bei 336 Einblendungen auf Position 36,6. Gleiche Seite, gleiche Autorität, unterschiedliche Überschrift, 25 Plätze Unterschied.</p>
+      <p>Zweiter Beleg: Die OXID-Seite hat eine Zwischenüberschrift „OXID eShop in der Cloud“ — <span class="q">oxid cloud</span> steht auf Position 7,8, dem besten Wert dieser Seite.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow">Maßnahme A1</div>
+      <h2>commercetools: Agentur-Absicht bedienen, Doppelbelegung auflösen</h2>
+      <div class="card-id">A1 <span class="url">kosmonaut.io/expertise/commercetools/</span></div>
+    </div>
+    <p class="lede">Die Seite sammelt 789 Einblendungen aus 34 Suchanfragen und hat in 90 Tagen keinen einzigen Klick erzeugt. Zusätzlich konkurriert die eigene News-Meldung um dieselbe Hauptanfrage — und rankt dort besser als die Leistungsseite.</p>
+    <div class="tscroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Suchanfragen-Gruppe</th>
+            <th class="num">Einbl. / Pos.</th>
+            <th class="num">Vol. DE</th>
+            <th>Was wir ändern</th>
+            <th>Was wir uns davon versprechen</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="stack"><strong>Kern: Agentur</strong><span class="q">commercetools agentur</span><span class="q">commercetools aentur</span> (Vertipper)</td>
+            <td class="num">445 · 15,0<br>29 · 9,4</td>
+            <td class="num">10</td>
+            <td>Titel und H1 tragen das Wort „Agentur“ — heute in beidem nicht enthalten</td>
+            <td>Position 15 → 5–8. Erste Klicks überhaupt; Ziel ≥ 15 in 28 Tagen <span class="chip chip-gain">Hauptziel</span></td>
+          </tr>
+          <tr>
+            <td class="stack"><strong>Headless / Composable</strong><span class="q">headless commerce agentur</span><span class="q">headless e-commerce agentur</span><span class="q">commercetools headless</span></td>
+            <td class="num">138 · 22,6<br>7 · 11,1<br>4 · 17,0</td>
+            <td class="num">150</td>
+            <td>Eigene Zwischenüberschrift „Headless Commerce Agentur“ statt der heutigen Ein-Wort-Überschrift „Headless“</td>
+            <td>Position 22 → 10–14. Diese Seite ist die beste Headless-URL der Domain <span class="chip chip-flat">niedrig hängend</span></td>
+          </tr>
+          <tr>
+            <td class="stack"><strong>Fragen an die KI-Suche</strong><span class="q">welche agentur ist spezialist für headless commerce in deutschland?</span> u. 2 weitere</td>
+            <td class="num">43 · 1,0–10,6</td>
+            <td class="num">—</td>
+            <td>Die Frage wörtlich als Überschrift, darunter eine 40-Wort-Antwort mit Firmenname</td>
+            <td>Zitierfähigkeit in KI-Antworten. Eine dieser Anfragen steht bereits auf Position 1,0 <span class="chip chip-gain">niedrig hängend</span></td>
+          </tr>
+          <tr>
+            <td class="stack"><strong>Status</strong><span class="q">commercetools partner</span></td>
+            <td class="num">8 · 6,4</td>
+            <td class="num">60</td>
+            <td>Partnerstatus in den Titel — siehe Abschnitt Partnerstatus</td>
+            <td>Vertrauensanker in der Trefferliste; stützt die Klickrate der Kernanfrage</td>
+          </tr>
+          <tr>
+            <td class="stack"><strong>Wissensfragen</strong><span class="q">was ist commercetools</span> · <span class="q">commercetools beratung</span></td>
+            <td class="num">6 · 13,5<br>8 · 14,9</td>
+            <td class="num">20</td>
+            <td>Überschrift „Was ist commercetools?“ mit Kurzantwort</td>
+            <td>Einstiegsverkehr am Anfang der Kaufentscheidung <span class="chip chip-flat">niedrig hängend</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note"><strong>Doppelbelegung:</strong> Für <span class="q">commercetools agentur</span> ranken zwei eigene Seiten — die News-Meldung mit 475 Einblendungen auf Position 14,0 schlägt die Leistungsseite mit 445 auf 15,0. Beide bei null Klicks. Die Meldung soll Zubringer bleiben: Sie verlinkt heute dreimal auf die Leistungsseite, aber mit dem sichtbaren Ankertext „commercetools Partner“. Ein Ankertext wird auf „commercetools Agentur“ geändert — das ist die gesamte Änderung, kein neuer Link, kein neuer Text.</p>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow">Maßnahme A2</div>
+      <h2>OXID: die Wortvariante und die Städte fehlen komplett</h2>
+      <div class="card-id">A2 <span class="url">kosmonaut.io/expertise/oxid-shop/</span></div>
+    </div>
+    <p class="lede">991 Einblendungen, ein Klick. Die Analyse fördert zwei Gruppen zutage, die in der ursprünglichen Maßnahmenkarte gar nicht vorkamen: eine zweite Schreibweise mit 176 Einblendungen und ein ganzer Block Ortsanfragen.</p>
+    <div class="tscroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Suchanfragen-Gruppe</th>
+            <th class="num">Einbl. / Pos.</th>
+            <th class="num">Vol. DE</th>
+            <th>Was wir ändern</th>
+            <th>Was wir uns davon versprechen</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="stack"><strong>Kern</strong><span class="q">oxid agentur</span></td>
+            <td class="num">299 · 14,9</td>
+            <td class="num">30</td>
+            <td>Titel von 128 auf unter 65 Zeichen kürzen, H1 auf die Leistung statt auf das Produkt</td>
+            <td>Position 15 → 8–11; ≥ 5 Klicks in 28 Tagen</td>
+          </tr>
+          <tr>
+            <td class="stack"><strong>Zweite Schreibweise</strong><span class="q">oxid eshop agentur</span> · <span class="q">oxid eshop internetagentur</span></td>
+            <td class="num">176 · 17,8<br>8 · 19,9</td>
+            <td class="num">100</td>
+            <td>Zwischenüberschrift „OXID eShop Agentur“ — die Seite trägt diese Wortfolge nirgends</td>
+            <td>Zweitgrößte Anfrage der Seite, bisher unbedient <span class="chip chip-gain">niedrig hängend</span></td>
+          </tr>
+          <tr>
+            <td class="stack"><strong>Orte</strong><span class="q">oxid agentur münchen</span> · <span class="q">allgäu</span> · <span class="q">kempten</span> · <span class="q">köln</span> · <span class="q">stuttgart</span></td>
+            <td class="num">96 · 15,9<br>47 · 15,4<br>33 · 14,8<br>+2 weitere</td>
+            <td class="num">—</td>
+            <td>Entscheidung nötig: bundesweite Formulierung auf der Seite oder bewusst ignorieren</td>
+            <td>≈ 200 Einblendungen. Hinweis: Kempten und Allgäu ranken zusätzlich über die Zertifizierungs-Meldung <span class="chip chip-warn">Entscheidung</span></td>
+          </tr>
+          <tr>
+            <td class="stack"><strong>SEO-Leistung</strong><span class="q">oxid seo agentur</span> · <span class="q">oxid onlineshops seo agentur</span></td>
+            <td class="num">147 · 33,6<br>10 · 15,1</td>
+            <td class="num">150</td>
+            <td>Bisher keine Maßnahme vorgesehen — die Seite nennt SEO nicht</td>
+            <td>Höchster Klickpreis im Feld (7 €). Position 33 ist zu weit für das Fenster, gehört ins Relaunch-Briefing <span class="chip chip-warn">vormerken</span></td>
+          </tr>
+          <tr>
+            <td class="stack"><strong>Vorhandene Stärken</strong><span class="q">oxid cloud</span> · <span class="q">oxid b2b</span> · <span class="q">oxid enterprise</span></td>
+            <td class="num">11 · 7,8<br>16 · 16,8<br>15 · 13,7</td>
+            <td class="num">30</td>
+            <td>Nichts anfassen — diese drei ranken wegen bestehender Zwischenüberschriften</td>
+            <td>Kontrollgruppe: Sie belegen, dass Überschriften auf dieser Seite messbar wirken</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow">Maßnahme A3</div>
+      <h2>API-Artikel: das größte Volumen liegt auf Position 36</h2>
+      <div class="card-id">A3 <span class="url">kosmonaut.io/newsroom/insights/apisunverzichtbar/</span></div>
+    </div>
+    <p class="lede">987 Einblendungen aus 41 Anfragen, null Klicks. Die stärkste Anfrage der Seite ist nicht die, für die sie gebaut wurde.</p>
+    <div class="tscroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Suchanfragen-Gruppe</th>
+            <th class="num">Einbl. / Pos.</th>
+            <th class="num">Vol. DE</th>
+            <th>Was wir ändern</th>
+            <th>Was wir uns davon versprechen</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="stack"><strong>Programmierung</strong><span class="q">schnittstellen programmierung</span> · <span class="q">schnittstellenprogrammierung</span></td>
+            <td class="num">336 · 36,6<br>17 · 57,3</td>
+            <td class="num">150</td>
+            <td>Eigener Abschnitt „Schnittstellenprogrammierung“ mit Leistungsbeschreibung</td>
+            <td>Größte Einzelanfrage der Seite, heute praktisch unsichtbar <span class="chip chip-gain">größter Hebel</span></td>
+          </tr>
+          <tr>
+            <td class="stack"><strong>Kommerziell</strong><span class="q">api schnittstellen agentur</span></td>
+            <td class="num">150 · 7,4</td>
+            <td class="num">60</td>
+            <td>Angebotsblock „KOSMONAUT als API- und Schnittstellen-Agentur“ mit Referenzen und Kontakt-Handlungsaufruf</td>
+            <td>Position 7 ohne Angebot bringt nichts. Ziel ≥ 3 Klicks in 28 Tagen</td>
+          </tr>
+          <tr>
+            <td class="stack"><strong>Shop-Bezug</strong><span class="q">shopsystem apis</span> · <span class="q">onlineshop apis</span></td>
+            <td class="num">13 · 10,1<br>5 · 7,0</td>
+            <td class="num">—</td>
+            <td>Überschrift „APIs im Shopsystem“ — verbindet den Artikel mit dem Kerngeschäft</td>
+            <td>Beste Positionen der Seite, kleinste Mengen — schneller Testfall <span class="chip chip-flat">niedrig hängend</span></td>
+          </tr>
+          <tr>
+            <td class="stack"><strong>Wissensfragen</strong><span class="q">was sind apis</span> · <span class="q">api steht für</span> · <span class="q">für was steht api</span></td>
+            <td class="num">16 · 11,2<br>3 · 10,3<br>3 · 11,7</td>
+            <td class="num">—</td>
+            <td>Nichts anfassen. Die vorhandene Überschrift „Was sind APIs?“ trägt diese Positionen</td>
+            <td>Kontrollgruppe für die Wirkung von Überschriften</td>
+          </tr>
+          <tr>
+            <td class="stack"><strong>Generisch</strong><span class="q">api schnittstellen</span> · <span class="q">schnittstellen api</span> · <span class="q">apis</span></td>
+            <td class="num">94 · 19,9<br>75 · 20,6<br>60 · 21,7</td>
+            <td class="num">90</td>
+            <td>Ergibt sich aus den Abschnitten oben, keine eigene Maßnahme</td>
+            <td>229 Einblendungen knapp hinter der ersten Ergebnisseite</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note"><strong>Grenze der Maßnahme:</strong> Der Handlungsaufruf verlinkt auf die Kontaktseite, nicht auf <span class="q">/expertise/api/</span>. Diese Seite steht für dieselbe Anfrage nur auf Position 34,8 und ist als Zusammenlegungsziel für den Relaunch vorgemerkt — im laufenden Fenster wird sie nicht optimiert, sonst konkurrieren wieder zwei eigene Seiten.</p>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow">Antwort auf die dritte Frage</div>
+      <h2>Niedrig hängende Früchte: sieben Überschriften, die heute fehlen</h2>
+    </div>
+    <p class="lede">Kriterium: Die Anfrage bringt bereits Einblendungen auf der Seite, das Wort steht aber in keiner Überschrift. Aufwand jeweils ein Absatz, kein neuer Seitenaufbau, kein Deployment nötig, sofern der Text im Redaktionssystem liegt.</p>
+    <div class="tscroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Neue Überschrift</th>
+            <th>Seite</th>
+            <th class="num">Einbl.</th>
+            <th class="num">Pos. heute</th>
+            <th class="num">Erwartung</th>
+            <th>Begründung</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Schnittstellenprogrammierung</strong></td>
+            <td>API-Artikel</td>
+            <td class="num">336</td>
+            <td class="num">36,6</td>
+            <td class="num">15–20</td>
+            <td>Größte unbediente Anfrage der Domain in dieser Gruppe</td>
+          </tr>
+          <tr>
+            <td><strong>OXID eShop Agentur</strong></td>
+            <td>OXID</td>
+            <td class="num">176</td>
+            <td class="num">17,8</td>
+            <td class="num">8–12</td>
+            <td>Zweite Schreibweise, auf der Seite nirgends vorhanden</td>
+          </tr>
+          <tr>
+            <td><strong>Headless Commerce Agentur</strong></td>
+            <td>commercetools</td>
+            <td class="num">138</td>
+            <td class="num">22,6</td>
+            <td class="num">10–14</td>
+            <td>Heute nur die Ein-Wort-Überschrift „Headless“</td>
+          </tr>
+          <tr>
+            <td><strong>Welche Agentur ist Spezialist für Headless Commerce?</strong></td>
+            <td>commercetools</td>
+            <td class="num">35</td>
+            <td class="num">9,9</td>
+            <td class="num">3–6</td>
+            <td>Wörtliche Nutzerfrage, für KI-Antworten zitierfähig</td>
+          </tr>
+          <tr>
+            <td><strong>Was ist commercetools?</strong></td>
+            <td>commercetools</td>
+            <td class="num">6</td>
+            <td class="num">13,5</td>
+            <td class="num">5–8</td>
+            <td>Klassische Definitionsfrage ohne Antwortabschnitt</td>
+          </tr>
+          <tr>
+            <td><strong>APIs im Shopsystem</strong></td>
+            <td>API-Artikel</td>
+            <td class="num">18</td>
+            <td class="num">7,0–10,1</td>
+            <td class="num">3–6</td>
+            <td>Verbindet den Erklärartikel mit dem Kerngeschäft</td>
+          </tr>
+          <tr>
+            <td><strong>OXID Enterprise</strong></td>
+            <td>OXID</td>
+            <td class="num">15</td>
+            <td class="num">13,7</td>
+            <td class="num">6–9</td>
+            <td>Nur sinnvoll, wenn der Status geklärt ist — siehe unten</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Alle sieben zusammen: rund 724 Einblendungen, die heute auf Positionen liegen, von denen praktisch niemand klickt. Die Erwartungswerte sind aus den Positionssprüngen vergleichbarer Überschriften auf denselben Seiten abgeleitet, nicht aus Branchendurchschnitten.</p>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow">Was außerhalb des Fensters liegt</div>
+      <h2>Die wirklich großen Früchte hängen an drei anderen Seiten</h2>
+    </div>
+    <p class="lede">Die Maßnahmen A1 bis A3 betreffen rund 2.800 Einblendungen. Die folgenden drei Seiten tragen zusammen über 8.000 — sie stehen nicht im 60-Tage-Fenster. Zur Kenntnis, nicht zur Entscheidung.</p>
+    <div class="tscroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Seite</th>
+            <th class="num">Einbl. in Schlagdistanz</th>
+            <th>Stärkste Anfragen</th>
+            <th>Warum sie liegen bleibt</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="q">/newsroom/insights/checklisteonlineshop/</span></td>
+            <td class="num">≈ 3.000</td>
+            <td><span class="q">e commerce strategie</span> 569 · Pos 19,7 · <span class="q">e-commerce optimierung</span> 433 · Pos 12,7 · <span class="q">onlineshop strategie</span> 311 · Pos 8,2</td>
+            <td>Ratgeberartikel ohne kommerzielles Ziel. Der Beratungs-Zielseite fehlt es an einer eigenen Seite — Relaunch-Thema</td>
+          </tr>
+          <tr>
+            <td><span class="q">/newsroom/insights/mdm/</span></td>
+            <td class="num">≈ 1.900</td>
+            <td><span class="q">kundenstammdaten management</span> 443 · Pos 16,5 · <span class="q">produktdaten pflegen</span> 378 · Pos 7,5</td>
+            <td>Stammdaten sind kein beauftragtes Cluster; nur interne Verlinkung vorgesehen</td>
+          </tr>
+          <tr>
+            <td><span class="q">/expertise/shopify-agentur/</span></td>
+            <td class="num">912</td>
+            <td><span class="q">shopify plus agentur</span> · Pos 35,7 — 800 Suchen/Monat, Wettbewerbshürde 1 von 100, 7 € Klickpreis</td>
+            <td>Startet erst in Woche 4–5. <strong>Die attraktivste kommerzielle Anfrage der gesamten Domain</strong> <span class="chip chip-gain">größtes Geschäft</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Zum Vergleich der Marktgrößen: <span class="q">shopware agentur</span> hat 3.600 Suchen im Monat bei 17 € Klickpreis — die Shopware-Seite steht dort auf Position 46,4. <span class="q">commercetools agentur</span> hat laut Ahrefs nur 10 Suchen im Monat, sammelt in der Search Console aber 920 Einblendungen. Beides stimmt: Ahrefs misst die exakte Wortfolge, die Search Console zählt alle Varianten mit. Für Entscheidungen zählen die Search-Console-Zahlen.</p>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow">Jenseits der Textfelder</div>
+      <h2>Eure fertige Arbeit kommt nicht online — und das kostet auf jeder Seite</h2>
+    </div>
+    <p class="lede">Die Prüfung der strukturierten Daten — des Bauplans, mit dem Google und die KI-Systeme verstehen, <em>was</em> eine Seite ist und <em>wer</em> dahintersteht — hat zwei Dinge zutage gefördert. Das erste ist kein Technikfehler, sondern ein Stau.</p>
+    <div class="tscroll">
+      <table>
+        <thead>
+          <tr><th>Umgebung</th><th>Geprüft</th><th class="num">Strukturierte Daten</th><th>Bewertung</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Produktivsystem</strong> kosmonaut.io</td>
+            <td>Startseite und die drei Maßnahmenseiten, roh und mit ausgeführtem JavaScript</td>
+            <td class="num">0</td>
+            <td>Auf allen rund 107 Seiten nichts <span class="chip chip-crit">wirkt nach außen</span></td>
+          </tr>
+          <tr>
+            <td><strong>Entwicklungssystem</strong> dev.kosmonaut.io</td>
+            <td>dieselbe commercetools-Seite</td>
+            <td class="num">3</td>
+            <td>Organisation, Website, Navigationspfad — fertig und korrekt <span class="chip chip-gain">seit Langem gebaut</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Der Code ist also da. Er ist nur nie auf dem Produktivsystem angekommen: Die Einbindung existiert im Entwicklungszweig, im Produktivzweig nicht — dieser liegt rund 107 Änderungen zurück. Damit ist das kein Auftrag an die Entwicklung, sondern ein Argument dafür, den Abgleich zwischen beiden Ständen zu terminieren, statt ihn weiter zu schieben. Derselbe Mechanismus hat schon einen früheren Navigationspfad-Fehler nie auf die Website gebracht.</p>
+    <div class="proof">
+      <div class="label">Der zweite Fund: auch fertig ist noch nicht gut</div>
+      <p>Der Organisations-Eintrag auf dem Entwicklungssystem besteht aus vier Feldern — Typ, Name, Adresse der Website, fertig. Keine Anschrift, keine Partnerstatus, keine Auszeichnungen, keine Verweise auf externe Profile.</p>
+      <p>Das heißt: <strong>OXID Diamant-Partner</strong>, commercetools Solution Partner, Shopify Plus Partner, die OXID-Entwicklerzertifizierung und der vierfache Shop Usability Award samt Agentur des Jahres bleiben auch nach dem Abgleich maschinell unsichtbar. Für jedes KI-System, das eine Agentur empfehlen soll, ist davon nichts greifbar.</p>
+      <p>Die ausgebaute Vorlage liegt im Repository — mit Anschrift, allen vier Partnerstatus als überprüfbare Auszeichnungen und dem öffentlichen commercetools-Partnerverzeichnis als Beleg. Sinnvollerweise zusammen mit dem Abgleich ausliefern, dann landet beides in einem Zug.</p>
+    </div>
+    <p class="note">Was auf dem Entwicklungssystem bereits stimmt und nicht angefasst werden muss: Der Navigationspfad ist dreistufig und vollständig ausgezeichnet. Die Bedienbarkeit für Maschinen und Screenreader erreicht 100 von 100 Punkten — 19 semantische Bereiche, echte Schaltflächen, keine Formularfehler. Die Inhaltsqualität des API-Artikels liegt bei 92 von 100, ohne KI-typische Sprachmuster; einziger Hinweis sind Wiederholungen.</p>
+    <p class="note"><strong>Zur Methode, weil es hier zuerst falsch lief:</strong> Diese Analyse hat den Schema-Fund zunächst als Einbaufehler gemeldet. Die Messung stimmte, die Ursache nicht. Ab sofort gilt: Technik und Markup werden am Entwicklungssystem gemessen, Sichtbarkeit und Nachfrage am Produktivsystem. Was nur produktiv fehlt, ist eine Stau-Meldung, kein Fehlerbericht.</p>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow">Recherche Partnerstatus</div>
+      <h2>Zwei von vier Programmen haben ihre Stufennamen geändert</h2>
+    </div>
+    <p class="lede">Auftrag war zu prüfen, wie die Status heute heißen, bevor sie in Titel und Seiten wandern. Ergebnis: Bei OXID und commercetools ist die Nomenklatur seit den Kosmonaut-Meldungen von 2020 gewechselt.</p>
+    <div class="tscroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Anbieter</th>
+            <th>Aktuelle Stufen</th>
+            <th>Was Kosmonaut heute führt</th>
+            <th>Belegt durch</th>
+            <th>Zu klären</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>commercetools</strong></td>
+            <td>Neues Programm seit 2025, Punktesystem mit Stufen bis Platinum (ab 150 Punkten). Rollen: Solution Partner, Systems Integrator</td>
+            <td>„commercetools Solution Partner / Systems Integrator“</td>
+            <td>Eigene Partnerseite bei commercetools: <span class="q">commercetools.com/partners/kosmonaut</span> — gelistet als Solution Partner <span class="chip chip-gain">bestätigt</span></td>
+            <td>Aktuelle Punktestufe erfragen. Wenn eine benennbare Stufe vorliegt, gehört sie in den Titel</td>
+          </tr>
+          <tr>
+            <td><strong>OXID eSales</strong></td>
+            <td><strong>Kristall → Rubin → Diamant</strong>. Das frühere Modell mit „Enterprise Solution Partner“ ist abgelöst</td>
+            <td><strong>Diamant-Partner</strong> — höchste Stufe des Programms</td>
+            <td>Bestätigt durch Anatolij am 19.08.2026; Stufenbezeichnungen von der OXID-Partnerseite <span class="chip chip-gain">bestätigt</span></td>
+            <td>Die Website führt noch „Enterprise Partner“ — Titel und Beschreibung auf „Diamant-Partner“ ziehen</td>
+          </tr>
+          <tr>
+            <td><strong>Shopware</strong></td>
+            <td>Bronze (neu ab 2026) → Silver → Gold → Platinum. Silver ab 4 Zertifizierungen, Gold ab 10</td>
+            <td>Als Plattform-Kompetenz genannt, Stufe nirgends ausgewiesen</td>
+            <td>Shopware-Partnerprogramm, Agenturverzeichnis</td>
+            <td>Stufe und Zertifizierungszahl bestätigen — bei <span class="q">shopware agentur</span> (3.600 Suchen/Monat) ist das ein echter Klickfaktor</td>
+          </tr>
+          <tr>
+            <td><strong>Shopify</strong></td>
+            <td>Shopify Partner / Shopify Plus Partner</td>
+            <td>Status und Referenzfall am 17.08. bestätigt</td>
+            <td>Freigabe im Maßnahmenplan</td>
+            <td>Namen für den Nachweisblock der Woche 4 — Referenzkunde und Statusbezeichnung</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="proof">
+      <div class="label">Warum das für die Klickrate zählt</div>
+      <p>In der Trefferliste zu <span class="q">shopify plus agentur</span> führt jedes rankende Ergebnis eine Akkreditierung im Titel. Gleichzeitig steht dort ein Anbieter mit Domain-Autorität 6 auf Position 10 — Autorität ist also nicht die Hürde, die Akkreditierung im Titel ist der Unterschied. Derselbe Mechanismus gilt für commercetools und OXID.</p>
+      <p>Konsequenz für A1: Statt der freien Formulierung „zertifizierter Partner“ gehört die offizielle Rolle in den Titel — <strong>Solution Partner</strong>. Sie ist bei commercetools öffentlich hinterlegt und damit überprüfbar.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow">Vorschlag zur Umsetzung</div>
+      <h2>Reihenfolge und offene Entscheidungen</h2>
+    </div>
+    <div class="proof">
+      <div class="label">Am 19.08. geklärt: der Titel gehört ganz euch</div>
+      <p>Die Vermutung, der Marken-Anhang „- Kosmonaut“ komme aus dem Code, ist widerlegt — im Quelltext gibt es keine Titel-Vorlage, das Redaktionssystem-Feld erscheint zeichengleich in der Suche. Der doppelte Markenname bei A1 ist also schlicht ein Tippfehler im Feld und verschwindet mit dem neuen Wert. Damit gelten die Zeichenlängen wie gerechnet, und ein Eintrag ist ohne Umwege möglich.</p>
+    </div>
+    <h3>Empfohlene Titel, sofort eintragbar</h3>
+    <div class="tscroll">
+      <table>
+        <thead>
+          <tr><th>Seite</th><th>Empfohlener Titel</th><th class="num">Zeichen</th><th>Statt</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>commercetools</td>
+            <td><span class="q">commercetools Agentur &amp; Solution Partner | KOSMONAUT</span></td>
+            <td class="num">52</td>
+            <td class="num">77 (freigegebene Fassung)</td>
+          </tr>
+          <tr>
+            <td>OXID</td>
+            <td><span class="q">OXID eShop Agentur &amp; Diamant-Partner | KOSMONAUT</span></td>
+            <td class="num">48</td>
+            <td class="num">128 (heute)</td>
+          </tr>
+          <tr>
+            <td>API-Artikel</td>
+            <td><span class="q">Warum APIs unverzichtbar sind | KOSMONAUT API-Agentur</span></td>
+            <td class="num">53</td>
+            <td class="num">70 (freigegebene Fassung)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Warum bei commercetools die kurze Fassung: <span class="q">commercetools agentur</span> und <span class="q">commercetools partner</span> sind die einzigen beiden Anfragen dieser Seite mit belegter Nachfrage. B2B, B2C und D2C tauchen in den Suchanfragen der Seite überhaupt nicht auf — sie kosten nur Zeichen. Wenn die Positionierung trotzdem in den Titel soll, gibt es eine 66-Zeichen-Fassung.</p>
+    <h3>Weiter ohne Rückfrage möglich</h3>
+    <ul class="plain">
+      <li>Ankertext in der commercetools-Meldung auf „commercetools Agentur“ ändern.</li>
+      <li>Die sieben Überschriften aus dem Abschnitt oben, sofern sie im Redaktionssystem gepflegt werden.</li>
+    </ul>
+    <h3>Braucht eine Entscheidung</h3>
+    <ul class="plain">
+      <li><strong>Shopware-Stufe:</strong> fehlt als Einzige im Organisations-Eintrag. Bronze, Silver, Gold oder Platinum — lieber leer als falsch.</li>
+      <li><strong>Zahl der zertifizierten OXID-Entwickler:</strong> die Meldung von 2020 nennt zehn, inzwischen sind es mehr. Eine Zahl wirkt in der Trefferliste und in KI-Antworten stärker als ein Adjektiv.</li>
+      <li><strong>Ortsanfragen bei OXID:</strong> rund 200 Einblendungen aus München, Allgäu, Kempten, Köln und Stuttgart. Bundesweite Formulierung auf der Seite — oder bewusst liegen lassen.</li>
+      <li><strong>Beschreibungstext für den API-Artikel:</strong> in der Maßnahmenkarte nicht enthalten, Vorschlag liegt vor.</li>
+    </ul>
+    <p class="note">Reihenfolge-Empfehlung: A1 und A2 gemeinsam eintragen, Wirkung 28 Tage messen, danach A3 mit dem Angebotsblock. Grund: A1 und A2 sind reine Feldänderungen, A3 verlangt neuen Text — wenn beides gleichzeitig live geht, ist am Tag 28 nicht unterscheidbar, was gewirkt hat.</p>
+  </section>
+
+  <footer>
+    Datengrundlage: Google Search Console, Property sc-domain:kosmonaut.io, Zeitraum 90 Tage bis 19.08.2026, Dimensionen query + page, 1.530 Zeilen · Ahrefs Keywords Explorer, Land DE · Live-Abruf der Zielseiten am 19.08.2026 · Partnerprogramm-Recherche über die Anbieterseiten von commercetools, OXID eSales und Shopware<br>
+    Nicht verwendet: der Ahrefs-Search-Console-Konnektor. Er liefert Seiten-Summen, die als Anfragewerte gelesen bereits einmal zu einem Fehlbefund geführt haben.<br>
+    Erstellt von der SEO-Session · Ablage im openseo-Repo unter docs/kosmonaut/ · Code by AW — KOSMONAUT
+  </footer>
+
+</div>
