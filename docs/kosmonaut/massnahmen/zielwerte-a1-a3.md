@@ -2,8 +2,21 @@
 
 Datenlieferung der SEO-Session an kmt-website-fix · 19.08.2026 · Weg (a)
 Redakteursweg (D8). Soll-Werte aus der freigegebenen Kartendatei
-[2026-08-16-cluster-a.md](./2026-08-16-cluster-a.md) (Freigabe D1, 17.08.),
-Ist-Werte live von Prod gezogen (fetch_page, 19.08.2026, HTTP 200).
+[2026-08-16-cluster-a.md](./2026-08-16-cluster-a.md) (Freigabe D1, 17.08.).
+
+**Ist-Werte regelkonform aus der Strapi-API** (Prod, `populate=deep`, ohne
+`encodeSourceMaps`, 19.08.2026) — nicht aus dem HTML, gemäß der Direktive
+vom 19.08. Alle Werte mit 0 unsichtbaren Zeichen; sie stimmen zeichengenau
+mit der vorherigen HTML-Messung überein, die Zahlen ändern sich also nicht.
+
+| Karte | Slug (Strapi-Format) | Page-ID |
+| --- | --- | --- |
+| A1 | `/expertise/commercetools` | **72** |
+| A2 | `/expertise/oxid-shop` | **71** |
+| A3 | `/newsroom/insights/apisunverzichtbar` | **66** |
+
+Slugs führen einen Schrägstrich vorn und keinen hinten — der `trailingSlash`
+der Website entsteht erst im Routing.
 
 **Robots bleibt bei allen drei Karten unverändert:** live gemessen
 `index, follow` auf allen drei URLs → `RobotsIndex = true`,
