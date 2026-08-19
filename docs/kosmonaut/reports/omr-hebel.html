@@ -1,0 +1,334 @@
+<title>OMR-Hebel Kosmonaut</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+<style>
+:root {
+  --ground: #F6F7F9; --surface: #FFFFFF; --surface-sunk: #EEF1F5;
+  --ink: #16233B; --ink-soft: #47536B; --ink-faint: #78849B;
+  --rule: #D8DEE7; --rule-strong: #B9C3D1;
+  --copper: #A8562F; --copper-soft: #F0E2DA;
+  --gain: #2C6A50; --gain-soft: #DFEDE6;
+  --warn: #9A6A18; --warn-soft: #F3E9D5;
+  --crit: #9C3833; --crit-soft: #F5E1E0;
+  --bar: #A8562F; --bar-track: #E2E7EE;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #10192B; --surface: #16223A; --surface-sunk: #1C2A45;
+    --ink: #E9EDF4; --ink-soft: #AEB9CC; --ink-faint: #7C89A1;
+    --rule: #2C3B57; --rule-strong: #435472;
+    --copper: #E0906A; --copper-soft: #3A2A22;
+    --gain: #74BE9C; --gain-soft: #1B3A2E;
+    --warn: #DCAE5E; --warn-soft: #3A2E19;
+    --crit: #E28A85; --crit-soft: #3A2120;
+    --bar: #E0906A; --bar-track: #26344E;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #10192B; --surface: #16223A; --surface-sunk: #1C2A45;
+  --ink: #E9EDF4; --ink-soft: #AEB9CC; --ink-faint: #7C89A1;
+  --rule: #2C3B57; --rule-strong: #435472;
+  --copper: #E0906A; --copper-soft: #3A2A22;
+  --gain: #74BE9C; --gain-soft: #1B3A2E;
+  --warn: #DCAE5E; --warn-soft: #3A2E19;
+  --crit: #E28A85; --crit-soft: #3A2120;
+  --bar: #E0906A; --bar-track: #26344E;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--ground); color: var(--ink);
+  font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+}
+.wrap {
+  max-width: 1080px; margin: 0 auto;
+  padding: clamp(2rem, 5vw, 4.5rem) clamp(1rem, 4vw, 3rem) 5rem;
+  display: flex; flex-direction: column; gap: clamp(2.5rem, 5vw, 4rem);
+}
+.masthead { display: flex; flex-direction: column; gap: 1rem; }
+.eyebrow {
+  font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 0.7rem;
+  font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--copper);
+}
+h1 {
+  font-family: Archivo, sans-serif; font-weight: 700;
+  font-size: clamp(2rem, 5vw, 3.1rem); line-height: 1.05;
+  letter-spacing: -0.022em; margin: 0; text-wrap: balance;
+}
+.standfirst { font-size: clamp(1.02rem, 2vw, 1.16rem); color: var(--ink-soft); max-width: 62ch; margin: 0; }
+.sourceline {
+  font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 0.74rem;
+  color: var(--ink-faint); line-height: 1.7; border-top: 1px solid var(--rule); padding-top: 0.9rem;
+}
+section { display: flex; flex-direction: column; gap: 1.1rem; }
+.sec-head { display: flex; flex-direction: column; gap: 0.35rem; }
+h2 {
+  font-family: Archivo, sans-serif; font-weight: 600;
+  font-size: clamp(1.35rem, 3vw, 1.75rem); line-height: 1.15;
+  letter-spacing: -0.015em; margin: 0; text-wrap: balance;
+}
+h3 { font-family: Archivo, sans-serif; font-weight: 600; font-size: 1.05rem; margin: 0.6rem 0 0; }
+p { margin: 0; max-width: 74ch; }
+p + p { margin-top: 0.7rem; }
+.lede { color: var(--ink-soft); max-width: 72ch; }
+.tscroll { overflow-x: auto; background: var(--surface); border: 1px solid var(--rule); }
+table { width: 100%; border-collapse: collapse; font-size: 0.855rem; min-width: 640px; }
+thead th {
+  text-align: left; font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.66rem; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;
+  color: var(--ink-faint); padding: 0.75rem 0.9rem;
+  border-bottom: 1px solid var(--rule-strong); vertical-align: bottom; white-space: nowrap;
+}
+tbody td { padding: 0.72rem 0.9rem; border-bottom: 1px solid var(--rule); vertical-align: middle; line-height: 1.5; }
+tbody tr:last-child td { border-bottom: 0; }
+tbody tr:hover { background: var(--surface-sunk); }
+td.num, th.num { font-family: "IBM Plex Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr.own td { background: var(--copper-soft); font-weight: 500; }
+tr.own:hover td { background: var(--copper-soft); }
+.bar { display: flex; align-items: center; gap: 0.6rem; min-width: 170px; }
+.bar-track { flex: 1; height: 9px; background: var(--bar-track); border-radius: 1px; overflow: hidden; }
+.bar-fill { height: 100%; background: var(--bar); }
+.chip {
+  display: inline-block; font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.66rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 0.16em 0.5em; border-radius: 2px; white-space: nowrap;
+}
+.chip-gain { background: var(--gain-soft); color: var(--gain); }
+.chip-warn { background: var(--warn-soft); color: var(--warn); }
+.chip-crit { background: var(--crit-soft); color: var(--crit); }
+.proof {
+  background: var(--surface); border-left: 3px solid var(--copper);
+  padding: 1.1rem 1.3rem; display: flex; flex-direction: column; gap: 0.55rem;
+}
+.proof .label {
+  font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 0.68rem;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--copper);
+}
+.proof p { font-size: 0.94rem; }
+.note { font-size: 0.86rem; color: var(--ink-soft); border-left: 2px solid var(--rule-strong); padding-left: 0.9rem; max-width: 76ch; }
+pre {
+  background: var(--surface-sunk); border: 1px solid var(--rule); padding: 0.85rem 1rem;
+  overflow-x: auto; font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.78rem; line-height: 1.6; margin: 0;
+}
+.q {
+  font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 0.8em;
+  background: var(--surface-sunk); padding: 0.08em 0.34em; border-radius: 2px;
+}
+.stufe { display: flex; flex-direction: column; gap: 0.5rem; border-top: 1px solid var(--rule); padding-top: 1rem; }
+.stufe-kopf { display: flex; align-items: baseline; gap: 0.8rem; flex-wrap: wrap; }
+.stufe-nr {
+  font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 0.72rem;
+  font-weight: 600; letter-spacing: 0.1em; color: var(--copper); white-space: nowrap;
+}
+ul.plain { margin: 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.45rem; }
+ul.plain li { max-width: 72ch; }
+footer {
+  border-top: 1px solid var(--rule); padding-top: 1.2rem;
+  font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 0.72rem;
+  color: var(--ink-faint); line-height: 1.75;
+}
+a { color: var(--copper); }
+a:focus-visible { outline: 2px solid var(--copper); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="eyebrow">Plattform-Analyse · OMR Reviews · 19.08.2026</div>
+    <h1>Der beste Platz, den niemand besetzt hat</h1>
+    <p class="standfirst">Auf OMR steht Kosmonaut auf drei Seiten als <em>einziger</em> gelisteter Dienstleister — bei Shopify Plus sogar ausdrücklich als „OMR Exclusive Partner". Und hat dort null selbst eingeworbene Bewertungen, während vergleichbare Agenturen zwischen 18 und 75 vorweisen.</p>
+    <div class="sourceline">
+      Quellen: Live-Abrufe der sieben OMR-Seiten am 19.08.2026, teils mit ausgeführtem JavaScript · Ahrefs Domain Rating · Vergleichsabrufe von vier Wettbewerberprofilen · Search Console für die Nachfrageseite
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow">Bestand</div>
+      <h2>Was Kosmonaut auf OMR heute besitzt</h2>
+    </div>
+    <p class="lede">Sechs Platzierungen, drei davon exklusiv. Diese Plätze sind bereits vergeben — sie müssen nicht erobert, sondern nur genutzt werden.</p>
+    <div class="tscroll">
+      <table>
+        <thead>
+          <tr><th>Seite</th><th>Position</th><th>Wer sonst noch dort steht</th></tr>
+        </thead>
+        <tbody>
+          <tr class="own">
+            <td><strong>Shopify Plus</strong><br><span class="q">Produktseite</span></td>
+            <td><strong>einziger Partner</strong> — ausgewiesen als „OMR Exclusive Partner" <span class="chip chip-gain">exklusiv</span></td>
+            <td>niemand</td>
+          </tr>
+          <tr class="own">
+            <td><strong>B2B Shop</strong><br><span class="q">Content Hub</span></td>
+            <td><strong>einziger verlinkter Dienstleister</strong> <span class="chip chip-gain">exklusiv</span></td>
+            <td>niemand</td>
+          </tr>
+          <tr class="own">
+            <td><strong>E-Commerce PIM</strong><br><span class="q">Content Hub</span></td>
+            <td><strong>einziger verlinkter Dienstleister</strong> <span class="chip chip-gain">exklusiv</span></td>
+            <td>niemand</td>
+          </tr>
+          <tr>
+            <td><strong>OXID</strong><br><span class="q">Produktseite</span></td>
+            <td>1 von 2 im „trusted partner network"</td>
+            <td>dixeno</td>
+          </tr>
+          <tr>
+            <td><strong>commercetools</strong><br><span class="q">Produktseite</span></td>
+            <td>1 von 4</td>
+            <td>foryouandyourcustomers, piazza-blu, webmatch</td>
+          </tr>
+          <tr>
+            <td><strong>Zehn E-Commerce-Agenturen im Vergleich</strong><br><span class="q">Content Hub, deutsch</span></td>
+            <td>1 von 11 gelisteten Agenturen</td>
+            <td>antiloop, basecom, basilicom, blackbit, brandung, elbkapitaene, netformic, onmacon, saphir-solution, tante-e</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow">Die Lücke</div>
+      <h2>Bester Schnitt im Feld — auf der schmalsten Basis</h2>
+    </div>
+    <div class="tscroll">
+      <table>
+        <thead>
+          <tr><th>Agentur</th><th class="num">Bewertungen</th><th>Verhältnis</th><th class="num">Schnitt</th></tr>
+        </thead>
+        <tbody>
+          <tr class="own">
+            <td><strong>KOSMONAUT</strong></td>
+            <td class="num">7</td>
+            <td><div class="bar"><div class="bar-track"><div class="bar-fill" style="width:9%"></div></div></div></td>
+            <td class="num"><strong>5,0</strong></td>
+          </tr>
+          <tr>
+            <td>basecom</td>
+            <td class="num">75</td>
+            <td><div class="bar"><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div></div></td>
+            <td class="num">4,6</td>
+          </tr>
+          <tr>
+            <td>brandung</td>
+            <td class="num">40</td>
+            <td><div class="bar"><div class="bar-track"><div class="bar-fill" style="width:53%"></div></div></div></td>
+            <td class="num">4,3</td>
+          </tr>
+          <tr>
+            <td>blackbit</td>
+            <td class="num">33</td>
+            <td><div class="bar"><div class="bar-track"><div class="bar-fill" style="width:44%"></div></div></div></td>
+            <td class="num">4,6</td>
+          </tr>
+          <tr>
+            <td>dixeno</td>
+            <td class="num">18</td>
+            <td><div class="bar"><div class="bar-track"><div class="bar-fill" style="width:24%"></div></div></div></td>
+            <td class="num">4,3</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Das Profil ist als „managed by the owner (0 reviews)" ausgewiesen. Die sieben Bewertungen stammen laut OMR aus externen Quellen, nicht aus eigener Einwerbung — es hat also nie jemand Kunden um eine Bewertung gebeten. In einem Vergleich von zehn Agenturen liest sich 5,0 bei sieben Stimmen schwächer als 4,6 bei fünfundsiebzig.</p>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow">Warum das für die KI-Suche zählt</div>
+      <h2>Die Bewertung ist bereits maschinenlesbar — auf einer Domain, die 50 Punkte stärker ist</h2>
+    </div>
+    <div class="proof">
+      <div class="label">Was im Quelltext des OMR-Profils steht</div>
+      <pre>{"@type": "AggregateRating", "ratingValue": "5.00",
+ "reviewCount": 7, "bestRating": 5, "worstRating": 0}</pre>
+      <p>Genau diese Struktur lesen Google und die KI-Systeme aus. Sie steht auf einer Domain mit Autoritätswert <strong>82</strong>, während kosmonaut.io bei <strong>32</strong> liegt. Für eine Frage wie „welche E-Commerce-Agentur für Shopify Plus" ist OMR die belastbarere Quelle als die eigene Website — mit großem Abstand.</p>
+    </div>
+    <p>Dazu kommt das Seitenformat: <strong>„Zehn E-Commerce-Agenturen im Vergleich"</strong> ist exakt die Art Seite, die ein Sprachmodell heranzieht, wenn jemand um eine Empfehlung bittet. Wer dort mit dünner Bewertungsbasis steht, wird genannt — aber nicht empfohlen.</p>
+    <p>Dass so gefragt wird, steht schon in den eigenen Zahlen: In der Search Console tauchen Anfragen in natürlicher Sprache auf — <span class="q">welche agentur ist spezialist für headless commerce in deutschland?</span> auf Position 9,9 und <span class="q">welche agentur hilft mir bei einer headless e-commerce entwicklung?</span> auf Position 10,6. Dieselben Sätze werden Chatbots gestellt.</p>
+    <p class="note"><strong>Was hier nicht gemessen ist:</strong> ob und wie oft omr.com konkret in KI-Antworten zitiert wird. Das erfordert einen eingerichteten Brand-Radar-Report bei Ahrefs, den es für dieses Konto nicht gibt. Die Argumentation stützt sich auf Autorität, Markup und Seitenformat — nicht auf gezählte Zitate.</p>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow">Plan</div>
+      <h2>Vier Stufen, die erste kostet eine Stunde</h2>
+    </div>
+
+    <div class="stufe">
+      <div class="stufe-kopf">
+        <span class="stufe-nr">Stufe 1</span>
+        <h3 style="margin:0">Sofort, ohne Vorbedingung</h3>
+      </div>
+      <ul class="plain">
+        <li><strong>Profil beanspruchen.</strong> Solange „managed by the owner (0 reviews)" dort steht, läuft jede weitere Maßnahme ins Leere. Das ist die Voraussetzung für Pflege, Bewertungseinladungen und Aktualisierungen.</li>
+        <li><strong>Standortangaben vereinheitlichen.</strong> OMR nennt Bielefeld, Osnabrück, Sofia und Ho Chi Minh City — das Impressum nennt Rheda-Wiedenbrück. Für die Entitätserkennung muss dieselbe Firma überall denselben Hauptsitz tragen. Nebenstandorte dürfen dazu, der Hauptsitz muss stimmen.</li>
+        <li><strong>Beidseitig verlinken.</strong> Von der eigenen Website aufs OMR-Profil, und das Profil in die Organisationsdaten aufnehmen — dort ist es bereits eingetragen.</li>
+      </ul>
+    </div>
+
+    <div class="stufe">
+      <div class="stufe-kopf">
+        <span class="stufe-nr">Stufe 2</span>
+        <h3 style="margin:0">Von 7 auf 25 Bewertungen</h3>
+      </div>
+      <p>Bei einem Schnitt von 5,0 ist jede weitere Bewertung reiner Zugewinn. Ab etwa 25 steht Kosmonaut im Vergleichsfeld nicht mehr am unteren Rand.</p>
+      <p>Bestandskunden aus abgeschlossenen Projekten anschreiben — die Referenzen der Website sind die naheliegende Liste. Wichtig ist die Streuung über die Systeme: Bewertungen, die OXID, commercetools, Shopware und Shopify Plus abdecken, stützen alle vier Produktseiten gleichzeitig, auf denen Kosmonaut gelistet ist.</p>
+      <p class="note">Keine Anreize, keine vorformulierten Texte. OMR prüft Bewertungen, und ein Muster gleichlautender Rezensionen schadet mehr, als es nützt.</p>
+    </div>
+
+    <div class="stufe">
+      <div class="stufe-kopf">
+        <span class="stufe-nr">Stufe 3</span>
+        <h3 style="margin:0">Die Exklusivplätze sichtbar machen</h3>
+      </div>
+      <ul class="plain">
+        <li><strong>Shopify Plus:</strong> „OMR Exclusive Partner" ist ein Vertrauenssignal, das auf der eigenen Shopify-Seite nirgends auftaucht. Es gehört in den Nachweisblock, den der Content-Plan für Woche 4 ohnehin vorsieht.</li>
+        <li><strong>B2B Shop und E-Commerce PIM:</strong> Beide Themen sind auf OMR bereits von Kosmonaut besetzt, ohne dass die eigene Website entsprechende Seiten hätte. Zwei Themen, für die Kosmonaut extern schon als Adresse gilt — Kandidaten fürs Relaunch-Briefing.</li>
+      </ul>
+    </div>
+
+    <div class="stufe">
+      <div class="stufe-kopf">
+        <span class="stufe-nr">Stufe 4</span>
+        <h3 style="margin:0">Inhalte in die Content Hubs</h3>
+      </div>
+      <p>OMR zitiert Fachleute in seinen Hubs und verweist auf Dienstleister. Wer dort inhaltlich beiträgt, verstetigt die Platzierung. Redaktionsarbeit mit längerer Laufzeit — gehört nicht ins 60-Tage-Fenster, sondern in die Planung danach.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow">Aufwand</div>
+      <h2>Was es kostet und was es bringt</h2>
+    </div>
+    <div class="tscroll">
+      <table>
+        <thead>
+          <tr><th>Maßnahme</th><th>Aufwand</th><th>Wirkung</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Profil beanspruchen</td><td class="num">15 Minuten</td><td>Voraussetzung für alles Weitere</td></tr>
+          <tr><td>Standorte vereinheitlichen</td><td class="num">30 Minuten</td><td>Entitätserkennung, regionale Signale</td></tr>
+          <tr><td>Beidseitig verlinken</td><td class="num">eine Zeile</td><td>Verbindet die beiden Profile in beide Richtungen</td></tr>
+          <tr><td>18 zusätzliche Bewertungen</td><td>Vertriebsaufgabe über Wochen</td><td>Wirkt auf allen sechs OMR-Seiten gleichzeitig <span class="chip chip-gain">größter Hebel</span></td></tr>
+          <tr><td>Exklusivplätze ausweisen</td><td>Teil des geplanten Nachweisblocks</td><td>Vertrauenssignal in der eigenen Trefferliste</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Die ersten drei Punkte kosten zusammen etwa eine Stunde und hängen an nichts: weder am Code-Abgleich zwischen Entwicklungs- und Produktivsystem noch an der Klickvorlage. Sie können heute passieren.</p>
+  </section>
+
+  <footer>
+    Alle Zahlen aus Live-Abrufen vom 19.08.2026 · OMR-Profil, drei Produktseiten und drei Content Hubs, jeweils HTTP 200 · Wettbewerbsvergleich über die OMR-Profile von basecom, brandung, blackbit und dixeno · Autoritätswerte aus Ahrefs<br>
+    Vollständige Fassung mit Messplan im openseo-Repo unter docs/kosmonaut/omr-strategie-2026-08-19.md · Code by AW — KOSMONAUT
+  </footer>
+
+</div>
