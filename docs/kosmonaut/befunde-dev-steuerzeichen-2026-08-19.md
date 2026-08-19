@@ -44,37 +44,33 @@ Ausgeschlossen wurde davor:
 `dev.kosmonaut.io` läuft als `VERCEL_ENV=preview`, Prod als `production` —
 dort ist das Flag konstruktionsbedingt aus. Deshalb 0 Zeichen auf Prod.
 
-## Kein Gate
+## Die Nutzlast wird erzeugt, aber von niemandem gelesen
 
-Eine Prüfung, die unsichtbare Steuerzeichen abweist, würde auf dev jeden Build
-zu Recht rot färben und ein gewolltes Editier-Feature bekämpfen. Auf Prod kann
-das Overlay bauartbedingt nicht erscheinen. Der Grundsatz „solche Zeichen
-dürfen nicht vorkommen" (Anatolij, 19.08.) bleibt richtig für alles, was auf
-Prod landet — hier greift er nicht, weil nichts davon je nach Prod gelangt.
+Nachgefasst durch die KMT-Session: Die Kodierung braucht einen
+Visual-Editing-Client, der sie wieder dekodiert. Den gibt es im Projekt nicht
+— kein stega-/Visual-Editing-Konsument in `app/`, `components/`, `utils/`, und
+im ausgelieferten dev-HTML kein Toolbar- oder Visual-Editing-Marker (deckt
+sich mit meiner eigenen Messung).
 
-## Bindende Messregel
+Damit ist es kein genutztes Feature, sondern reiner Ballast, der zugleich jede
+Längenmessung auf Preview-Deployments verfälscht. Anatolijs Grundsatz („solche
+Steuerzeichen dürfen nicht vorkommen") wird deshalb nicht über ein Gate
+erfüllt, sondern durch Entfernen der Quelle.
 
-**Jede Zeichen-, Längen- oder Tokenisierungsmessung auf dev muss die
-unsichtbaren Zeichen vorher entfernen.** Sonst wird das Editier-Overlay
-gemessen statt des Inhalts.
+**Umgesetzt in PR #136:** `encodeSourceMaps` fliegt aus
+`utils/queries/getPage/query.ts`; der Test kehrt die Richtung um und sichert
+ab, dass der Parameter auch im Preview-Modus nicht mehr gesendet wird. Das ist
+die Regressionsprüfung an der richtigen Stelle — ein Gate über gerenderte
+Seiten entfällt.
 
-Betroffen sind unmittelbar:
-
-- **Title- und Description-Längen** — die ≤ 65-Zeichen-Regel für Titles wäre
-  auf dev-Werten sinnlos.
-- H2- und Überschriften-Analysen.
-- Dateigrößen und Wortzahlen.
-
-Filter vor jeder Auswertung: alle Zeichen aus U+200B, U+200C, U+200D und
-U+FEFF strippen.
-
-```python
-INVIS = {"​", "‌", "‍", "﻿"}
-clean = "".join(ch for ch in raw if ch not in INVIS)
-```
-
-Nicht betroffen: Struktur- und Markup-Prüfungen (Schema, semantische
-Landmarks, Robots-Header) — dort stören die Zeichen nicht.
+**Offener QS-Vorbehalt (SEO-Session):** Content Source Maps sind die Grundlage
+für „Click-to-Edit" in Vercel-Previews. Die Marker-Suche im HTML schließt nur
+aus, dass ein *anonymer* Abruf die Toolbar sieht — bei einem im Vercel-Konto
+angemeldeten Menschen wird sie per Edge injiziert und erschiene nicht im
+statischen HTML. Vor dem Merge zu klären: **Nutzt jemand im Team Visual
+Editing in den Preview-Deployments?** Falls ja, ist der PR eine
+Funktionsentfernung und keine Bereinigung — dann wäre das Flag gezielt nur
+für die Dauer von Messungen abzuschalten. Falls nein, ist Entfernen richtig.
 
 ## Was der Vorgang gezeigt hat
 
