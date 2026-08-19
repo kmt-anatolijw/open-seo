@@ -67,7 +67,7 @@ abgeschnitten.
    Alternative, falls die Positionierung im Title stehen soll.
 2. **Statusbezeichnung.** „zertifizierter Partner" ist belegt, aber die
    offizielle Bezeichnung lautet **commercetools Solution Partner /
-   Systems Integrator** (Beleg: `/newsroom/news/commercetools/` — Training und
+   Systems Integrator** (Tier laut Suchindex: Registered) (Beleg: `/newsroom/news/commercetools/` — Training und
    Zertifizierung der Developer + Solution/Functional Architects abgeschlossen
    **Dezember 2020**). Empfehlung: offizielle Bezeichnung verwenden.
    **Aktualität ist zu bestätigen** (Beleg ist 5 Jahre alt) — auf die

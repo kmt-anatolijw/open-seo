@@ -66,8 +66,7 @@
         "name": "commercetools GmbH",
         "url": "https://commercetools.com/"
       },
-      "url": "https://commercetools.com/partners/kosmonaut",
-      "description": "Partnerschaft seit 2020, 11 Zertifikate im Team."
+      "description": "Partnerschaft seit 2020, 11 Zertifikate im Team. Rolle laut Unternehmensangabe; der öffentliche Verzeichniseintrag ist seit dem commercetools-Website-Relaunch nicht erreichbar."
     },
     {
       "@type": "EducationalOccupationalCredential",
@@ -106,7 +105,6 @@
     "Direct-to-Consumer"
   ],
   "sameAs": [
-    "https://de.linkedin.com/company/kosmonaut-io",
-    "https://commercetools.com/partners/kosmonaut"
+    "https://de.linkedin.com/company/kosmonaut-io"
   ]
 }
