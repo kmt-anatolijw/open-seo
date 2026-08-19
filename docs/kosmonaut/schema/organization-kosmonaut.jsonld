@@ -44,7 +44,7 @@
         "name": "OXID eSales AG",
         "url": "https://www.oxid-esales.com/"
       },
-      "description": "Höchste Stufe des OXID-Partnerprogramms (Kristall, Rubin, Diamant). Partnerschaft seit 2008."
+      "description": "Höchste Stufe des OXID-Partnerprogramms (Kristall, Rubin, Diamant), seit 2025. OXID-Partnerschaft seit 2008, über 80 realisierte Projekte."
     },
     {
       "@type": "EducationalOccupationalCredential",
@@ -66,7 +66,8 @@
         "name": "commercetools GmbH",
         "url": "https://commercetools.com/"
       },
-      "description": "Partnerschaft seit 2020, 11 Zertifikate im Team. Rolle laut Unternehmensangabe; der öffentliche Verzeichniseintrag ist seit dem commercetools-Website-Relaunch nicht erreichbar."
+      "description": "Partnerschaft seit 2020, 11 Zertifikate im Team. Partner tier: Registered.",
+      "url": "https://commercetools.com/service-partners/kosmonaut"
     },
     {
       "@type": "EducationalOccupationalCredential",
@@ -82,8 +83,8 @@
     {
       "@type": "EducationalOccupationalCredential",
       "credentialCategory": "Partnerstatus",
-      "name": "Shopware Partner",
-      "description": "Partnerschaft seit 2014. Programmstufe noch zu bestätigen.",
+      "name": "Shopware Silver Partner",
+      "description": "Partnerschaft seit 2014, Programmstufe Silver (Bronze, Silver, Gold, Platinum).",
       "recognizedBy": {
         "@type": "Organization",
         "name": "shopware AG",
@@ -105,6 +106,8 @@
     "Direct-to-Consumer"
   ],
   "sameAs": [
-    "https://de.linkedin.com/company/kosmonaut-io"
+    "https://de.linkedin.com/company/kosmonaut-io",
+    "https://commercetools.com/service-partners/kosmonaut",
+    "https://omr.com/en/reviews/service/kosmonaut-germany"
   ]
 }
