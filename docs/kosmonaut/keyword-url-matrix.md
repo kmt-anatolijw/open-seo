@@ -36,7 +36,8 @@ Alle URLs mit abschließendem Schrägstrich (`trailingSlash: true`).
 | --- | --- | --- |
 | conversion optimierung agentur (603 Impr. · Pos 69,5) | `/services/conversion-rate-optimization/` | Relaunch der bestehenden Seite (kein Neubau); im Fenster keine Maßnahme |
 | b2b e-commerce agentur (6 Impr. · Pos 43,7) | `/expertise/b2b-ecommerce/` | Relaunch der bestehenden Seite |
-| api-schnittstellen (2.400 Vol, KD 17) | `/expertise/api/` | Relaunch nur mit 301-/Konsolidierungsplan gegenüber dem Insight-Artikel |
+| api-schnittstellen (2.400 Vol, KD 17) · schnittstellen programmierung (336 Impr · Pos 36,6) · api entwicklung (250 Vol, KD 0) · erp schnittstelle (150 Vol, KD 0) · datenintegration (800 Vol, KD 0) | **Neue Data-Hub-Seite** (`/expertise/schnittstellen/`) | `/expertise/api/` wird darauf konsolidiert. Insight-Artikel `apisunverzichtbar` bleibt Ranking-URL für `api schnittstellen agentur` und wird Zubringer. Konzept: [Relaunch-Briefing Data Hub](./relaunch-briefing-data-hub.md) |
+| stammdaten- und produktdaten-Cluster (≈ 4.000 Impr auf `/newsroom/insights/mdm/`, u. a. `stammdatenmanagement` 819 · Pos 69,2, `e-commerce-datenmanagement` 251 · **Pos 3,6**, `produktdaten pflegen` 378 · **Pos 7,5**) | `/newsroom/insights/mdm/` bleibt | **Kein 301.** Die Seite hält zwei Spitzenpositionen und wird Zubringer mit hartem Anker auf die Data-Hub-Seite |
 | `/expertise/b2c-ecommerce/` + `/expertise/direct-to-consumer-ecommerce/` | eine konsolidierte Seite | **Zusammenlegen per 301** (D6, 17.08.). Empfehlung: d2c bleibt (Insight „Direktvertrieb" trägt 2.713 Impr.), b2c wird 301 |
 | `/expertise/omnichannel/` (61 Impr.) | `/expertise/omnichannel/` | Relaunch (D6); Insight `omnichannel-e-commerce/` (1.228 Impr. · Pos 18,9) wird Zubringer |
 | `/expertise/website/` | → `/services/` | 301 (D6) |
