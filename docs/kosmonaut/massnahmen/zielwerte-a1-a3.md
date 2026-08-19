@@ -37,6 +37,7 @@ abgeschnitten.
 | Title (Alternative mit Zielgruppen) | `commercetools Agentur & Solution Partner für B2B & D2C \| KOSMONAUT` (66 Z.) |
 | Title (Ist, Prod 19.08.) | `Kosmonaut - commercetools Partner und – maßgeschneiderter E-Commerce für B2B, B2C und D2C - Kosmonaut` (101 Z.) |
 | **Meta-Description (Soll)** | `commercetools Agentur mit Implementierungs-Erfahrung: Composable Commerce für B2B, B2C und D2C — Beratung, Entwicklung, Betrieb. Jetzt Projekt anfragen.` (152 Z.) |
+| Description (QS-Alternative mit Belegen) | `commercetools Solution Partner seit 2020, 11 Zertifikate im Team: Composable Commerce für B2B, B2C und D2C — Beratung, Entwicklung, Betrieb.` (140 Z.) |
 | Description (Ist) | „Ein Shopsystem für den E-Commerce, das sich ganz nach dem Schwerpunkt…" (209 Z., abgeschnitten in der SERP) |
 | **H1 (Soll)** | `commercetools Agentur für maßgeschneiderten E-Commerce (B2B, B2C, D2C)` |
 | H1 (Ist) | `commercetools – maßgeschneiderter E-Commerce für B2B, B2C und D2C` |
@@ -78,9 +79,11 @@ abgeschnitten.
 | **Title (QS-Empfehlung, final)** | `OXID eShop Agentur & Diamant-Partner \| KOSMONAUT` (48 Z.) |
 | Title (Soll, freigegeben — überholt) | `OXID Agentur \| Enterprise-Partner für B2B, B2C & D2C \| KOSMONAUT` (64 Z.) |
 | Title (Ist, Prod 19.08.) | `Prämierte OXID Agentur \| Mehrfach ausgezeichnet für D2C, B2C und B2B Projekte \| Kosmonaut E-Commerce Agentur aus OWL - Kosmonaut` (128 Z.) |
-| **Meta-Description** | **unverändert lassen** — Ist ist gut (157 Z.): „OXID Enterprise Partner. Über 15 Jahre OXID Erfahrung, mehr als 50 OXID Projekte, nur zertifizierte OXID Entwickler \| OXID eShop Full-Service aus einer Hand" |
+| **Meta-Description (QS-Empfehlung, neu)** | `OXID Diamant-Partner seit 2008: über 15 zertifizierte Entwickler, 40+ OXID-Projekte. Full-Service für B2B, B2C und D2C aus einer Hand.` (134 Z.) |
+| Description (Ist, Prod) | „OXID Enterprise Partner. Über 15 Jahre OXID Erfahrung, mehr als 50 OXID Projekte, nur zertifizierte OXID Entwickler \| OXID eShop Full-Service aus einer Hand" (157 Z.) — **enthält die abgelöste Nomenklatur und eine widersprüchliche Projektzahl** |
 | **H1 (Soll)** | `OXID Agentur – prämierte E-Commerce-Projekte auf OXID eShop` |
 | H1 (Ist) | `OXID eShop skalierbare E-Commerce Plattform` |
+| **Seitenleiste (dritte Stelle)** | führt ebenfalls „Enterprise-Partner seit: 2008" — muss im selben Zug auf „Diamant-Partner seit: 2008", sonst widerspricht die Seite sich selbst (Befund KMT) |
 | Robots | unverändert (`index, follow`) |
 
 **QS-Flags A2**
@@ -96,7 +99,12 @@ abgeschnitten.
    im selben Zug auf „Diamant-Partner" gezogen werden; Zertifizierungsbeleg
    `/newsroom/news/oxid-zertifizierung/` (Certified Development, 10 Entwickler,
    Oktober 2020 — Zahl laut Anatolij inzwischen höher, aktuelle Zahl nachtragen).
-4. Der Ist-Title trägt „Prämierte" — das entfällt im Soll. Bewusst so
+4. **Zahlenwiderspruch:** Die Prod-Description sagt „mehr als 50 OXID
+   Projekte", die Seitenleiste im Strapi sagt „OXID Projekte: 40+". Eine
+   der beiden Angaben ist falsch — vor dem Eintragen die richtige Zahl
+   bestimmen. Meine Empfehlung nutzt 40+, weil die Seitenleiste die
+   gepflegtere Quelle ist; das ist zu bestätigen.
+5. Der Ist-Title trägt „Prämierte" — das entfällt im Soll. Bewusst so
    freigegeben (Intent vor Auszeichnung); die Auszeichnung bleibt in H1 und
    Description erhalten.
 

@@ -21,8 +21,14 @@
     "name": "Deutschland"
   },
   "founder": [
-    { "@type": "Person", "name": "Stephan Engau" },
-    { "@type": "Person", "name": "Anatolij Woromsbecher" }
+    {
+      "@type": "Person",
+      "name": "Stephan Engau"
+    },
+    {
+      "@type": "Person",
+      "name": "Anatolij Woromsbecher"
+    }
   ],
   "award": [
     "Shop Usability Award – Agentur des Jahres",
@@ -37,13 +43,14 @@
         "@type": "Organization",
         "name": "OXID eSales AG",
         "url": "https://www.oxid-esales.com/"
-      }
+      },
+      "description": "Höchste Stufe des OXID-Partnerprogramms (Kristall, Rubin, Diamant). Partnerschaft seit 2008."
     },
     {
       "@type": "EducationalOccupationalCredential",
       "credentialCategory": "Zertifizierung",
       "name": "OXID eShop Enterprise Edition Certified Development",
-      "description": "Zertifizierte Entwicklerinnen und Entwickler im Team.",
+      "description": "Über 15 zertifizierte Entwicklerinnen und Entwickler im Team.",
       "recognizedBy": {
         "@type": "Organization",
         "name": "OXID eSales AG",
@@ -59,7 +66,8 @@
         "name": "commercetools GmbH",
         "url": "https://commercetools.com/"
       },
-      "url": "https://commercetools.com/partners/kosmonaut"
+      "url": "https://commercetools.com/partners/kosmonaut",
+      "description": "Partnerschaft seit 2020, 11 Zertifikate im Team."
     },
     {
       "@type": "EducationalOccupationalCredential",
@@ -69,6 +77,18 @@
         "@type": "Organization",
         "name": "Shopify Inc.",
         "url": "https://www.shopify.com/"
+      },
+      "description": "Partnerschaft seit 2020."
+    },
+    {
+      "@type": "EducationalOccupationalCredential",
+      "credentialCategory": "Partnerstatus",
+      "name": "Shopware Partner",
+      "description": "Partnerschaft seit 2014. Programmstufe noch zu bestätigen.",
+      "recognizedBy": {
+        "@type": "Organization",
+        "name": "shopware AG",
+        "url": "https://www.shopware.com/"
       }
     }
   ],
