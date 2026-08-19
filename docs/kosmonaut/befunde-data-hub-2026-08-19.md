@@ -9,11 +9,17 @@ Suche auf der Website.
 Gesucht in allen 95 Prod-Strapi-Seiten (API, `populate=deep`, ohne
 `encodeSourceMaps`). „Data Hub" kommt auf drei Seiten vor:
 
-| Seite | Treffer | Was es tatsächlich ist |
-| --- | --- | --- |
-| `/newsroom/insights/apisunverzichtbar` (id 66) | 8 | **alle im selben Bild-Asset**: `data-hub-basic-architecture_gallery.jpg`, Bildtitel „DataHub Basic Architecture" |
-| `/expertise/api` (id 60) | 6 | **dasselbe Bild**, in den Größenvarianten |
-| `/newsroom/news/harkkamine` (id 28) | 1 | Randerwähnung |
+| Seite | Wo der Begriff steht |
+| --- | --- |
+| `/newsroom/insights/apisunverzichtbar` (id 66) | **Bildunterschrift und Alt-Text** des Assets `data-hub-basic-architecture_gallery.jpg` |
+| `/expertise/api` (id 60) | **nur Bildunterschrift**, dasselbe Asset |
+| `/newsroom/news/harkkamine` (id 28) | Randerwähnung |
+
+*Zählweise präzisiert (KMT-Gegenprüfung, 19.08.):* Meine erste Meldung nannte
+8 bzw. 6 Treffer — darin waren die Dateinamen-Varianten desselben Bildes
+(`large_`, `medium_`, `small_`) mitgezählt. Ein Feld-Walk über die Prod-API
+zeigt: Der Begriff steht in genau drei Textfeldern, alle davon
+Bildbeschriftungen. Der Befund wird dadurch nicht schwächer, sondern schärfer.
 
 **Es gibt keinen einzigen Satz Fließtext über den Data Hub.** Was existiert,
 ist ein Architekturbild ohne erklärende Umgebung — Dateiname und Alt-Text
