@@ -73,6 +73,7 @@ h3 { font-family: Archivo, sans-serif; font-weight: 600; font-size: 1.05rem; mar
 p { margin: 0; max-width: 74ch; }
 p + p { margin-top: 0.7rem; }
 .lede { color: var(--ink-soft); max-width: 72ch; }
+section h3 { font-size: 1.06rem; margin: 2rem 0 0.6rem; color: var(--ink); letter-spacing: -0.01em; }
 .tscroll { overflow-x: auto; background: var(--surface); border: 1px solid var(--rule); }
 table { width: 100%; border-collapse: collapse; font-size: 0.855rem; min-width: 640px; }
 thead th {
@@ -140,7 +141,7 @@ a:focus-visible { outline: 2px solid var(--copper); outline-offset: 2px; }
   <header class="masthead">
     <div class="eyebrow">Plattform-Analyse · OMR Reviews · 19.08.2026</div>
     <h1>Der beste Platz, den niemand besetzt hat</h1>
-    <p class="standfirst">Auf OMR steht Kosmonaut auf drei Seiten als <em>einziger</em> gelisteter Dienstleister — bei Shopify Plus sogar ausdrücklich als „OMR Exclusive Partner". Und hat dort null selbst eingeworbene Bewertungen, während vergleichbare Agenturen zwischen 18 und 75 vorweisen.</p>
+    <p class="standfirst">Auf OMR steht Kosmonaut auf drei Seiten als <em>einziger</em> gelisteter Dienstleister, bei Shopify Plus ausdrücklich als „OMR Exclusive Partner" — und zwei der Seiten sind vollwertige Fallstudien über Kosmonaut, mit Kundennamen und einem wörtlichen Zitat des COO. OMR lässt jeden großen KI-Crawler auf diese Seiten. Was fehlt: null selbst eingeworbene Bewertungen, und beide Fallstudien sind seit neun Monaten nicht aktualisiert.</p>
     <div class="sourceline">
       Quellen: Live-Abrufe der sieben OMR-Seiten am 19.08.2026, teils mit ausgeführtem JavaScript · Ahrefs Domain Rating · Vergleichsabrufe von vier Wettbewerberprofilen · Search Console für die Nachfrageseite
     </div>
@@ -191,6 +192,79 @@ a:focus-visible { outline: 2px solid var(--copper); outline-offset: 2px; }
         </tbody>
       </table>
     </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow">Technische Prüfung · 19.08.2026</div>
+      <h2>Zwei Fallstudien, ein offenes Tor — und ein Haltbarkeitsdatum</h2>
+    </div>
+    <p class="lede">Alle sieben Seiten wurden ohne JavaScript abgerufen, so wie ein KI-Crawler sie sieht. Drei Dinge kamen dabei heraus, die vorher niemand auf dem Zettel hatte.</p>
+
+    <h3>Es sind keine Listeneinträge, es sind Fallstudien</h3>
+    <p>Zwei der sechs Content-Hub-Seiten sind redaktionelle Fallstudien über Kosmonaut, beide von OMR-Autorin Chantal Seiter. Die Shopify-Fallstudie nennt Kosmonaut schon in der Suchergebnis-Beschreibung:</p>
+    <div class="proof">
+      <div class="label">Meta-Description, Shopify Plus / Ludwig von Kapff</div>
+      <p style="margin:0">„So hat die Agentur <strong>KOSMONAUT</strong> den Weinhändler Ludwig von Kapff bei der Migration seines Onlineshops zu Shopify Plus unterstützt."</p>
+    </div>
+    <p>Die OXID-Fallstudie über Lucky Bike geht noch weiter — sie enthält ein wörtliches Zitat mit Namen und Funktion:</p>
+    <div class="proof">
+      <div class="label">OXID / Lucky Bike</div>
+      <p style="margin:0">„Die Anforderungen an Skalierbarkeit, Performance und Integration neuer Funktionen mussten dringend auf ein neues Level gehoben werden", sagt <strong>Evgenij Bazenov, COO der KOSMONAUT Germany GmbH</strong>.</p>
+    </div>
+    <p>Ein namentlich zugeordnetes Zitat einer Führungskraft auf einer fremden Domain mit Autoritätswert 82 verknüpft drei Dinge auf einmal: eine Person, ein Unternehmen und ein Fachgebiet. Stärker wird ein externes Signal nicht.</p>
+
+    <h3>Wo der Name steht, entscheidet mit</h3>
+    <p>Rund 44 % der KI-Zitationen stammen aus dem ersten Drittel einer Seite. Gemessen wurde, an welcher Stelle des Artikeltextes Kosmonaut zum ersten Mal fällt:</p>
+    <div class="tscroll">
+      <table>
+        <thead><tr><th>Seite</th><th class="num">Erste Nennung bei</th><th class="num">Nennungen</th><th>Bewertung</th></tr></thead>
+        <tbody>
+          <tr class="own"><td>Shopify-Plus-Fallstudie</td><td class="num"><strong>6,2 %</strong></td><td class="num">13</td><td><span class="chip chip-gain">optimal</span></td></tr>
+          <tr class="own"><td>OXID-Fallstudie</td><td class="num"><strong>7,1 %</strong></td><td class="num">12</td><td><span class="chip chip-gain">optimal</span></td></tr>
+          <tr class="own"><td>Zehn Agenturen im Vergleich</td><td class="num">23,5 %</td><td class="num">6</td><td><span class="chip chip-gain">erstes Drittel</span></td></tr>
+          <tr><td>E-Commerce PIM</td><td class="num">45,0 %</td><td class="num">3</td><td><span class="chip chip-warn">zweite Hälfte</span></td></tr>
+          <tr><td>B2B Shop</td><td class="num">49,3 %</td><td class="num">3</td><td><span class="chip chip-warn">zweite Hälfte</span></td></tr>
+          <tr><td>OXID Shop</td><td class="num">57,8 %</td><td class="num">3</td><td><span class="chip chip-warn">hinteres Drittel</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>OMR lässt die KI-Crawler ausdrücklich herein</h3>
+    <div class="proof">
+      <div class="label">Aus omr.com/robots.txt</div>
+      <pre>User-agent: GPTBot          # OpenAI
+User-agent: Google-Extended # Google
+User-agent: anthropic-ai    # Anthropic
+User-agent: PerplexityBot   # Perplexity
+…
+Allow: /*/reviews/</pre>
+      <p>Jeder große KI-Crawler darf die Reviews lesen — freigegeben, nicht bloß geduldet. Damit ist die Wirkung dieser Platzierungen auf KI-Antworten keine Annahme mehr, sondern serverseitig belegt.</p>
+    </div>
+    <p>Im selben Dokument steht die Kehrseite: <code>SemrushBot</code>, <code>AhrefsBot</code> und <code>SeobilityBot</code> sind komplett gesperrt. Wer den Wert dieser Seiten mit einem SEO-Werkzeug messen will, misst Lücken. Belastbar sind nur die eigene Search Console und Stichproben in den KI-Systemen selbst.</p>
+
+    <h3>Die stärksten Seiten haben ein Haltbarkeitsdatum</h3>
+    <p>KI-Systeme bevorzugen Aktuelles deutlich: Inhalte unter drei Monaten werden rund dreimal häufiger zitiert, ab etwa sechs Monaten ohne Pflege sinkt die Zitierfähigkeit messbar.</p>
+    <div class="tscroll">
+      <table>
+        <thead><tr><th>Seite</th><th class="num">zuletzt aktualisiert</th><th class="num">Alter heute</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>Zehn Agenturen im Vergleich</td><td class="num">13.05.2026</td><td class="num">3,2 Mon.</td><td><span class="chip chip-gain">frisch</span></td></tr>
+          <tr><td>E-Commerce PIM</td><td class="num">09.01.2026</td><td class="num">7,3 Mon.</td><td><span class="chip chip-warn">alternd</span></td></tr>
+          <tr class="own"><td><strong>Shopify-Plus-Fallstudie</strong></td><td class="num">10.11.2025</td><td class="num"><strong>9,3 Mon.</strong></td><td><span class="chip chip-warn">alternd</span></td></tr>
+          <tr class="own"><td><strong>OXID-Fallstudie</strong></td><td class="num">10.11.2025</td><td class="num"><strong>9,3 Mon.</strong></td><td><span class="chip chip-warn">alternd</span></td></tr>
+          <tr><td>OXID Shop</td><td class="num">25.08.2025</td><td class="num">11,8 Mon.</td><td><span class="chip chip-crit">veraltet</span></td></tr>
+          <tr><td>B2B Shop</td><td class="num">23.04.2025</td><td class="num">15,9 Mon.</td><td><span class="chip chip-crit">veraltet</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Zwei der sechs Seiten tragen ein Aktualisierungsdatum aus 2026. OMR pflegt seine Artikel also — es gibt einen Prozess, in den man hineinkommt.</p>
+
+    <h3>Zwei Lücken, die bisher niemand benannt hat</h3>
+    <p><strong>Es fließt keine Linkkraft.</strong> Keine der sechs Seiten verlinkt auf kosmonaut.io. Der einzige externe Link steht auf dem Profil und trägt <code>rel="nofollow"</code>. Das mindert den Wert nicht — Markenerwähnungen korrelieren rund dreimal stärker mit KI-Zitationen als Backlinks — aber es verschiebt die Begründung: Diese Maßnahme ist Entitätsarbeit, kein Linkaufbau, und darf auch nicht daran gemessen werden.</p>
+    <p><strong>Die besten Texte gibt es nur auf Deutsch.</strong> Beide Fallstudien und der Agenturvergleich liefern unter <code>/en/</code> einen 404 — während OMR für <em>B2B Shop</em> und <em>E-Commerce PIM</em> längst englische Fassungen führt, in denen Kosmonaut ebenfalls steht. Für ein Unternehmen mit Standorten in Sofia und Ho-Chi-Minh-Stadt ist das die naheliegendste Reichweitenerweiterung.</p>
+
+    <p class="note"><strong>Ein Widerspruch mit Nutzen:</strong> Die OXID-Fallstudie nennt Kosmonaut „zertifizierter OXID <em>Enterprise</em> Solution Partner". Seit 2025 gilt Diamant. Beides war zu seiner Zeit richtig — der Artikel ist von April 2025. Für die Entitätserkennung ist es trotzdem ein Problem, wenn zwei Quellen Unterschiedliches über dieselbe Firma sagen. Und es ist der beste denkbare Anlass, die Redaktion um eine Aktualisierung zu bitten.</p>
   </section>
 
   <section>
@@ -293,6 +367,12 @@ a:focus-visible { outline: 2px solid var(--copper); outline-offset: 2px; }
         <li><strong>Shopify Plus:</strong> „OMR Exclusive Partner" ist ein Vertrauenssignal, das auf der eigenen Shopify-Seite nirgends auftaucht. Es gehört in den Nachweisblock, den der Content-Plan für Woche 4 ohnehin vorsieht.</li>
         <li><strong>B2B Shop und E-Commerce PIM:</strong> Beide Themen sind auf OMR bereits von Kosmonaut besetzt, ohne dass die eigene Website entsprechende Seiten hätte. Zwei Themen, für die Kosmonaut extern schon als Adresse gilt — Kandidaten fürs Relaunch-Briefing.</li>
       </ul>
+      <p style="margin-top:1.1rem"><strong>Drei Anfragen an die Redaktion, alle in eine Mail:</strong></p>
+      <ul class="plain">
+        <li><strong>Aktualisierung beider Fallstudien</strong> — Anlass ist der Diamant-Status. Mitliefern: 80+ OXID-Projekte, 70+ API-Projekte in zehn Jahren, der Data Hub als benannter Accelerator. Hebt zwei Seiten von 9,3 Monaten auf frisch und räumt den Enterprise-Widerspruch aus.</li>
+        <li><strong>Englische Fassungen der Fallstudien.</strong> OMR führt sie für zwei andere Seiten bereits — die Bitte ist keine Sonderbehandlung.</li>
+        <li><strong>Frühere Platzierung in den drei Ratgebern.</strong> Von 45 bis 58 Prozent Seitentiefe ins erste Drittel, dorthin, wo die Zitationen entstehen.</li>
+      </ul>
     </div>
 
     <div class="stufe">
@@ -320,6 +400,7 @@ a:focus-visible { outline: 2px solid var(--copper); outline-offset: 2px; }
           <tr><td>Beidseitig verlinken</td><td class="num">eine Zeile</td><td>Verbindet die beiden Profile in beide Richtungen</td></tr>
           <tr><td>18 zusätzliche Bewertungen</td><td>Vertriebsaufgabe über Wochen</td><td>Wirkt auf allen sechs OMR-Seiten gleichzeitig <span class="chip chip-gain">größter Hebel</span></td></tr>
           <tr><td>Exklusivplätze ausweisen</td><td>Teil des geplanten Nachweisblocks</td><td>Vertrauenssignal in der eigenen Trefferliste</td></tr>
+          <tr><td>Redaktionsanfrage an OMR</td><td class="num">eine Mail</td><td>Frische, Reichweite und Zitierposition der beiden stärksten Seiten <span class="chip chip-gain">bester Aufwand-Nutzen</span></td></tr>
         </tbody>
       </table>
     </div>
@@ -327,7 +408,7 @@ a:focus-visible { outline: 2px solid var(--copper); outline-offset: 2px; }
   </section>
 
   <footer>
-    Alle Zahlen aus Live-Abrufen vom 19.08.2026 · OMR-Profil, drei Produktseiten und drei Content Hubs, jeweils HTTP 200 · Wettbewerbsvergleich über die OMR-Profile von basecom, brandung, blackbit und dixeno · Autoritätswerte aus Ahrefs<br>
+    Alle Zahlen aus Live-Abrufen vom 19.08.2026 · OMR-Profil, drei Produktseiten und sechs Content Hubs, jeweils HTTP 200, abgerufen ohne JavaScript · Struktur, Frische und Positionen aus den JSON-LD-Blöcken und dem Artikeltext der Seiten · Crawler-Regeln aus omr.com/robots.txt · Wettbewerbsvergleich über die OMR-Profile von basecom, brandung, blackbit und dixeno · Autoritätswerte aus Ahrefs<br>
     Vollständige Fassung mit Messplan im openseo-Repo unter docs/kosmonaut/omr-strategie-2026-08-19.md · Code by AW — KOSMONAUT
   </footer>
 
