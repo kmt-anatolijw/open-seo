@@ -63,14 +63,21 @@ ab, dass der Parameter auch im Preview-Modus nicht mehr gesendet wird. Das ist
 die Regressionsprüfung an der richtigen Stelle — ein Gate über gerenderte
 Seiten entfällt.
 
-**Offener QS-Vorbehalt (SEO-Session):** Content Source Maps sind die Grundlage
-für „Click-to-Edit" in Vercel-Previews. Die Marker-Suche im HTML schließt nur
-aus, dass ein *anonymer* Abruf die Toolbar sieht — bei einem im Vercel-Konto
-angemeldeten Menschen wird sie per Edge injiziert und erschiene nicht im
-statischen HTML. Vor dem Merge zu klären: **Nutzt jemand im Team Visual
-Editing in den Preview-Deployments?** Falls ja, ist der PR eine
-Funktionsentfernung und keine Bereinigung — dann wäre das Flag gezielt nur
-für die Dauer von Messungen abzuschalten. Falls nein, ist Entfernen richtig.
+**QS-Vorbehalt geprüft und ausgeräumt (19.08.2026):** Der Einwand lautete,
+der Dekoder sei nicht der Projektcode, sondern die Vercel-Toolbar — die bei
+angemeldeten Nutzern per Edge injiziert wird und deshalb in keiner
+HTML-Messung auftaucht. Nachgeprüft: `@vercel/toolbar` ist **nicht
+installiert**, im Repo liegen von Vercel nur `@vercel/analytics` und
+`@vercel/speed-insights`; keine Content-Link-Konfiguration in
+`next.config.mjs`, `vercel.json` oder im App-Code. Content Link braucht beide
+Hälften — kodierte Inhalte **und** die eingerichtete Toolbar. Hier existiert
+nur die kodierende. Auch angemeldete Nutzer bekommen kein Click-to-Edit.
+
+Damit ist PR #136 eine Bereinigung, keine Funktionsentfernung. Sollte
+Visual Editing später gewollt sein, kommt das Flag als bewusster Teil dieser
+Einrichtung zurück statt als stiller Default mitzulaufen. Die Grundsatzfrage
+— ist Visual Editing perspektivisch gewollt? — legt die KMT-Session Anatolij
+vor dem Merge vor.
 
 ## Was der Vorgang gezeigt hat
 
