@@ -54,6 +54,13 @@ Gemessen am 19.08.2026 auf `omr.com/en/reviews/service/kosmonaut-germany`:
 | Schnitt | **5,0** | 4,6 | 4,3 | 4,6 | 4,3 |
 | davon selbst eingeworben | **0** | — | — | — | — |
 
+**Der Beleg, dass diese Lücke unabhängig von der Website schließbar ist:**
+blackbit.de hat organisch **32 Besucher im Monat auf 7 rankenden Keywords** —
+weniger als kosmonaut.io mit 68 auf 61 (DataForSEO, 19.08.2026,
+[Marktdaten](./befunde-marktdaten-2026-08-19.md)). Und trotzdem 33 Bewertungen
+gegen unsere sieben. OMR-Sichtbarkeit ist ein eigener Kanal, kein Nebenprodukt
+organischer Stärke. Sie wird eingeworben, nicht erarbeitet.
+
 Das Profil ist als „managed by the owner (0 reviews)" ausgewiesen: Die sieben
 Bewertungen stammen laut OMR „in part or in full from external sources", nicht
 aus eigener Einwerbung. **Der beste Schnitt im Feld — auf der schmalsten

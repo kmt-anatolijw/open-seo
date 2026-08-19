@@ -55,7 +55,7 @@ Trägt heute `/newsroom/insights/mdm/`, ohne kommerzielle Ausrichtung.
 | `produktdaten verwalten` | 202 | 11,7 |
 | weitere 30+ Varianten | ≈ 3.000 | 15–70 |
 
-Marktkontext: `datenintegration` 800 Suchen/Monat bei Wettbewerbshürde **0**.
+Marktkontext: `datenintegration` **320** Suchen/Monat bei Wettbewerbshürde **0** (DataForSEO, 19.08.2026 — die früher hier notierten 800 stammten aus einer Ahrefs-Stichprobe und sind zu hoch).
 
 **Regel:** Der MDM-Artikel bleibt die Ranking-URL und wird **nicht** auf die
 Data-Hub-Seite umgeleitet — er hält Positionen 3,6 und 7,5, die nicht
@@ -63,18 +63,35 @@ gefährdet werden dürfen. Er wird Zubringer mit hartem Anker.
 
 ### Gruppe 2 — Schnittstellen und Programmierung (die Leistungsanfrage)
 
-| Suchanfrage | Impr. 90 d | Pos. | Volumen/Monat | Hürde |
-| --- | --- | --- | --- | --- |
-| `schnittstellen programmierung` | 336 | 36,6 | 150 | **0** |
-| `api schnittstellen agentur` | 150 | 7,4 | 60 | — |
-| `api schnittstellen` | 94 | 19,9 | 90 | 4 |
-| `systemintegration e commerce` | 26 | 47,6 | — | — |
-| `api entwicklung` | — | — | 250 | **0** |
-| `erp schnittstelle` | — | — | 150 | **0** |
-| `shopware schnittstelle` | — | — | 100 | **0** |
+| Suchanfrage | Impr. 90 d | Pos. | Volumen/Monat | Hürde | CPC |
+| --- | --- | --- | --- | --- | --- |
+| **`api schnittstelle`** (Singular) | — | — | **2.397** | 14 | 2,72 € |
+| `schnittstellen programmierung` | 336 | 36,6 | **1** | 3 | 6,80 € |
+| `api schnittstellen agentur` | 150 | 7,4 | — | — | — |
+| `api schnittstellen` (Plural) | 94 | 19,9 | **1** | 14 | 2,72 € |
+| `erp anbindung` | — | — | 70 | **0** | **25,02 €** |
+| `api entwicklung` | — | — | 55 | **0** | 6,84 € |
+| `shopware schnittstelle` | — | — | 50 | **0** | 4,73 € |
+| `erp schnittstelle` | — | — | 22 | **0** | — |
+| `systemintegration e commerce` | 26 | 47,6 | — | — | — |
 
-Bemerkenswert: Fast das gesamte Feld hat Wettbewerbshürde 0. Das ist ein
-Cluster, in dem Autorität kaum gebraucht wird — Substanz reicht.
+*Volumen und Hürde: DataForSEO mit Clickstream-Auflösung, 19.08.2026. Die
+früher hier notierten Werte (150 / 250 / 150 / 100) stammten aus
+Ahrefs-Stichproben und lagen durchweg zu hoch — Einzelheiten in den
+[Marktdaten](./befunde-marktdaten-2026-08-19.md).*
+
+**Zwei Dinge sind daran entscheidend.**
+
+Erstens die **Schreibweise**: Google Ads meldet Singular und Plural als eine
+gruppierte Zahl. Aufgelöst liegt die gesamte Nachfrage beim **Singular
+`api schnittstelle`** — 2.397 Suchen im Monat, transaktionale Absicht. Der
+Plural und `schnittstellen programmierung` haben je eine. Titel, H1 und
+Ziel-URL folgen dem Singular.
+
+Zweitens die **Hürde**: Fast das gesamte Feld liegt bei 0 bis 1, während
+Werbetreibende 25 Euro für `erp anbindung` zahlen. Ein Markt mit teuren Anzeigen
+und ohne organische Konkurrenz ist eine offene Flanke — hier wird keine
+Autorität gebraucht, sondern Substanz.
 
 **Vorsicht bei `systemintegration`** (1.800/Monat): Das Elternthema ist
 „Ausbildung Fachinformatiker Systemintegration". Der Löwenanteil des Volumens
@@ -90,8 +107,9 @@ nachweislich besser als Gattungsbegriffe.
 
 ### Nicht als Ziel: „Data Hub"
 
-Der Markenbegriff hat keine Suchnachfrage. Er ist der Beleg auf der Seite,
-nicht ihr Titel-Keyword.
+Bestätigt durch die Messung: `data hub` hat zwar 1.000 Suchen im Monat, die
+Absicht ist aber **navigational** — gesucht werden fremde Produkte dieses
+Namens. Der Begriff bleibt der Beleg auf der Seite, nicht ihr Titel-Keyword.
 
 ## Fragen für die KI-Optimierung
 
@@ -157,10 +175,13 @@ Praktisch heißt das:
 
 ## Seitenkonzept
 
-**Ziel-URL:** `/expertise/data-hub/` oder `/expertise/schnittstellen/` — die
-zweite Variante trägt das Keyword, die erste das Produkt. Empfehlung:
-`/expertise/schnittstellen/` als URL, „Data Hub" als Produktname im Inhalt.
-Die URL bedient die Nachfrage, der Name das Gedächtnis.
+**Ziel-URL:** `/expertise/schnittstellen/`, „Data Hub" als Produktname im
+Inhalt. Die URL bedient die Nachfrage, der Name das Gedächtnis.
+
+*Nachtrag 19.08.:* Zu prüfen ist `/expertise/api-schnittstelle/` als Alternative
+— das Wort trägt 2.397 Suchen im Monat, `schnittstellen` als Einzelbegriff ist
+ungemessen. Entscheidung gehört ins Relaunch-Konzept, nicht hierher; beide
+Varianten sind vertretbar, solange Titel und H1 den Singular führen.
 
 **Verhältnis zu bestehenden Seiten:**
 
@@ -204,5 +225,6 @@ Relaunch-Scope. Messbar wird sie an:
 Baseline: [GSC-Auszug vom 19.08.2026](./data/gsc-baseline-90d-2026-08-19.json.gz).
 
 Teil der Kosmonaut-Doku · [Data-Hub-Befund](./befunde-data-hub-2026-08-19.md) ·
+[Marktdaten](./befunde-marktdaten-2026-08-19.md) ·
 [OMR-Strategie](./omr-strategie-2026-08-19.md) ·
 [Matrix](./keyword-url-matrix.md)

@@ -4,6 +4,14 @@ Stand 16.08.2026 · Quellen: Ahrefs SERP-Overviews (DE) für die Partner-/Servic
 Keywords + Batch-Analysis (DE-Organik) + Struktur-Analyse der KMT-Webseite-Session
 (DEPT/norisk). Ergänzt [pilot-kosmonaut-60-tage.md](./pilot-kosmonaut-60-tage.md).
 
+> **Quellenhinweis 19.08.2026:** Alle Zahlen dieses Dokuments stammen aus
+> Ahrefs. Eine Zweitmessung über DataForSEO liegt seit dem 19.08. vor und
+> liefert systematisch höhere Werte (dixeno.de dort 2.281 statt 394,
+> kosmonaut.io 68 statt 34). Beide Quellen sind je für sich konsistent, aber
+> **nicht mischbar** — verschiedene Keyword-Datenbanken und Traffic-Modelle.
+> Zahlen aus der Zweitmessung stehen in den
+> [Marktdaten](./befunde-marktdaten-2026-08-19.md).
+
 ## Ausgangspunkt: wo KOSMONAUT steht
 
 | | DR | Org. Traffic (DE) | Org. Keywords | Top-3-Keywords | Ref. Domains |

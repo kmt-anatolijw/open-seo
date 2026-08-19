@@ -3,6 +3,11 @@
 19.08.2026 · SEO-Session · Datenlieferung, keine Vorgabe · Nachfolgepaket zu
 den Karten A1–A3
 
+> **Nachtrag 19.08. abends:** Nach der OpenSEO-MCP-Anbindung liegen jetzt auch
+> Marktzahlen vor. Sie ändern die Reihenfolge — siehe
+> [Marktdaten](../befunde-marktdaten-2026-08-19.md) und den Abschnitt
+> „Reihenfolge nach Marktwert" weiter unten.
+
 Kriterium: Die Suchanfrage bringt der Seite bereits Impressionen, das Wort
 steht aber in **keiner** Überschrift. Aufwand je Position ein Absatz. Alle
 Zahlen: GSC Service-Account, 90 Tage, Dimensionen query + page. Ist-Stand der
@@ -39,6 +44,37 @@ praktisch niemand klickt.
 Die Erwartungswerte sind aus den Positionssprüngen der beiden Kontrollfälle
 oben abgeleitet, nicht aus Branchendurchschnitten.
 
+## Reihenfolge nach Marktwert (Nachtrag 19.08.)
+
+Die Impressionen oben sind eigene Messung. Was fehlte, war der Markt dahinter.
+Aus DataForSEO, mit aufgelösten Singular-/Plural-Varianten:
+
+| # | Kandidat | eigene Impr. | Volumen/Mon | Schwierigkeit | CPC |
+| --- | --- | --- | --- | --- | --- |
+| **3** | Headless Commerce Agentur | 138 | **210** | **1** | 25,49 € |
+| **2** | OXID eShop Agentur | 176 | 40 (`oxid agentur`) | 9 | 21,01 € |
+| **1** | Schnittstellenprogrammierung | 336 | **1** | 3 | 6,80 € |
+| 7 | OXID Enterprise | 15 | 10 | — | — |
+| 4, 5, 6 | Longtail-Fragen | 59 | kein messbares Volumen | — | — |
+
+**Kandidat 1 fällt vom ersten auf den dritten Platz.** Er hatte die meisten
+Impressionen und hat den kleinsten Markt: Aufgelöst wird
+`schnittstellen programmierung` einmal im Monat gesucht. Das erklärt, warum die
+336 Impressionen nie zu Klicks wurden — die Seite erscheint für ein Umfeld von
+Varianten, von denen keine für sich genommen nachgefragt wird.
+
+**Die Nachfrage liegt woanders:** `api schnittstelle` im **Singular** hat 2.397
+Suchen im Monat bei Schwierigkeit 14 und transaktionaler Absicht. Der Plural
+`api schnittstellen` hat eine.
+
+**Empfehlung für Kandidat 1:** umsetzen, aber die Überschrift auf
+**„API-Schnittstelle"** formulieren statt auf „Schnittstellenprogrammierung".
+Gleicher Aufwand, ein Markt statt keiner.
+
+Die Kandidaten 4, 5 und 6 bleiben sinnvoll — Longtail-Fragen haben selten
+messbares Volumen, tragen aber Positionen zwischen 7,0 und 9,9 und sind genau
+die Formulierungen, die auch an KI-Assistenten gehen.
+
 ## Offene Entscheidung: Ortsanfragen OXID
 
 Kein Überschriften-Kandidat, sondern eine Richtungsfrage. Auf
@@ -64,5 +100,6 @@ Je Position eigenes 28-Tage-Fenster ab Livegang. Kontrollsignale: Brand-Query
 `kosmonaut` und die beiden Kontrollfälle oben dürfen nicht verlieren.
 Baseline liegt unter [../data/](../data/) als GSC-Auszug vom 19.08.2026.
 
-Teil der Kosmonaut-Doku · [Zielwerte A1–A3](./zielwerte-a1-a3.md) ·
+Teil der Kosmonaut-Doku · [Marktdaten](../befunde-marktdaten-2026-08-19.md) ·
+[Zielwerte A1–A3](./zielwerte-a1-a3.md) ·
 [Matrix](../keyword-url-matrix.md) · [Bericht](../reports/keyword-hebel.html)
