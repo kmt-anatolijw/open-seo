@@ -132,7 +132,7 @@ abgeschnitten.
 | **Title (Soll, freigegeben)** | `APIs – Warum Schnittstellen unverzichtbar sind \| KOSMONAUT API-Agentur` (70 Z.) |
 | **Title (QS-Empfehlung, final)** | `Warum APIs unverzichtbar sind \| KOSMONAUT API-Agentur` (53 Z.) |
 | Title (Ist, Prod 19.08.) | `APIs – Warum Schnittstellen unverzichtbar sind \| Kosmonaut E-Commerce Agentur aus OWL - Kosmonaut` (97 Z.) |
-| **Meta-Description** | in der Karte nicht definiert. Vorschlag zur Freigabe: `Wie APIs und Schnittstellen Systeme verbinden — und was eine API-Agentur bei ERP-, PIM- und Shop-Anbindung übernimmt. Praxis aus über 50 Projekten.` (149 Z.) |
+| **Meta-Description** | in der Karte nicht definiert. Vorschlag: `Wie APIs und Schnittstellen Systeme verbinden — und was eine API-Agentur bei ERP-, PIM- und Shop-Anbindung übernimmt. Über 70 API-Projekte.` (139 Z.) — Zahl belegt durch Anatolij, 19.08.2026 |
 | Description (Ist) | „API oder Schnittstellen verbinden externe Dienste oder Software um Datenpunkte zu verknüpfen und Prozesse zu automatisieren." (125 Z.) |
 | **H1** | unverändert (`APIs – Warum Schnittstellen unverzichtbar sind`) |
 | **Neuer H2-Block im Body** | `KOSMONAUT als API- & Schnittstellen-Agentur` — Leistungsversprechen (Systemintegration, Middleware, ERP/PIM/Shop-Anbindung), 2–3 Projekt-Referenzen, CTA auf die Kontaktseite |
