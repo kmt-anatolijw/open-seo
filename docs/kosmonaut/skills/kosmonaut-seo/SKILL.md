@@ -71,8 +71,36 @@ Entscheidung, ist Schluss. Nur wenn eine Investition davon abhängt, open-seo na
    `create_project`.
 3. Bei größeren Abfragen vorher sagen, was sie ungefähr kostet, und bestätigen lassen.
 
-Ist open-seo nicht erreichbar: nicht auf Schätzwerte ausweichen, sondern sagen, welche Frage
-unbeantwortet bleibt.
+## Fehlt eine autorisierte Datenquelle: nichts beschaffen
+
+Gilt für **jede** Quelle dieser Tabelle — open-seo nicht verbunden, claude-seo-Runtime nicht
+vorhanden, Credentials fehlen, Kostenfreigabe verweigert.
+
+**Dann gilt ausnahmslos:** benennen, welche Frage unbeantwortet bleibt, und welche Quelle
+dafür fehlt. Danach ist Schluss.
+
+**Nicht erlaubt** — auch nicht, wenn es technisch ginge, und auch nicht „nur zur
+Orientierung":
+
+- keine Suchmaschine im Browser aufrufen, um SERP-Zeilen abzulesen
+- kein `curl`, `wget` oder Skript gegen Suchmaschinen, Aggregatoren oder fremde SEO-Tools
+- **keine gefälschten User-Agents** — nie einen Browser vortäuschen, den es nicht gibt
+- kein Ausweichen auf eine andere Datenquelle, ohne dass der Wechsel in der Antwort steht
+- keine Schätzwerte, keine aus dem Gedächtnis ergänzten Zahlen
+
+Der Grund ist nicht Vorsicht, sondern die Zusage des Produkts: Jede Zahl in einem
+Kosmonaut-Report trägt Quelle und Konfidenz. Eine stillschweigend getauschte Quelle bricht
+genau diese Zusage — und der Kunde merkt es erst, wenn er die Zahl verteidigen muss.
+
+Ist eine Ersatzquelle fachlich sinnvoll, wird sie **vorgeschlagen, nicht verwendet**:
+„Für X fehlt open-seo. Möglich wäre Y, mit Einschränkung Z — soll ich?"
+
+*Anlass: Werkbank-Akzeptanz M2 (Hermes-Lead, 19.08.2026). Ein Testlauf traf die Zeile
+„Keyword-Volumen, Difficulty, SERP-Zeilen → open-seo" bei nicht verbundenem open-seo. Die
+Verfügbarkeitsprüfung lief korrekt; danach wich der Agent selbstständig auf Browser-Suche
+und dann auf `curl` mit gefälschtem Chrome-User-Agent gegen html.duckduckgo.com aus und
+extrahierte SERP-Zeilen aus dem gescrapten HTML. Der alte Wortlaut verbot nur Schätzwerte —
+die Beschaffung selbst war nicht ausgeschlossen.*
 
 ## Namenskollisionen
 
