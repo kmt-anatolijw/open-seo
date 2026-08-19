@@ -1,108 +1,100 @@
-# Befund dev: 36.044 unsichtbare Steuerzeichen pro Seite
+# dev-Steuerzeichen: aufgeklärt — Editier-Overlay, kein Defekt
 
-19.08.2026 · SEO-Session · gemessen nach der neuen Messregel gegen
-`dev.kosmonaut.io` · Gegenmessung Prod
+19.08.2026 · SEO-Session (Messung) + KMT-Session (Ursachenklärung) ·
+**Ergebnis: kein Handlungsbedarf am Code, aber eine bindende Messregel.**
 
-## Messung
-
-| Umgebung | URL | Dateigröße | Unsichtbare Steuerzeichen |
-| --- | --- | --- | --- |
-| **dev** | `dev.kosmonaut.io/expertise/commercetools/` | 212.046 Zeichen | **36.044** |
-| **Prod** | `kosmonaut.io/expertise/commercetools/` | 96.589 Zeichen | **0** |
-
-Aufschlüsselung dev: 11.542 Zero-Width-Non-Joiner (U+200C), 9.776
-Zero-Width-Joiner (U+200D), 7.686 Zero-Width-No-Break-Space / BOM (U+FEFF),
-7.040 Zero-Width-Space (U+200B).
-
-Verteilung: In **jeder** Überschrift. Das `<h1>` trägt 592 solcher Zeichen,
-die geprüften `<h2>` jeweils 564 bis 596. Sie stehen als zusammenhängende
-Sequenz **hinter** dem sichtbaren Text, nicht zwischen den Buchstaben.
-
-## Verifikation (nachgeschärft 19.08.2026)
-
-Auf Nachfrage von Anatolij über drei unabhängige Wege gegengeprüft:
+## Was gemessen wurde
 
 | Abrufweg | Seite | Unsichtbare Zeichen |
 | --- | --- | --- |
 | einfacher Fetcher | dev `/expertise/commercetools/` | 36.044 |
-| **Playwright, echter Chrome** | dev `/expertise/commercetools/` | **36.044 — identisch** |
+| Playwright, echter Chrome | dev `/expertise/commercetools/` | 36.044 — zeichengenau identisch |
 | einfacher Fetcher | dev `/expertise/oxid-shop/` | 48.416 |
-| Playwright, echter Chrome | Prod `/expertise/commercetools/` | 0 |
+| Playwright | Prod `/expertise/commercetools/` | 0 |
 
-Zwei völlig verschiedene Clients liefern zeichengenau dieselbe Zahl. Ein
-Artefakt des Abrufwerkzeugs ist damit ausgeschlossen. Der Effekt ist real und
-auf dev reproduzierbar.
+62 Sequenzen mit 20 und mehr Zeichen, die längste 632, jede am Ende eines
+Textblocks unmittelbar vor dem schließenden Tag. Auch im Next-Flight-Payload
+enthalten, also serverseitig.
 
-## Wo genau die Sequenzen sitzen
+## Ursache (KMT, code-belegt und reproduziert)
 
-**62 Sequenzen** mit jeweils 20 und mehr Zeichen, die längste 632 Zeichen.
-Jede sitzt **am Ende eines Textblocks, unmittelbar vor dem schließenden Tag**:
+`utils/queries/getPage/query.ts:21` sendet an Strapi:
 
-```
-…für B2B, B2C und D2C[592 unsichtbare Zeichen]</h1>
-…mit dem Fokus auf eine einzigartige Customer Experience.[576]</p>
+```ts
+encodeSourceMaps: process.env.VERCEL_ENV === "preview"
 ```
 
-Sie sind auch im Next-Flight-Payload enthalten (18.640 von 103.571 Zeichen)
-— also in den serialisierten **Serverdaten**, nicht erst im Browser-DOM.
-Damit ist eine clientseitige Injektion ausgeschlossen.
+Das Strapi-`sourcemaps`-Plugin kodiert daraufhin die Editier-Herkunft jedes
+Textwerts steganografisch in den Text — das Verfahren hinter Vercels Visual
+Editing, das ZWSP, ZWNJ, ZWJ und BOM als Trägerzeichen nutzt. Direkt
+reproduziert: dieselbe API-Abfrage mit `&encodeSourceMaps=true` liefert die
+Hero-Headline mit 657 statt 65 Zeichen, davon 592 unsichtbar — exakt die
+Zahl, die im gerenderten `<h1>` gemessen wurde.
 
-**Widerlegte Hypothese:** Kein Vercel-Toolbar-, Preview- oder
-Draft-Mode-Marker im Dokument (`vercel`, `toolbar`, `speed-insights`,
-`draft`, `live-preview` kommen auf dev wie auf Prod null Mal vor). Es ist
-also kein Preview-only-Feature der Hosting-Umgebung.
+Ausgeschlossen wurde davor:
 
-## Offen: Strapi oder Render-Schritt?
+- **Redaktionsinhalt**: dev-Strapi ohne das Flag abgefragt (`populate=deep,10`,
+  9 Komponenten) → 0 unsichtbare Zeichen.
+- **Code**: `grep` über app/components/utils nach den vier Codepoints →
+  0 Treffer; lokaler Render der Hero-Komponente → sauber.
+- **Umgebungsspezifik**: frisches Preview-Deployment (PR #135) → dieselben
+  36.044, also deterministisch.
+- **Mein Abrufwerkzeug**: zwei verschiedene Clients, identische Zahl.
 
-Die Sequenzen hängen an jedem Rich-Text-Block. Eine Stichprobe auf die
-Strapi-Feldnamen im Payload (`Headline`, `Title`, `Text`, `Subline`,
-`MetaDescription`, `BreadcrumbText`) fand sie dort **nicht** — dieser Test ist
-aber zu schwach, um Strapi freizusprechen: Er greift nur bei kurzen Werten
-und einer bestimmten Serialisierungsform.
+`dev.kosmonaut.io` läuft als `VERCEL_ENV=preview`, Prod als `production` —
+dort ist das Flag konstruktionsbedingt aus. Deshalb 0 Zeichen auf Prod.
 
-**Die Frage lässt sich nur an der Quelle entscheiden.** Prüfauftrag an die
-KMT-Session (Anatolij, 19.08.2026): direkter API-Call gegen
-`dev-strapi.kosmonaut.io` für den commercetools-Eintrag, Response auf
-U+200B, U+200C, U+200D und U+FEFF prüfen; dieselbe Prüfung gegen
-`strapi.kosmonaut.io`.
+## Kein Gate
 
-- **Treffer im Strapi-Response** → die Zeichen stecken im Redaktionsinhalt.
-  Herkunft klären (aus welchem Werkzeug wurden die Texte eingefügt?), Felder
-  bereinigen, Eingangsprüfung ergänzen.
-- **Strapi-Response sauber** → ein Schritt zwischen Datenabruf und Auslieferung
-  fügt sie ein. Dann die Markdown- oder Rich-Text-Verarbeitung prüfen.
+Eine Prüfung, die unsichtbare Steuerzeichen abweist, würde auf dev jeden Build
+zu Recht rot färben und ein gewolltes Editier-Feature bekämpfen. Auf Prod kann
+das Overlay bauartbedingt nicht erscheinen. Der Grundsatz „solche Zeichen
+dürfen nicht vorkommen" (Anatolij, 19.08.) bleibt richtig für alles, was auf
+Prod landet — hier greift er nicht, weil nichts davon je nach Prod gelangt.
 
-## Grundsatz (Anatolij, 19.08.2026)
+## Bindende Messregel
 
-**Solche Steuerzeichen dürfen nicht vorkommen** — unabhängig davon, welche
-Stufe sie einträgt. Nach der Ursachenklärung gehört eine Prüfung in die
-Gates, die unsichtbare Steuerzeichen in Überschriften, Meta-Feldern und
-Fließtext abweist.
+**Jede Zeichen-, Längen- oder Tokenisierungsmessung auf dev muss die
+unsichtbaren Zeichen vorher entfernen.** Sonst wird das Editier-Overlay
+gemessen statt des Inhalts.
 
-## Warum das zählt
+Betroffen sind unmittelbar:
 
-1. Die dev-Seite ist mehr als doppelt so groß wie dieselbe Seite auf Prod —
-   212 KB statt 97 KB, praktisch vollständig unsichtbarer Ballast.
-2. Solange die Zeichen **hinter** dem Text stehen, ist die Worterkennung
-   vermutlich unbeschädigt. Stünden sie zwischen Buchstaben, wären die
-   Überschriften für Suchmaschinen keine erkennbaren Wörter mehr. Das ist vor
-   einem Port zu prüfen.
-3. Jede Content-Messung auf dev — Textlänge, Lesbarkeit, Keyword-Dichte —
-   ist verzerrt, solange das besteht.
+- **Title- und Description-Längen** — die ≤ 65-Zeichen-Regel für Titles wäre
+  auf dev-Werten sinnlos.
+- H2- und Überschriften-Analysen.
+- Dateigrößen und Wortzahlen.
+
+Filter vor jeder Auswertung: alle Zeichen aus U+200B, U+200C, U+200D und
+U+FEFF strippen.
+
+```python
+INVIS = {"​", "‌", "‍", "﻿"}
+clean = "".join(ch for ch in raw if ch not in INVIS)
+```
+
+Nicht betroffen: Struktur- und Markup-Prüfungen (Schema, semantische
+Landmarks, Robots-Header) — dort stören die Zeichen nicht.
+
+## Was der Vorgang gezeigt hat
+
+Die Messung war korrekt und über drei Wege belastbar; die erste
+Ursachenvermutung („Wasserzeichen oder Redaktionsartefakt, Gate nötig") war
+falsch. Geklärt hat es der direkte API-Call gegen Strapi — angeordnet von
+Anatolij, ausgeführt von der KMT-Session. Für künftige Fälle: Ein Effekt, der
+nur zwischen zwei Umgebungen auftritt, wird an der Datenquelle isoliert, nicht
+am ausgelieferten HTML.
 
 ## Nebenbefund: zwei getrennte CMS-Instanzen
 
 `dev.kosmonaut.io` zieht aus `dev-strapi.kosmonaut.io`, Prod aus
-`strapi.kosmonaut.io`. Inhaltlich sind beide beim geprüften Datensatz
-identisch (Title, Description und H1 zeichengleich).
+`strapi.kosmonaut.io`.
 
-Konsequenz für die Karten A1–A3: Änderungen an Titles, Descriptions und H1
-sind **CMS-Inhalte und nicht vom main-Port abhängig** — im Prod-Strapi
-gepflegt wirken sie sofort live. Offen ist, in welche Richtung die beiden
-Instanzen abgeglichen werden: Wird dev regelmäßig aus Prod geklont, gehen
-dort gepflegte Texte verloren; läuft es umgekehrt, überschreibt ein Sync die
-Prod-Texte. **Diese Frage gehört beantwortet, bevor die Klickvorlage
-abgearbeitet wird** — sonst ist die Arbeit beim nächsten Abgleich weg.
+Konsequenz für die Karten A1–A3: Titles, Descriptions und H1 sind
+**CMS-Inhalte und nicht vom main-Port abhängig** — im Prod-Strapi gepflegt
+wirken sie sofort live. Ob ein automatischer Abgleich zwischen den Instanzen
+läuft, verifiziert die KMT-Session vor der Klickvorlage; der bisherige Stand
+ist, dass es keinen gibt und die Inhalte real auseinanderdriften.
 
 Teil der Kosmonaut-Doku · [Schema-Befund](./schema/README.md) ·
 [Zielwerte A1–A3](./massnahmen/zielwerte-a1-a3.md)
