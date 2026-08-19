@@ -83,6 +83,35 @@ Anatolij 19.08.2026 (OXID Diamant), D3-Freigabe 17.08.2026 (Shopify Plus).
   Certified-Development-Credential; eine Zahl wirkt in Trefferliste und
   KI-Antworten stärker als ein Adjektiv.
 
+## Einbaureihenfolge der Credentials — Schema darf der Seite nicht widersprechen
+
+Festgelegt mit der KMT-Session am 19.08.2026. Leitsatz: **Die maschinenlesbare
+Aussage muss die sichtbare Seite abbilden, nicht ihr vorauseilen.** Ein
+`hasCredential` „Diamant-Partner" auf einer Seite, deren Seitenleiste
+„Enterprise-Partner" sagt, ist ein Widerspruch auf derselben URL — und genau
+das, was Googles Richtlinien für strukturierte Daten untersagen.
+
+| Credential | Aufnahme | Bedingung |
+| --- | --- | --- |
+| commercetools Solution Partner (seit 2020, 11 Zertifikate) | **sofort** | `/newsroom/news/commercetools/` nennt „Solution Partner" zweimal, „Systems Integrator" einmal; die Seitenleiste nennt Jahr und Zertifikate |
+| Shopify Plus Partner (seit 2020) | **sofort** | Die Shopify-Seite führt „Shopify Plus" zehnmal |
+| OXID Diamant-Partner (seit 2008) | **erst mit der Klickvorlage** | Title, Description und Seitenleiste ziehen gemeinsam auf „Diamant". Vorher widerspräche das Schema der Seite |
+| OXID Certified Development (>15 Entwickler) | **mit OXID zusammen** | Gleiche Seite, gleicher Zug |
+| Shopware Partner (seit 2014) | **noch nicht** | Stufe offen. Ein Credential ohne Stufe hat wenig Wert und lädt zum Nachziehen mit erfundener Stufe ein. Die Shopware-Kompetenz ist bis dahin über `knowsAbout` abgedeckt |
+| Awards (Shop Usability Award) | **sofort** | Das Site-Banner führt sie auf jeder Seite |
+
+`url` bleibt bei allen Credentials weg, solange keine auflöst — siehe
+[Beleglage](../befunde-partnerverzeichnisse-2026-08-19.md). Ein Link ins Leere
+ist schlechter als kein Link.
+
+Die Vorlage
+[organization-kosmonaut.jsonld](./organization-kosmonaut.jsonld) ist das
+**Zielbild** mit allen Credentials. Wer sie einbaut, nimmt die Zeilen nach der
+Tabelle oben gestaffelt auf, nicht in einem Rutsch.
+
+Umsetzung laut KMT nicht in PR #135 (im letzten Gate-Durchgang, ein Nachschub
+würde den Durchlauf neu starten), sondern als eigener PR direkt danach.
+
 ## Vorlage — Service je Expertise-Seite
 
 Pro Leistungsseite ein `Service`-Knoten, der auf die Organisation zeigt:
