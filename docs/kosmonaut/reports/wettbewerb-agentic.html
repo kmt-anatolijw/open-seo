@@ -1,0 +1,416 @@
+<title>Sechs Konkurrenten, gemessen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+:root {
+  --ground: #F1F3F2; --surface: #FFFFFF; --sunk: #E6EAE8;
+  --ink: #16201E; --ink-soft: #4B5754; --ink-faint: #7B8785;
+  --rule: #D5DBD9; --rule-hard: #B4BEBB;
+  --petrol: #0E6B6B; --petrol-soft: #DCEBEA;
+  --gain: #2E6B45; --gain-soft: #DEEBE3;
+  --warn: #97621B; --warn-soft: #F2E7D4;
+  --crit: #A0362F; --crit-soft: #F3E0DE;
+  --track: #DFE5E3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #0E1614; --surface: #16211F; --sunk: #1D2B28;
+    --ink: #E8EDEB; --ink-soft: #A9B6B3; --ink-faint: #7A8886;
+    --rule: #2A3936; --rule-hard: #405150;
+    --petrol: #52B5B0; --petrol-soft: #14322F;
+    --gain: #6FB88E; --gain-soft: #17301F;
+    --warn: #D0A05B; --warn-soft: #33281A;
+    --crit: #DE8880; --crit-soft: #331F1D;
+    --track: #24332F;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #0E1614; --surface: #16211F; --sunk: #1D2B28;
+  --ink: #E8EDEB; --ink-soft: #A9B6B3; --ink-faint: #7A8886;
+  --rule: #2A3936; --rule-hard: #405150;
+  --petrol: #52B5B0; --petrol-soft: #14322F;
+  --gain: #6FB88E; --gain-soft: #17301F;
+  --warn: #D0A05B; --warn-soft: #33281A;
+  --crit: #DE8880; --crit-soft: #331F1D;
+  --track: #24332F;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--ground); color: var(--ink);
+  font-family: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  font-size: 16px; line-height: 1.62; -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 940px; margin: 0 auto; padding: 3.2rem 1.4rem 5rem; }
+
+.masthead { border-bottom: 2px solid var(--ink); padding-bottom: 1.6rem; margin-bottom: 2.6rem; }
+.eyebrow {
+  font-family: "IBM Plex Mono", monospace; font-size: 0.71rem;
+  letter-spacing: 0.13em; text-transform: uppercase; color: var(--petrol);
+  margin-bottom: 0.7rem;
+}
+h1 {
+  font-family: "IBM Plex Serif", Georgia, serif; font-weight: 600;
+  font-size: clamp(2rem, 5vw, 3rem); line-height: 1.08; letter-spacing: -0.02em;
+  margin: 0 0 1rem; text-wrap: balance;
+}
+.standfirst { font-size: clamp(1rem, 2vw, 1.14rem); color: var(--ink-soft); max-width: 64ch; margin: 0; }
+.sourceline {
+  font-family: "IBM Plex Mono", monospace; font-size: 0.72rem; line-height: 1.75;
+  color: var(--ink-faint); border-top: 1px solid var(--rule);
+  margin-top: 1.4rem; padding-top: 0.9rem;
+}
+
+section { margin: 3.4rem 0; }
+.sec-head { margin-bottom: 1.3rem; }
+h2 {
+  font-family: "IBM Plex Serif", Georgia, serif; font-weight: 600;
+  font-size: clamp(1.3rem, 3vw, 1.72rem); line-height: 1.2; letter-spacing: -0.015em;
+  margin: 0; text-wrap: balance;
+}
+h3 {
+  font-family: "IBM Plex Sans", sans-serif; font-weight: 600;
+  font-size: 1.02rem; margin: 2.1rem 0 0.6rem; letter-spacing: -0.005em;
+}
+p { margin: 0 0 1rem; max-width: 74ch; }
+.lede { color: var(--ink-soft); }
+strong { font-weight: 600; }
+code, .mono { font-family: "IBM Plex Mono", monospace; font-size: 0.88em; }
+.q {
+  font-family: "IBM Plex Mono", monospace; font-size: 0.85em;
+  background: var(--sunk); padding: 0.1em 0.4em; border-radius: 2px; color: var(--ink-soft);
+}
+
+.tscroll { overflow-x: auto; background: var(--surface); border: 1px solid var(--rule); margin: 1.2rem 0; }
+table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+thead th {
+  font-family: "IBM Plex Mono", monospace; font-size: 0.68rem; font-weight: 500;
+  letter-spacing: 0.08em; text-transform: uppercase; text-align: left;
+  color: var(--ink-faint); padding: 0.72rem 0.85rem;
+  border-bottom: 1px solid var(--rule-hard); white-space: nowrap; vertical-align: bottom;
+}
+tbody td { padding: 0.68rem 0.85rem; border-bottom: 1px solid var(--rule); vertical-align: middle; }
+tbody tr:last-child td { border-bottom: none; }
+.num { text-align: right; font-variant-numeric: tabular-nums; font-family: "IBM Plex Mono", monospace; }
+th.num { text-align: right; }
+tr.own td { background: var(--petrol-soft); font-weight: 500; }
+
+.bar { display: flex; align-items: center; gap: 0.5rem; min-width: 100px; }
+.bar-track { flex: 1; height: 8px; background: var(--track); overflow: hidden; }
+.bar-fill { height: 100%; background: var(--petrol); }
+.bar-fill.dim { background: var(--rule-hard); }
+
+.chip {
+  display: inline-block; font-family: "IBM Plex Mono", monospace;
+  font-size: 0.66rem; letter-spacing: 0.05em; text-transform: uppercase;
+  padding: 0.16em 0.5em; border-radius: 2px; white-space: nowrap;
+}
+.chip-gain { background: var(--gain-soft); color: var(--gain); }
+.chip-warn { background: var(--warn-soft); color: var(--warn); }
+.chip-crit { background: var(--crit-soft); color: var(--crit); }
+
+.finding {
+  background: var(--surface); border-left: 3px solid var(--petrol);
+  padding: 1.15rem 1.3rem; margin: 1.4rem 0;
+}
+.finding .label {
+  font-family: "IBM Plex Mono", monospace; font-size: 0.68rem;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--petrol);
+  margin-bottom: 0.5rem;
+}
+.finding p:last-child { margin-bottom: 0; }
+.note {
+  font-size: 0.9rem; color: var(--ink-soft); background: var(--sunk);
+  padding: 0.95rem 1.1rem; border-radius: 2px;
+}
+
+.serp { background: var(--surface); border: 1px solid var(--rule); padding: 1.1rem 1.2rem; margin: 1.2rem 0; }
+.serp ol { margin: 0; padding-left: 0; list-style: none; counter-reset: pos; }
+.serp li {
+  display: flex; gap: 0.8rem; align-items: baseline;
+  padding: 0.34rem 0; border-bottom: 1px solid var(--rule); font-size: 0.9rem;
+}
+.serp li:last-child { border-bottom: none; }
+.serp .pos {
+  font-family: "IBM Plex Mono", monospace; font-size: 0.78rem;
+  color: var(--ink-faint); min-width: 2.1rem; text-align: right;
+}
+.serp li.hit .pos { color: var(--petrol); font-weight: 500; }
+.serp li.hit { background: var(--petrol-soft); margin: 0 -1.2rem; padding-left: 1.2rem; padding-right: 1.2rem; }
+.serp .who { flex: 1; }
+.serp .tag { font-size: 0.78rem; color: var(--ink-faint); }
+
+ul.plain { list-style: none; padding-left: 0; margin: 1rem 0; }
+ul.plain li {
+  padding-left: 1.3rem; position: relative; margin-bottom: 0.75rem; max-width: 74ch;
+}
+ul.plain li::before {
+  content: ""; position: absolute; left: 0; top: 0.62em;
+  width: 6px; height: 6px; background: var(--petrol);
+}
+ol.steps { counter-reset: s; list-style: none; padding-left: 0; }
+ol.steps li {
+  counter-increment: s; position: relative; padding-left: 2.6rem;
+  margin-bottom: 1.15rem; max-width: 74ch;
+}
+ol.steps li::before {
+  content: counter(s); position: absolute; left: 0; top: 0.05em;
+  font-family: "IBM Plex Mono", monospace; font-size: 0.8rem;
+  width: 1.75rem; height: 1.75rem; display: grid; place-items: center;
+  background: var(--petrol); color: var(--surface); border-radius: 50%;
+}
+footer {
+  margin-top: 4rem; padding-top: 1.3rem; border-top: 1px solid var(--rule);
+  font-family: "IBM Plex Mono", monospace; font-size: 0.71rem; line-height: 1.8;
+  color: var(--ink-faint);
+}
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="eyebrow">Wettbewerbsanalyse · SEO &amp; KI-Sichtbarkeit · 20.08.2026</div>
+    <h1>Sechs Konkurrenten, gemessen</h1>
+    <p class="standfirst">KOSMONAUT ist in jeder Kennzahl Letzter — beim Traffic um Faktor 13 bis 171, bei den Zitationen in KI-Antworten um Faktor 1,4 bis 26. Zwei der sechs sind trotzdem in drei Monaten einholbar, und das teuerste unbesetzte Keyword des Feldes heißt nicht „Agentic".</p>
+    <div class="sourceline">
+      Ahrefs · KI-Zitationen über sieben Plattformen, Markt DE<br>
+      OpenSEO / DataForSEO · Domain-Footprint, SERPs, Keyword-Metriken<br>
+      Live-Abrufe der Konkurrenzseiten ohne JavaScript · SISTRIX nicht verfügbar
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow">Ausgangslage</div>
+      <h2>Die Rangliste, ohne Beschönigung</h2>
+    </div>
+    <p class="lede">Alle Werte aus derselben Quelle am selben Tag. „KI-Zitationen" zählt, wie oft die Domain in Antworten von ChatGPT, Google AI Overviews, AI Mode, Gemini, Perplexity, Copilot und Grok als Quelle auftaucht.</p>
+    <div class="tscroll">
+      <table>
+        <thead>
+          <tr><th>Domain</th><th class="num">Traffic/Mon</th><th>Verhältnis</th><th class="num">Keywords</th><th class="num">KI-Zitationen</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>dotsource.de</strong></td><td class="num">11.641</td>
+            <td><div class="bar"><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div></div></td>
+            <td class="num">899</td><td class="num"><strong>128</strong></td>
+          </tr>
+          <tr>
+            <td>dixeno.de</td><td class="num">2.281</td>
+            <td><div class="bar"><div class="bar-track"><div class="bar-fill" style="width:20%"></div></div></div></td>
+            <td class="num">604</td><td class="num">33</td>
+          </tr>
+          <tr>
+            <td>kernpunkt.de</td><td class="num">1.505</td>
+            <td><div class="bar"><div class="bar-track"><div class="bar-fill" style="width:13%"></div></div></div></td>
+            <td class="num">482</td><td class="num">36</td>
+          </tr>
+          <tr>
+            <td>brandung.de</td><td class="num">1.313</td>
+            <td><div class="bar"><div class="bar-track"><div class="bar-fill" style="width:11%"></div></div></div></td>
+            <td class="num">311</td><td class="num">27</td>
+          </tr>
+          <tr>
+            <td>basecom.de</td><td class="num">960</td>
+            <td><div class="bar"><div class="bar-track"><div class="bar-fill dim" style="width:8%"></div></div></div></td>
+            <td class="num">284</td><td class="num">7</td>
+          </tr>
+          <tr>
+            <td>norisk.group</td><td class="num">868</td>
+            <td><div class="bar"><div class="bar-track"><div class="bar-fill dim" style="width:7%"></div></div></div></td>
+            <td class="num">207</td><td class="num">8</td>
+          </tr>
+          <tr class="own">
+            <td><strong>kosmonaut.io</strong></td><td class="num"><strong>68</strong></td>
+            <td><div class="bar"><div class="bar-track"><div class="bar-fill" style="width:0.6%"></div></div></div></td>
+            <td class="num"><strong>61</strong></td><td class="num"><strong>5</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="finding">
+      <div class="label">Die Lücke ist keine Wand, sondern eine Treppe</div>
+      <p><strong>basecom (7) und norisk (8) liegen kaum über KOSMONAUT (5).</strong> Zwei der sechs Konkurrenten sind in drei Monaten einholbar — das liefert einen belegbaren Zwischenerfolg, anders als der Abstand zu dotSource mit 128.</p>
+    </div>
+
+    <h3>Die Zitationen nach Plattform</h3>
+    <div class="tscroll">
+      <table>
+        <thead>
+          <tr><th>Domain</th><th class="num">ChatGPT</th><th class="num">AI Overviews</th><th class="num">AI Mode</th><th class="num">Gemini</th><th class="num">Perplexity</th><th class="num">Copilot</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>dotsource.de</td><td class="num"><strong>18</strong></td><td class="num"><strong>30</strong></td><td class="num"><strong>54</strong></td><td class="num">5</td><td class="num">17</td><td class="num">4</td></tr>
+          <tr><td>kernpunkt.de</td><td class="num">1</td><td class="num">6</td><td class="num">16</td><td class="num">1</td><td class="num"><strong>12</strong></td><td class="num">0</td></tr>
+          <tr><td>dixeno.de</td><td class="num">12</td><td class="num">3</td><td class="num">7</td><td class="num">0</td><td class="num">0</td><td class="num"><strong>11</strong></td></tr>
+          <tr><td>brandung.de</td><td class="num">2</td><td class="num">10</td><td class="num">11</td><td class="num">2</td><td class="num">2</td><td class="num">0</td></tr>
+          <tr><td>norisk.group</td><td class="num">1</td><td class="num">1</td><td class="num">5</td><td class="num">0</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr><td>basecom.de</td><td class="num">1</td><td class="num">1</td><td class="num">3</td><td class="num">2</td><td class="num">0</td><td class="num">0</td></tr>
+          <tr class="own"><td><strong>kosmonaut.io</strong></td><td class="num">1</td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">2</td><td class="num">0</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>dotSource dominiert <strong>Google AI Mode</strong> mit 54 Zitationen auf 40 Seiten. Das passt zur Funktionsweise: AI Mode zieht aus einem breiteren Quellenpool als die AI Overviews — wer viele solide Seiten hat, gewinnt dort überproportional. Bei <strong>Grok ist niemand sichtbar</strong>, und Copilot ist außer bei dixeno leer.</p>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow">Korrektur 1</div>
+      <h2>Das Agentic-Fenster ist inhaltlich besetzt — im Ranking steht es offen</h2>
+    </div>
+    <p class="lede">Die interne Einschätzung lautet, das First-Mover-Fenster sei geschlossen. Inhaltlich stimmt das: kernpunkt hat Landingpage plus Studie, dotSource eine Consulting-Seite, basecom ebenfalls. Die Rankingdaten sagen etwas anderes.</p>
+
+    <div class="finding">
+      <div class="label">Rankinghürde für „agentic commerce"</div>
+      <p><strong>0 bis 2 von 100</strong> — Ahrefs und DataForSEO unabhängig voneinander. Bei 1.300 Suchen im Monat, 16,29 € Klickpreis und kommerzieller Absicht. Das ist kein verteidigtes Feld.</p>
+    </div>
+
+    <p>Der Beweis steht in der SERP selbst. Für <span class="q">agentic commerce</span> rankt in den Top 20 <strong>keine einzige der sechs Agenturen</strong>:</p>
+
+    <div class="serp">
+      <ol>
+        <li><span class="pos">2</span><span class="who">live.handelsblatt.com</span><span class="tag">Medium</span></li>
+        <li><span class="pos">3</span><span class="who">salesforce.com</span><span class="tag">Hersteller</span></li>
+        <li><span class="pos">5</span><span class="who">ibm.com</span><span class="tag">Hersteller</span></li>
+        <li><span class="pos">6</span><span class="who">intershop.com</span><span class="tag">Hersteller</span></li>
+        <li class="hit"><span class="pos">7</span><span class="who"><strong>omr.com</strong> — Content Hub „Agentic Commerce"</span><span class="tag">KOSMONAUT ist dort gelistet</span></li>
+        <li><span class="pos">10</span><span class="who">adyen.com</span><span class="tag">Zahlungsdienst</span></li>
+        <li><span class="pos">13</span><span class="who">bitkom.org</span><span class="tag">Verband</span></li>
+        <li><span class="pos">15</span><span class="who">valantic.com</span><span class="tag">Beratung</span></li>
+        <li><span class="pos">16</span><span class="who">stripe.com</span><span class="tag">Zahlungsdienst</span></li>
+        <li><span class="pos">18</span><span class="who">mastercard.com</span><span class="tag">Zahlungsdienst</span></li>
+        <li><span class="pos">20</span><span class="who">openai.com</span><span class="tag">Protokoll-Eigner</span></li>
+      </ol>
+    </div>
+
+    <p>Diese SERP gehört Medien, Herstellern und Verbänden. Eine Agentur kommt dort nur mit außergewöhnlichem Material hinein — oder über eine dieser Domains.</p>
+
+    <h3>Beim Agenturbegriff sieht es völlig anders aus</h3>
+    <p>Für <span class="q">agentic commerce agentur</span> (80 Suchen/Monat) steht dotSource auf Position 1. Dahinter beginnt sofort der Kleinstwettbewerb:</p>
+
+    <div class="serp">
+      <ol>
+        <li><span class="pos">1</span><span class="who"><strong>dotsource.de</strong> — Agentic-Commerce-Consulting</span><span class="tag">der eigentliche Gegner</span></li>
+        <li><span class="pos">3</span><span class="who">schmidtmedia.de</span><span class="tag">kleine Agentur, Köln</span></li>
+        <li><span class="pos">7</span><span class="who">seosoon.de</span><span class="tag">SEO-Anbieter</span></li>
+        <li><span class="pos">9</span><span class="who">webmedia-hilcher.de</span><span class="tag">kleine Agentur</span></li>
+        <li><span class="pos">11</span><span class="who">onacy.de</span><span class="tag">Shopware-Fokus</span></li>
+        <li><span class="pos">17</span><span class="who">nordalux.de</span><span class="tag">seit zwei Tagen online</span></li>
+        <li><span class="pos">18</span><span class="who">kernpunkt.de</span><span class="tag">die Studie, nicht die Landingpage</span></li>
+        <li><span class="pos">19</span><span class="who">basecom.de</span><span class="tag">Consulting-Seite</span></li>
+      </ol>
+    </div>
+
+    <p class="note"><strong>Agenturen, die KOSMONAUT in keiner anderen Disziplin schlagen, stehen hier vor kernpunkt und basecom.</strong> Der Agenturbegriff im Agentic-Feld ist nicht verteidigt — er ist nur besetzt gehalten.</p>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow">Korrektur 2</div>
+      <h2>Die größte unbesetzte Chance heißt nicht Agentic, sondern GEO</h2>
+    </div>
+    <div class="tscroll">
+      <table>
+        <thead>
+          <tr><th>Keyword</th><th class="num">Vol/Mon</th><th class="num">Hürde</th><th class="num">CPC</th><th>Lage in der SERP</th></tr>
+        </thead>
+        <tbody>
+          <tr class="own"><td><span class="q">geo agentur</span></td><td class="num"><strong>1.000</strong></td><td class="num"><strong>5</strong></td><td class="num"><strong>24,75 €</strong></td><td>keine E-Commerce-Agentur in den Top 20 <span class="chip chip-gain">offen</span></td></tr>
+          <tr class="own"><td><span class="q">geo optimierung</span></td><td class="num"><strong>1.000</strong></td><td class="num"><strong>0</strong></td><td class="num">10,63 €</td><td>dieselbe Lücke <span class="chip chip-gain">offen</span></td></tr>
+          <tr><td><span class="q">agentic commerce</span></td><td class="num">1.300</td><td class="num">2</td><td class="num">16,29 €</td><td>Medien und Hersteller <span class="chip chip-warn">schwer</span></td></tr>
+          <tr><td><span class="q">chatgpt shopping</span></td><td class="num">260</td><td class="num"><strong>0</strong></td><td class="num">7,63 €</td><td>informativ, guter Zubringer</td></tr>
+          <tr><td><span class="q">conversational commerce</span></td><td class="num">140</td><td class="num"><strong>0</strong></td><td class="num">15,61 €</td><td>brandung hat das Thema, rankt schwach</td></tr>
+          <tr><td><span class="q">composable commerce</span></td><td class="num">110</td><td class="num"><strong>0</strong></td><td class="num">19,73 €</td><td>Kerngeschäft, unbesetzt</td></tr>
+          <tr><td><span class="q">agentic ai</span></td><td class="num">9.900</td><td class="num"><strong>61</strong></td><td class="num">14,45 €</td><td>Protokoll-Eigner <span class="chip chip-crit">meiden</span></td></tr>
+          <tr><td><span class="q">model context protocol</span></td><td class="num">3.600</td><td class="num"><strong>68</strong></td><td class="num">8,15 €</td><td>Protokoll-Eigner <span class="chip chip-crit">meiden</span></td></tr>
+          <tr><td><span class="q">agentic commerce protocol</span></td><td class="num">210</td><td class="num"><strong>64</strong></td><td class="num">16,24 €</td><td>Protokoll-Eigner <span class="chip chip-crit">meiden</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="finding">
+      <div class="label">Wer für „geo agentur" rankt</div>
+      <p>geoagentur.de, suchhelden.de, seo-retter.de, evergreen.media, seowerk.de, sumax.de, noahlutz.de — <strong>ausschließlich reine GEO- und SEO-Spezialisten.</strong> Selbst dotSource, das eine eigene GEO-Seite betreibt, steht dafür nicht in den Top 20.</p>
+    </div>
+
+    <p><strong>Die unbesetzte Positionierung ist „GEO für E-Commerce".</strong> Nicht GEO allgemein — dort sind die Spezialisten stärker. Sondern die Verbindung: Produktdaten, Shopsysteme, Feeds, strukturierte Daten für KI-Systeme. Genau die Schnittmenge aus KOSMONAUTs Kerngeschäft und dem teuersten unbesetzten Begriff im Feld.</p>
+
+    <p class="note">Zusammen bringen <span class="q">geo agentur</span>, <span class="q">geo optimierung</span>, <span class="q">chatgpt shopping</span>, <span class="q">conversational commerce</span> und <span class="q">composable commerce</span> rund <strong>2.600 Suchen im Monat bei Hürde 0 bis 5</strong> — das Doppelte von <span class="q">agentic commerce</span> allein, ohne gegen Handelsblatt und IBM antreten zu müssen.</p>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow">Der kurze Weg</div>
+      <h2>OMR steht auf Position 7 — und KOSMONAUT ist dort schon</h2>
+    </div>
+    <p><span class="q">omr.com/de/reviews/contenthub/agentic-commerce</span> rankt auf <strong>Position 7</strong> für <span class="q">agentic commerce</span> und auf <strong>Position 10</strong> für <span class="q">agentic commerce agentur</span>. Der Artikel stammt vom 16.10.2025 und ist damit zehn Monate alt.</p>
+    <p>KOSMONAUT ist auf OMR bereits gelistet: zwei redaktionelle Fallstudien, drei Exklusivplatzierungen, Platz 3 im Agenturvergleich. Eine Nennung auf dieser Seite ist der kürzeste Weg ins Agentic-Feld — <strong>keine neue Domain-Autorität nötig, keine Wartezeit auf Indexierung, kein Wettbewerb um Position 1.</strong></p>
+    <p>Die Redaktionsanfrage für den Refresh der beiden Fallstudien ist ohnehin geplant. Dieser Punkt gehört in dieselbe Mail.</p>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow">Technik</div>
+      <h2>Ein Markup-Block trennt die Zitierten von den Übersehenen</h2>
+    </div>
+    <p class="lede">Live-Abruf der Agentic-Seiten, ohne JavaScript — so, wie ein KI-Crawler sie sieht.</p>
+    <div class="tscroll">
+      <table>
+        <thead>
+          <tr><th>Seite</th><th class="num">H2</th><th>FAQPage-Schema</th><th class="num">KI-Zitationen der Domain</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>dotSource Agentic-Consulting <span class="chip chip-gain">Pos 1</span></td><td class="num">10</td><td><strong>ja</strong></td><td class="num">128</td></tr>
+          <tr><td>kernpunkt Agentic-Landingpage</td><td class="num">10</td><td><strong>ja</strong></td><td class="num">36</td></tr>
+          <tr><td>basecom Agentic-Consulting</td><td class="num">17</td><td>nein</td><td class="num">7</td></tr>
+          <tr><td>norisk Agentic-Blogartikel</td><td class="num">4</td><td>kein Schema überhaupt</td><td class="num">8</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Die beiden Domains mit FAQPage-Schema sind die beiden mit den meisten Zitationen.</strong> FAQPage bringt seit 2023 keine Rich Results mehr in der klassischen Suche — für die KI-Extraktion wird es weiterhin gelesen, und genau dort zahlt es sich aus.</p>
+    <p>basecom ist der Gegenbeweis in die andere Richtung: reichstes Schema von allen (Service, OfferCatalog, Person, ServiceChannel), 17 Überschriften — aber kein FAQPage und nur sieben Zitationen. <strong>Struktur allein reicht nicht; es braucht die Frage-Antwort-Form, die ein Sprachmodell zitieren kann.</strong></p>
+    <p class="note"><span class="q">llms.txt</span> haben nur dotsource.de und kernpunkt.de. Google ignoriert die Datei erklärtermaßen — als Indikator für die Ernsthaftigkeit der GEO-Arbeit taugt sie trotzdem. <strong>Keine der sieben Domains blockt KI-Crawler.</strong></p>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow">Empfehlung</div>
+      <h2>Fünf Schritte für die nächsten drei Monate</h2>
+    </div>
+    <ol class="steps">
+      <li><strong>GEO-für-E-Commerce-Seite zuerst, nicht die Agentic-Landingpage.</strong> Der interne Plan setzt die Agentic-Seite auf Prio 1 und GEO auf Prio 5. Die Zahlen sagen das Gegenteil: 1,5-faches Volumen, niedrigere Hürde, kein Fachwettbewerber in der SERP.</li>
+      <li><strong>FAQPage-Schema auf jede Kernseite.</strong> Der einzige technische Faktor, der in dieser Messung sauber mit KI-Zitationen korreliert. Kosten: ein Markup-Block je Seite.</li>
+      <li><strong>OMR-Redaktionsanfrage um den Agentic-Hub erweitern.</strong> Position 7 für das Zielkeyword, KOSMONAUT ist dort bereits Dienstleister, der Artikel ist refresh-reif.</li>
+      <li><strong>Erst danach die Agentic-Landingpage</strong> — als Ziel für <span class="q">agentic commerce agentur</span> und die Plattform-Kombinationen wie <span class="q">commercetools agentic commerce</span> (26,17 € Klickpreis), nicht als Angriff auf den Hauptbegriff.</li>
+      <li><strong>basecom und norisk als erste Zielmarken.</strong> 7 und 8 Zitationen gegen KOSMONAUTs 5 — in drei Monaten einholbar und belegbar.</li>
+    </ol>
+
+    <h3>Was nicht empfohlen wird</h3>
+    <ul class="plain">
+      <li><strong>Kein Glossar nach dixeno-Vorbild.</strong> 85 % von dixenos Traffic kommt aus dem E-Commerce-Lexikon, mit Klickpreisen von teils 0,00 € — Traffic ohne Kaufabsicht.</li>
+      <li><strong>Kein Angriff auf <span class="q">agentic ai</span>, <span class="q">model context protocol</span> oder <span class="q">agentic commerce protocol</span>.</strong> Hürden von 61 bis 68, besetzt von den Protokoll-Eignern selbst.</li>
+      <li><strong>Keine llms.txt als Maßnahme verkaufen.</strong> Anlegen ist billig und schadet nicht, aber Google ignoriert die Datei ausdrücklich.</li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow">Grenzen</div>
+      <h2>Was hier nicht gemessen ist</h2>
+    </div>
+    <ul class="plain">
+      <li><strong>SISTRIX.</strong> Weder als MCP verbunden noch als Skill installiert, keine Credentials auffindbar. Der Widerspruch der beiden internen SISTRIX-Seiten — 21 gegen 348 rankende Keywords — bleibt ohne Zugang offen.</li>
+      <li><strong>Backlink-Profile.</strong> Für die Konkurrenzdomains liefert die Abfrage keine Referring-Domain-Zahlen; das Ziel „10 neue verweisende Domains" hat damit noch keine Ausgangsbasis.</li>
+      <li><strong>Prompt-Panel.</strong> Die Zitationszahlen sind Domain-Messungen über alle Themen, kein kontrollierter 30-Prompt-Satz. Sie ergänzen die geplante Baseline, ersetzen sie nicht.</li>
+    </ul>
+  </section>
+
+  <footer>
+    KI-Zitationen: Ahrefs, sieben Plattformen, Markt DE, abgerufen 20.08.2026 · Domain-Footprint, SERPs und Keyword-Metriken: OpenSEO / DataForSEO, Projekt KOSMONAUT Germany, Markt DE · Seitenstruktur und Schema: Live-Abrufe ohne JavaScript, 20.08.2026<br>
+    Vollständige Fassung mit Quellenangaben im openseo-Repo unter docs/kosmonaut/wettbewerb-agentic-geo-2026-08-20.md · Code by AW — KOSMONAUT
+  </footer>
+
+</div>
