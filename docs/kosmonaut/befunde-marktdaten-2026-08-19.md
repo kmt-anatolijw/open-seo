@@ -23,9 +23,22 @@ gleich stark. Der Clickstream-Abgleich trennt sie:
 | `api entwicklung` | 110 | 55 |
 | `datenintegration` | 320 | 320 |
 
-**Verwertbar daraus:** Das Zielwort heißt **`api schnittstelle`, im Singular.**
-Die Nachfrage liegt praktisch vollständig dort. Wo diese Doku bisher den Plural
-führte, war das eine Schreibweise ohne Markt.
+**Verwertbar daraus:** Wo eine **neue Überschrift eine Suchanfrage tragen
+soll**, heißt das Zielwort **`api schnittstelle`, im Singular.** Die Nachfrage
+liegt praktisch vollständig dort.
+
+*Reichweite der Regel, präzisiert am 20.08. (KMT):* Sie gilt für neue,
+suchgetriebene Überschriften — **nicht rückwirkend für bereits beschlossene
+Textbausteine.** Der in Abschnitt 4.3 des Plans festgelegte H2-Block
+„KOSMONAUT als API- & Schnittstellen-Agentur" bleibt unberührt: Er benennt die
+Leistung, er zielt nicht auf eine Anfrage. Der Einwand ist berechtigt — meine
+ursprüngliche Formulierung war zu breit und hätte eine getroffene Entscheidung
+nachträglich gekippt.
+
+*Zur Zahl 2.400:* Sie ist ein **gruppierter Google-Ads-Wert** über die gesamte
+Schreibweisenfamilie. Sie steht nicht im Widerspruch zur aufgelösten 1, sondern
+misst etwas anderes — wo beide Zahlen in einem Dokument vorkommen, gehört diese
+Kennzeichnung dazu.
 
 ## Die H2-Kandidaten mit Marktwert
 

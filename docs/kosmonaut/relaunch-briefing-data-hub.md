@@ -175,19 +175,25 @@ Praktisch heißt das:
 
 ## Seitenkonzept
 
-**Ziel-URL:** `/expertise/schnittstellen/`, „Data Hub" als Produktname im
-Inhalt. Die URL bedient die Nachfrage, der Name das Gedächtnis.
+**Ziel-URL:** `/expertise/api/` — die bestehende Seite, nicht eine neue.
 
-*Nachtrag 19.08.:* Zu prüfen ist `/expertise/api-schnittstelle/` als Alternative
-— das Wort trägt 2.397 Suchen im Monat, `schnittstellen` als Einzelbegriff ist
-ungemessen. Entscheidung gehört ins Relaunch-Konzept, nicht hierher; beide
-Varianten sind vertretbar, solange Titel und H1 den Singular führen.
+*Korrigiert am 20.08. (Codex-Gate zu PR #138):* Meine ursprüngliche Empfehlung
+lautete `/expertise/schnittstellen/` als neue Adresse. Codex hat sie gegen
+**Council-Entscheidung C2** gestellt, und der Einwand trägt: Eine dritte URL
+neben dem API-Artikel (dauerhafte Ranking-URL) und `/expertise/api/`
+(Konsolidierungsziel) wäre genau die konkurrierende Seite, die C2 ausschließt.
+`/expertise/api/` bringt zudem 459 Impressionen mit.
+
+Das Argument hinter meiner Empfehlung — die URL soll das Nachfragewort tragen —
+ist damit nicht verworfen, sondern an eine Bedingung geknüpft: Eine
+sprechendere Adresse bleibt möglich, aber als **Umbenennung mit 301**, nicht
+als zusätzliche URL. „Data Hub" bleibt der Produktname im Inhalt.
 
 **Verhältnis zu bestehenden Seiten:**
 
 | Seite | Rolle danach |
 | --- | --- |
-| `/expertise/api/` (Pos 34,8) | wird auf die neue Seite konsolidiert — steht bereits als Konsolidierungsziel in der [Matrix](./keyword-url-matrix.md) |
+| `/expertise/api/` (Pos 34,8) | **wird die Data-Hub-Seite** — Konsolidierungsziel laut [Matrix](./keyword-url-matrix.md), 459 Impressionen. Keine neue URL daneben (Council C2) |
 | `/newsroom/insights/apisunverzichtbar/` (Pos 7,4) | bleibt Ranking-URL für `api schnittstellen agentur`, wird Zubringer mit hartem Anker |
 | `/newsroom/insights/mdm/` (Pos 3,6 und 7,5) | bleibt unangetastet, wird Zubringer. **Kein 301** |
 | `/expertise/roqqio/`, `/expertise/findologic/` | bleiben, werden aus der Konnektorenliste verlinkt |
