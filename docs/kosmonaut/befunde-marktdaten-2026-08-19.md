@@ -138,6 +138,83 @@ Punkt 2 stützt die [OMR-Strategie](./omr-strategie-2026-08-19.md) stärker als
 alles bisher Gesammelte: Eine Agentur mit halb so viel organischem Traffic hat
 dort das Fünffache an Stimmen.
 
+## Was dixeno stark macht — und warum es kein Vorbild ist
+
+Nachgezogen am 20.08.: die 602 rankenden Keywords von dixeno.de gegen die 61
+von kosmonaut.io, jeweils die 60 traffic-stärksten.
+
+**Dixenos Traffic ist ein Glossar-Effekt.** 40 der 60 stärksten Keywords stehen
+auf `/ecommerce-lexikon/` — und tragen **1.635 von 1.913 Traffic-Einheiten,
+also 85 Prozent**. Wofür sie ranken:
+
+| Keyword | Vol/Mon | Pos | CPC |
+| --- | --- | --- | --- |
+| `adsense` | 9.900 | 7 | 0,51 € |
+| `billing address` | 1.600 | 7 | **0,00 €** |
+| `browser-caching` | 1.000 | 9 | 1,59 € |
+| `billing address deutsch` | 720 | 6 | **0,00 €** |
+| `what is a billing address` | 170 | 5 | **0,00 €** |
+
+Wer „billing address deutsch" sucht, beauftragt keine E-Commerce-Agentur. Der
+Klickwert liegt bei null, weil niemand darauf bietet. Dixeno hat 33-mal so viel
+Traffic wie Kosmonaut — der größte Teil davon ist Lexikonverkehr ohne
+Kaufabsicht.
+
+**Kosmonaut steht kommerziell dichter, nur schlechter platziert:**
+
+| | dixeno.de | kosmonaut.io |
+| --- | --- | --- |
+| Ø CPC der Top-60 | 4,71 € (Lexikon) / 2,44 € (Rest) | **7,86 €** |
+| Keywords mit CPC über 10 € | 5 | **19** |
+| organischer Traffic | 2.281 | 68 |
+
+Das ist der eigentliche Befund: Nicht die Menge fehlt, sondern die Position.
+Kosmonaut rankt für die richtigen, teuren Begriffe — durchgängig auf Seite drei
+bis acht.
+
+### Die sechs konkretesten Einzelchancen
+
+Alle auf **bestehenden** Seiten, keine Neuanlage nötig:
+
+| Keyword | Vol/Mon | Pos | CPC | Seite |
+| --- | --- | --- | --- | --- |
+| `shopware 6 agentur` | 170 | **47** | **73,39 €** | `/expertise/shopware-agentur/` |
+| `plentymarkets` | 1.900 | **27** | 12,17 € | `/expertise/plentymarkets/` |
+| `api-schnittstellen` | 2.400 | **32** | 2,72 € | `/newsroom/insights/apisunverzichtbar/` |
+| `shopify plus agentur` | 110 | **34** | 19,28 € | `/expertise/shopify-agentur/` |
+| `stammdatenmanagement` | 320 | **83** | 9,91 € | `/newsroom/insights/mdm/` |
+| `e commerce systems` | 110 | 18 | 22,57 € | `/newsroom/insights/technologieeinsatz-im-ecommerce/` |
+
+**`shopware 6 agentur` ist der teuerste Klick im gesamten Datensatz** — 73,39 €.
+Die Seite existiert, der Partnerstatus existiert (Silver seit 2014), die
+Nachfrage ist da. Position 47. Dieser Posten stand bisher in keinem Arbeitspaket.
+
+**`api-schnittstellen` auf Position 32** ist die harte Zahl unter dem
+[Data-Hub-Briefing](./relaunch-briefing-data-hub.md): Die Keyword-Familie trägt
+2.400 Suchen im Monat, und der Erklärartikel steht bereits darin — nur zu weit
+hinten, um gefunden zu werden.
+
+### Das Strukturmuster bestätigt sich
+
+Die Seiten mit den meisten rankenden Keywords sind durchweg **Artikel**, nicht
+Angebotsseiten:
+
+| Seite | rankende Keywords (Top-60) |
+| --- | --- |
+| `/newsroom/insights/direktvertrieb-im-e-commerce/` | 9 |
+| `/newsroom/insights/mdm/` | 7 |
+| Startseite | 7 |
+| `/newsroom/insights/checklisteonlineshop/` | 5 |
+| `/expertise/plentymarkets/` | 4 |
+
+Vier der fünf stärksten Seiten verkaufen nichts. Genau die Diagnose, die die
+[Matrix](./keyword-url-matrix.md) seit Beginn trägt — jetzt mit Marktzahlen
+statt nur mit Impressionen belegt.
+
+**Was daraus für den Relaunch folgt:** Kein Glossar bauen. Dixenos Weg erzeugt
+Traffic, den man nicht verkaufen kann. Der kürzere Weg ist, die sechs Positionen
+oben auf bestehenden Seiten zu heben — dort ist die Kaufabsicht bereits da.
+
 ## Methodisches für die nächsten Abfragen
 
 - **Immer Clickstream mitziehen**, wenn eine Schreibweise zur Entscheidung wird.

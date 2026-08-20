@@ -30,6 +30,30 @@ Alle URLs mit abschließendem Schrägstrich (`trailingSlash: true`).
 | stammdatenmanagement · master data management | `/newsroom/insights/mdm/` | — | NUR interne Links (Datenwiderspruch; GSC gilt). Kein Refresh |
 | agentur e-commerce strategie | — (Mapping aufgelöst, Council) | `/newsroom/insights/checklisteonlineshop/` — 89 Impr. · Pos 11,1 | Checkliste = Linkgeber-Asset; Refresh W8+ ohne Optimierung auf diese Query. Kommerzielles Ziel (Kandidat `/services/ecommerce-beratung/`) erst im Relaunch |
 
+### Marktwert der Fenster-Ziele (Nachtrag 20.08.)
+
+Die Tabelle oben priorisiert nach eigenen Impressionen. Seit der
+MCP-Anbindung liegt der Klickwert daneben — er ändert die Bewertung einer Zeile:
+
+| Fokus-Query | Vol/Mon | Pos heute | CPC | Anmerkung |
+| --- | --- | --- | --- | --- |
+| `shopware 6 agentur` | 170 | **47** | **73,39 €** | **teuerster Klick im gesamten Bestand** |
+| `e commerce systems` | 110 | 18 | 22,57 € | trägt `/newsroom/insights/technologieeinsatz-im-ecommerce/` |
+| `shopify plus agentur` | 110 | 34 | 19,28 € | Karte W4–5 |
+| `plentymarkets` | 1.900 | 27 | 12,17 € | größtes Volumen unter den Expertise-Seiten |
+| `stammdatenmanagement` | 320 | 83 | 9,91 € | MDM-Artikel, Regel „nur interne Links" bleibt |
+| `api-schnittstellen` | 2.400 | 32 | 2,72 € | Beleg für die Data-Hub-Seite |
+
+**Die Shopware-Zeile muss neu bewertet werden.** Sie steht oben als
+„Content-only-Karte, kein Klick-Versprechen Tag 60" — begründet mit 50
+Impressionen auf Position 46,4. Der Klickwert von 73,39 Euro ist der höchste im
+gesamten Keyword-Bestand der Domain, die Seite existiert, und der Silver-Status
+seit 2014 ist belegt. Das rechtfertigt eine eigene Prüfung, ob die Karte im
+Fenster mehr sein sollte als Content-only.
+
+Keine Änderung der Regeln oben ohne Entscheidung — dies ist die Datenlage, nicht
+die Vorgabe. Herkunft: [Marktdaten](./befunde-marktdaten-2026-08-19.md).
+
 ## 2. Relaunch-Backlog (Regeln jetzt, Umsetzung Relaunch)
 
 | Query / Seite | Ziel-URL (Relaunch) | Regel |
